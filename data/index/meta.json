@@ -1,0 +1,39 @@
+{
+  "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+  "rows": 6,
+  "dim": 384,
+  "source_index": "data/index/policies.jsonl",
+  "embeddings_file": "data/index/policies.npy",
+  "id_map": [
+    {
+      "id": "01-pto::chunk-1",
+      "doc_id": "01-pto",
+      "chunk_id": 1
+    },
+    {
+      "id": "01-pto::chunk-2",
+      "doc_id": "01-pto",
+      "chunk_id": 2
+    },
+    {
+      "id": "02-expenses::chunk-1",
+      "doc_id": "02-expenses",
+      "chunk_id": 1
+    },
+    {
+      "id": "02-expenses::chunk-2",
+      "doc_id": "02-expenses",
+      "chunk_id": 2
+    },
+    {
+      "id": "03-remote-work::chunk-1",
+      "doc_id": "03-remote-work",
+      "chunk_id": 1
+    },
+    {
+      "id": "03-remote-work::chunk-2",
+      "doc_id": "03-remote-work",
+      "chunk_id": 2
+    }
+  ]
+}
