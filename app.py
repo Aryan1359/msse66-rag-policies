@@ -1,179 +1,85 @@
-from flask import Flask, jsonify, request
-from functools import lru_cache
-from pathlib import Path
-import os, re, json
-import numpy as np
-from sentence_transformers import SentenceTransformer
+
+from flask import Flask, request, jsonify
+import sys
 
 app = Flask(__name__)
 
-# --- Paths ---
-INDEX_JSONL = Path("data/index/policies.jsonl")
-EMB_NPY     = Path("data/index/policies.npy")
-META_JSON   = Path("data/index/meta.json")
-
-# --- Shared helpers ---
-def _read_jsonl(path: Path):
-    if not path.exists():
-        return []
-    recs = []
-    with path.open("r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                recs.append(json.loads(line))
-    return recs
-
-# =============================
-# Keyword (bag-of-words) search
-# =============================
-def _kw_score(text: str, terms):
-    s = 0
-    for t in terms:
-        if not t:
-            continue
-        s += len(re.findall(rf"\b{re.escape(t)}\b", text, flags=re.I))
-    return s
-
-def _keyword_search(recs, query: str, topk: int = 3):
-    terms = [t.strip() for t in query.split() if t.strip()]
-    scored = []
-    for r in recs:
-        sc = _kw_score(r.get("text", ""), terms)
-        if sc > 0:
-            scored.append((sc, r))
-    scored.sort(key=lambda x: x[0], reverse=True)
-    out = []
-    for sc, r in scored[:topk]:
-        preview = (r.get("text", "")[:160].replace("\n", " ") + "…") if r else ""
-        out.append({
-            "doc_id": r.get("doc_id"),
-            "chunk_id": r.get("chunk_id"),
-            "id": r.get("id"),
-            "score": float(sc),
-            "preview": preview,
-        })
-    return out
-
-# =====================
-# Vector (semantic) search
-# =====================
-@lru_cache(maxsize=1)
-def _load_vec_index():
-    if not (INDEX_JSONL.exists() and EMB_NPY.exists() and META_JSON.exists()):
-        return None
-    mat  = np.load(EMB_NPY)  # [N,D], rows are L2-normalized
-    meta = json.load(META_JSON.open("r", encoding="utf-8"))
-    recs = _read_jsonl(INDEX_JSONL)
-    model = SentenceTransformer(meta["model_name"], device="cpu")
-    return (mat, meta, recs, model)
-
-def _l2_normalize(vec: np.ndarray) -> np.ndarray:
-    n = np.linalg.norm(vec) + 1e-12
-    return (vec / n).astype(np.float32)
-
-def _vector_search(query: str, topk: int = 3):
-    loaded = _load_vec_index()
-    if loaded is None:
-        return {"error": "vector index not built. Run scripts/embed_index.py."}, 400
-    mat, meta, recs, model = loaded
-    q = model.encode([query], convert_to_numpy=True, normalize_embeddings=False)[0].astype(np.float32)
-    q = _l2_normalize(q)
-    scores = mat @ q  # cosine similarity (rows are normalized)
-    idx = np.argsort(-scores)[:topk]
-
-    results = []
-    id_map = meta["id_map"]
-    for i in idx:
-        m = id_map[i]
-        r = next((rr for rr in recs if rr.get("id") == m["id"]), None)
-        preview = (r.get("text", "")[:160].replace("\n", " ") + "…") if r else ""
-        results.append({
-            "doc_id": m.get("doc_id"),
-            "chunk_id": m.get("chunk_id"),
-            "id": m.get("id"),
-            "score": float(scores[i]),
-            "preview": preview,
-        })
-    return {"mode": "vector", "query": query, "topk": topk, "results": results}, 200
-
-# ============
-# HTTP routes
-# ============
-
-
-from flask import jsonify
-
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({
-        "app": "msse66-rag-policies",
-        "endpoints": {
-            "/health": "Basic health check",
-            "/search": {
-                "description": "Retrieve policy chunks via keyword (default) or vector search.",
-                "params": {
-                    "q": "query string (required)",
-                    "topk": "int, default 5",
-                    "mode": "keyword|vector (default: keyword)"
-                },
-                "examples": [
-                    "/search?q=pto%20accrual",
-                    "/search?q=remote%20work&topk=3&mode=keyword",
-                    "/search?q=bereavement&topk=3&mode=vector"
-                ],
-                "response_fields": ["mode", "query", "results[]", "topk", "sources[]"]
-            }
-        },
-        "defaults": {"mode": "keyword"}
-    })
+    return "OK", 200
 
-@app.get("/health")
+@app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok"}), 200
 
-@app.get("/search")
+@app.route("/search", methods=["GET"])
 def search():
+    # Lightweight search endpoint, avoid heavy imports at module import
     q = request.args.get("q", "").strip()
     topk = int(request.args.get("topk", 3))
     mode = request.args.get("mode", "keyword").lower()
-
     if not q:
         return jsonify({"error": "missing q"}), 400
-
+    # Only import heavy modules if needed
     if mode == "vector":
-        payload, code = _vector_search(q, topk)
-        # build compact sources list from results (doc_id + chunk_id)
-        results = payload.get("results", []) if isinstance(payload, dict) else []
+        from scripts.vector_search import search as vector_search
+        results = vector_search(q, topk=topk)
         sources = [
             {"doc_id": r.get("doc_id"), "chunk_id": int(r.get("chunk_id", 0))}
             for r in results
             if r.get("doc_id") is not None
         ]
-        payload["sources"] = sources
-        return jsonify(payload), code
+        payload = {
+            "mode": "vector",
+            "query": q,
+            "results": results,
+            "topk": topk,
+            "sources": sources,
+        }
+        return jsonify(payload), 200
+    else:
+        from scripts.search_jsonl import search as kw_search
+        results = kw_search(q, topk=topk)
+        sources = [
+            {"doc_id": r.get("doc_id"), "chunk_id": int(r.get("chunk_id", 0))}
+            for r in results
+            if r.get("doc_id") is not None
+        ]
+        payload = {
+            "mode": "keyword",
+            "query": q,
+            "results": results,
+            "topk": topk,
+            "sources": sources,
+        }
+        return jsonify(payload), 200
 
-    # keyword (default)
-    recs = _read_jsonl(INDEX_JSONL)
-    if not recs:
-        return jsonify({"error": f"missing index: {INDEX_JSONL}"}), 400
-    results = _keyword_search(recs, q, topk)
-    # compact sources list
-    sources = [
-        {"doc_id": r.get("doc_id"), "chunk_id": int(r.get("chunk_id", 0))}
-        for r in results
-        if r.get("doc_id") is not None
-    ]
+@app.route("/ask", methods=["POST", "GET"])
+def ask():
+    if request.method == "POST":
+        data = request.get_json(silent=True) or {}
+        question = (data.get("question") or "").strip()
+        topk = int(data.get("topk") or 4)
+    else:
+        question = (request.args.get("q") or request.args.get("question") or "").strip()
+        topk = int(request.args.get("topk") or 4)
+    if not question:
+        return jsonify({"error": "question is required"}), 400
+    from scripts.generate_answer import run as rag_run
+    res = rag_run(question, topk=topk)
+    source_labels = {f"S{i+1}": {"doc_id": s["doc_id"], "chunk_id": s["chunk_id"]} for i, s in enumerate(res.get("sources", []))}
     payload = {
-        "mode": "keyword",
-        "query": q,
-        "results": results,
-        "topk": topk,
-        "sources": sources,
+        "question": res.get("question", question),
+        "answer": res.get("answer", ""),
+        "sources": res.get("sources", []),
+        "source_labels": source_labels,
+        "retrieval_ms": res.get("retrieval_ms", 0),
+        "llm_ms": res.get("llm_ms", 0),
+        "model": res.get("model", ""),
+        "tokens": res.get("tokens", 0),
     }
     return jsonify(payload), 200
 
-
 if __name__ == "__main__":
-    # Default to port 8000 in Codespaces
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "8000")), debug=False)
+    print(app.url_map, file=sys.stderr)
+    app.run(host="0.0.0.0", port=8000)

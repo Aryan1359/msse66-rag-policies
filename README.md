@@ -235,3 +235,29 @@ If `GROQ_API_KEY` is missing, the script returns an extractive summary ending wi
 - `RETRIEVAL_MODE=keyword` (default, fastest, no HuggingFace download)
 - `RETRIEVAL_MODE=http` (calls local API server `/search?mode=vector`)
 - `RETRIEVAL_MODE=vector` (internal, requires HF model)
+
+---
+
+### /ask endpoint
+
+Run the server:
+
+```
+python app.py
+```
+
+**POST (recommended):**
+
+```
+curl -s -X POST http://127.0.0.1:8000/ask \
+  -H "Content-Type: application/json" \
+  -d '{"question":"How do holidays accrue?","topk":4}' | jq
+```
+
+**GET (quick test):**
+
+```
+curl -s "http://127.0.0.1:8000/ask?q=How%20do%20holidays%20accrue%3F&topk=4" | jq
+```
+
+Returns JSON with keys: question, answer, sources, source_labels, retrieval_ms, llm_ms, model, tokens.
