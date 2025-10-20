@@ -200,5 +200,14 @@ Outputs per-item overlap and a latency roll-up:
 
 ---
 
-**Maintainer:** Aryan Yaghobi ([https://github.com/Aryan1359](https://github.com/Aryan1359))
-**Mentor / Co‑Developer:** ChatGPT‑5
+## Phase 4 – RAG Answer Synthesis (WIP)
+
+A minimal LLM client (`scripts/llm_client.py`) is scaffolded for answer synthesis using Groq's OpenAI-compatible API (Llama-3.1-8B-Instruct).
+
+- **Environment variables:**
+  - `GROQ_API_KEY` (required for LLM calls)
+  - `RAG_MODEL` (default: llama-3.1-8b-instruct)
+  - `RAG_MAX_TOKENS` (default: 512)
+- **CI-safe:** If no API key is present, the client raises `LLMNotConfigured` and callers can gracefully fallback. This keeps CI green and avoids test failures when secrets are missing.
+- **Not yet wired into Flask.**
+- See `scripts/test_llm_client.py` for a smoke test.
