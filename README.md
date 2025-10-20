@@ -322,3 +322,25 @@ MIN_GROUNDED=0.8 MIN_CITATION=0.8 P95_MS=3500 make eval-gate
 * On push/PR, GitHub Actions runs the evaluation gate.
 * Artifacts are uploaded even if the gate fails (for debugging).
 * The job fails at the end if thresholds aren’t met.
+
+---
+
+## 🚀 Deployment (Render Free Tier)
+
+**What’s included**
+- `Procfile` for a production entrypoint (`gunicorn app:app`).
+- `render/render.yaml` service definition (free plan).
+- `requirements.txt` includes `gunicorn`.
+
+**One-time setup**
+1. Push `main` to GitHub (already done).
+2. In Render, click **New > Web Service** and select this repo.
+3. Confirm the build/start commands match `render.yaml`.
+4. Set **Health Check Path** to `/health`.
+
+**Local prod-like run**
+```bash
+pip install -r requirements.txt
+PORT=8000 gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120
+# open http://127.0.0.1:8000/health
+```
