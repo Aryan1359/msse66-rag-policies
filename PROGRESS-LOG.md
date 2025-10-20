@@ -1,3 +1,33 @@
+# 2025-10-20: Phase 4 Step 2 — Added scripts/generate_answer.py (retrieval→prompt→LLM), fallback, CLI, test, docs, PR opened.
+  - Branch: feat/phase4-generator
+  - CLI example:
+    ```bash
+    python -m scripts.generate_answer --q "PTO accrual policy?" --topk 3
+    # Output: {"question":..., "answer":..., "sources":..., "model":..., ...}
+    ```
+
+# 2025-10-20: Phase 4 Step 3 — Implemented /ask endpoint (POST+GET), wraps RAG generator, returns answer, sources, timings, and source_labels. Tested with curl and Flask client.
+  - Branch: feat/phase4-generator
+  - Example:
+    ```bash
+    curl -s -X POST http://127.0.0.1:8000/ask -H "Content-Type: application/json" -d '{"question":"How do holidays accrue?","topk":4}' | jq
+    # Output: {"question":..., "answer":..., "sources":..., "source_labels":..., ...}
+    ```
+
+# 2025-10-20: Phase 4 Step 4 — Citation polish: [S#] ↔ source_labels mapping, test passing.
+  - Branch: feat/phase4-generator
+  - Test:
+    ```python
+    import app, json
+    def test_citations_map():
+        c = app.app.test_client()
+        r = c.post("/ask", json={"question":"PTO accrual policy?", "topk":3})
+        assert r.status_code == 200
+        data = r.get_json()
+        assert "sources" in data and "source_labels" in data
+        k = len(data["sources"])
+        assert list(data["source_labels"].keys()) == [f"S{i}" for i in range(1, k+1)]
+    ```
 - 2025-10-20: Phase 4 Step 3 — Implemented /ask endpoint (POST+GET), wraps RAG generator, returns answer, sources, timings, and source_labels. Tested with curl and Flask client.
 # PROGRESS LOG — Steps 1–7
 

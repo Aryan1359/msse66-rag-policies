@@ -202,62 +202,82 @@ Outputs per-item overlap and a latency roll-up:
 
 ## Phase 4 – RAG Answer Synthesis (WIP)
 
-A minimal LLM client (`scripts/llm_client.py`) is scaffolded for answer synthesis using Groq's OpenAI-compatible API (Llama-3.1-8B-Instruct).
 
-- **Environment variables:**
-  - `GROQ_API_KEY` (required for LLM calls)
-  - `RAG_MODEL` (default: llama-3.1-8b-instruct)
-  - `RAG_MAX_TOKENS` (default: 512)
-- **CI-safe:** If no API key is present, the client raises `LLMNotConfigured` and callers can gracefully fallback. This keeps CI green and avoids test failures when secrets are missing.
-- **Not yet wired into Flask.**
-- See `scripts/test_llm_client.py` for a smoke test.
+## Phase 4 – RAG Answer Synthesis
 
----
+### scripts/generate_answer.py (retrieval → prompt → LLM → citations)
 
+- End-to-end RAG answer generation: retrieves top policy chunks, builds a prompt, calls the LLM (if configured), and post-processes the answer.
+- If LLM is not configured, falls back to extractive summary with a clear note.
+- CLI usage (module mode recommended):
 
-### scripts/generate_answer.py — Local RAG synthesis
+  ```bash
+  python -m scripts.generate_answer --q "What’s our PTO carryover limit?" --topk 3
+  # Retrieval modes:
+  #   RETRIEVAL_MODE=keyword (default, no embeddings needed)
+  #   RETRIEVAL_MODE=http (calls /search?mode=vector)
+  #   RETRIEVAL_MODE=vector (local, needs embeddings)
+  ```
 
-Run end-to-end RAG answer generation from the command line (module mode recommended):
+### /ask endpoint (POST + GET)
 
-```
-# default: keyword
-python -m scripts.generate_answer --q "How do holidays accrue?"
-# force vector via API server:
-RETRIEVAL_MODE=http python -m scripts.generate_answer --q "..."
-# force local vector (requires HF model available):
-RETRIEVAL_MODE=vector python -m scripts.generate_answer --q "..."
-```
+- Unified endpoint for RAG answer synthesis.
+- Returns JSON with:
+  - `question`, `answer`, `sources`, `source_labels`, `retrieval_ms`, `llm_ms`, `model`, `tokens`
+- `source_labels` is a mapping `{S1: {doc_id, chunk_id}, ...}` matching the order of `sources[]`.
+- **Citation format:** Answers include inline `[S1]`, `[S2]`, ... that correspond 1:1 to the returned `sources[]` and `source_labels`.
 
-If `GROQ_API_KEY` is missing, the script returns an extractive summary ending with “(LLM disabled; extractive summary)”.
+#### Quickstart
 
-**Retrieval modes:**
+Run server:
 
-- `RETRIEVAL_MODE=keyword` (default, fastest, no HuggingFace download)
-- `RETRIEVAL_MODE=http` (calls local API server `/search?mode=vector`)
-- `RETRIEVAL_MODE=vector` (internal, requires HF model)
-
----
-
-### /ask endpoint
-
-Run the server:
-
-```
+```bash
 python app.py
 ```
 
-**POST (recommended):**
+Ask a question (POST):
 
-```
+```bash
 curl -s -X POST http://127.0.0.1:8000/ask \
   -H "Content-Type: application/json" \
   -d '{"question":"How do holidays accrue?","topk":4}' | jq
 ```
 
-**GET (quick test):**
+Ask a question (GET):
 
-```
-curl -s "http://127.0.0.1:8000/ask?q=How%20do%20holidays%20accrue%3F&topk=4" | jq
+```bash
+curl -s "http://127.0.0.1:8000/ask?q=PTO%20accrual%20policy%3F&topk=3" | jq
 ```
 
-Returns JSON with keys: question, answer, sources, source_labels, retrieval_ms, llm_ms, model, tokens.
+CLI generator (module mode):
+
+```bash
+python -m scripts.generate_answer --q "What’s our PTO carryover limit?" --topk 3
+```
+
+#### Retrieval modes
+
+Set the environment variable `RETRIEVAL_MODE=keyword|http|vector` (default: `keyword`).
+
+```bash
+# default keyword (no embeddings required)
+python -m scripts.generate_answer --q "PTO accrual policy?" --topk 4
+
+# force HTTP vector (server must be running)
+RETRIEVAL_MODE=http python -m scripts.generate_answer --q "PTO accrual policy?" --topk 4
+
+# force local vector (requires embeddings available)
+RETRIEVAL_MODE=vector python -m scripts.generate_answer --q "PTO accrual policy?" --topk 4
+```
+
+#### LLM configuration
+
+- `GROQ_API_KEY` (required for LLM calls)
+- `RAG_MODEL` (default: llama-3.1-8b-instruct)
+- `RAG_MAX_TOKENS` (default: 512)
+- If no API key is present, the system falls back to extractive summary with a note: `(LLM disabled; extractive summary)`
+
+#### Troubleshooting
+
+- If 404 on `/ask`: kill old process, restart with `python app.py`.
+- If zero hits: ensure `data/index/policies.jsonl` exists (rebuild with `python scripts/index_jsonl.py`) and try `RETRIEVAL_MODE=keyword`.
