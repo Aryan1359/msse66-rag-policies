@@ -200,5 +200,84 @@ Outputs per-item overlap and a latency roll-up:
 
 ---
 
-**Maintainer:** Aryan Yaghobi ([https://github.com/Aryan1359](https://github.com/Aryan1359))
-**Mentor / Co‑Developer:** ChatGPT‑5
+## Phase 4 – RAG Answer Synthesis (WIP)
+
+
+## Phase 4 – RAG Answer Synthesis
+
+### scripts/generate_answer.py (retrieval → prompt → LLM → citations)
+
+- End-to-end RAG answer generation: retrieves top policy chunks, builds a prompt, calls the LLM (if configured), and post-processes the answer.
+- If LLM is not configured, falls back to extractive summary with a clear note.
+- CLI usage (module mode recommended):
+
+  ```bash
+  python -m scripts.generate_answer --q "What’s our PTO carryover limit?" --topk 3
+  # Retrieval modes:
+  #   RETRIEVAL_MODE=keyword (default, no embeddings needed)
+  #   RETRIEVAL_MODE=http (calls /search?mode=vector)
+  #   RETRIEVAL_MODE=vector (local, needs embeddings)
+  ```
+
+### /ask endpoint (POST + GET)
+
+- Unified endpoint for RAG answer synthesis.
+- Returns JSON with:
+  - `question`, `answer`, `sources`, `source_labels`, `retrieval_ms`, `llm_ms`, `model`, `tokens`
+- `source_labels` is a mapping `{S1: {doc_id, chunk_id}, ...}` matching the order of `sources[]`.
+- **Citation format:** Answers include inline `[S1]`, `[S2]`, ... that correspond 1:1 to the returned `sources[]` and `source_labels`.
+
+#### Quickstart
+
+Run server:
+
+```bash
+python app.py
+```
+
+Ask a question (POST):
+
+```bash
+curl -s -X POST http://127.0.0.1:8000/ask \
+  -H "Content-Type: application/json" \
+  -d '{"question":"How do holidays accrue?","topk":4}' | jq
+```
+
+Ask a question (GET):
+
+```bash
+curl -s "http://127.0.0.1:8000/ask?q=PTO%20accrual%20policy%3F&topk=3" | jq
+```
+
+CLI generator (module mode):
+
+```bash
+python -m scripts.generate_answer --q "What’s our PTO carryover limit?" --topk 3
+```
+
+#### Retrieval modes
+
+Set the environment variable `RETRIEVAL_MODE=keyword|http|vector` (default: `keyword`).
+
+```bash
+# default keyword (no embeddings required)
+python -m scripts.generate_answer --q "PTO accrual policy?" --topk 4
+
+# force HTTP vector (server must be running)
+RETRIEVAL_MODE=http python -m scripts.generate_answer --q "PTO accrual policy?" --topk 4
+
+# force local vector (requires embeddings available)
+RETRIEVAL_MODE=vector python -m scripts.generate_answer --q "PTO accrual policy?" --topk 4
+```
+
+#### LLM configuration
+
+- `GROQ_API_KEY` (required for LLM calls)
+- `RAG_MODEL` (default: llama-3.1-8b-instruct)
+- `RAG_MAX_TOKENS` (default: 512)
+- If no API key is present, the system falls back to extractive summary with a note: `(LLM disabled; extractive summary)`
+
+#### Troubleshooting
+
+- If 404 on `/ask`: kill old process, restart with `python app.py`.
+- If zero hits: ensure `data/index/policies.jsonl` exists (rebuild with `python scripts/index_jsonl.py`) and try `RETRIEVAL_MODE=keyword`.

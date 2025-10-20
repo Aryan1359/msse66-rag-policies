@@ -1,3 +1,34 @@
+# 2025-10-20: Phase 4 Step 2 — Added scripts/generate_answer.py (retrieval→prompt→LLM), fallback, CLI, test, docs, PR opened.
+  - Branch: feat/phase4-generator
+  - CLI example:
+    ```bash
+    python -m scripts.generate_answer --q "PTO accrual policy?" --topk 3
+    # Output: {"question":..., "answer":..., "sources":..., "model":..., ...}
+    ```
+
+# 2025-10-20: Phase 4 Step 3 — Implemented /ask endpoint (POST+GET), wraps RAG generator, returns answer, sources, timings, and source_labels. Tested with curl and Flask client.
+  - Branch: feat/phase4-generator
+  - Example:
+    ```bash
+    curl -s -X POST http://127.0.0.1:8000/ask -H "Content-Type: application/json" -d '{"question":"How do holidays accrue?","topk":4}' | jq
+    # Output: {"question":..., "answer":..., "sources":..., "source_labels":..., ...}
+    ```
+
+# 2025-10-20: Phase 4 Step 4 — Citation polish: [S#] ↔ source_labels mapping, test passing.
+  - Branch: feat/phase4-generator
+  - Test:
+    ```python
+    import app, json
+    def test_citations_map():
+        c = app.app.test_client()
+        r = c.post("/ask", json={"question":"PTO accrual policy?", "topk":3})
+        assert r.status_code == 200
+        data = r.get_json()
+        assert "sources" in data and "source_labels" in data
+        k = len(data["sources"])
+        assert list(data["source_labels"].keys()) == [f"S{i}" for i in range(1, k+1)]
+    ```
+- 2025-10-20: Phase 4 Step 3 — Implemented /ask endpoint (POST+GET), wraps RAG generator, returns answer, sources, timings, and source_labels. Tested with curl and Flask client.
 # PROGRESS LOG — Steps 1–7
 
 ## Step 1: Repo + Codespaces
@@ -33,3 +64,6 @@
 
 - 2025-10-19: Added compact `sources[]` to /search responses (feat/search-sources) and merged to main.
 - 2025-10-19: Added tiny eval set (5 items) and scripts/eval.py with overlap + latency summary (PR #12).
+- 2025-10-20: Phase 4 Step 1 — Created feat/phase4-llm-setup branch, scaffolded Groq LLM client (scripts/llm_client.py), CI-safe fallback, smoke test, docs, PR opened.
+- 2025-10-20: Phase 4 Step 2 — Created feat/phase4-generator branch, added scripts/generate_answer.py (retrieval→prompt→LLM), fallback, CLI, test, docs, PR opened. See verification outputs below.
+- 2025-10-20: Phase 4 Step 3 — Implemented /ask endpoint (POST+GET), wraps RAG generator, returns answer, sources, timings, and source_labels. Tested with curl and Flask client.
