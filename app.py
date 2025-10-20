@@ -13,7 +13,7 @@ def health():
     return jsonify({"status": "ok"}), 200
 
 @app.route("/search", methods=["GET"])
-def search():
+def search_route():
     # Lightweight search endpoint, avoid heavy imports at module import
     q = request.args.get("q", "").strip()
     topk = int(request.args.get("topk", 3))
@@ -38,8 +38,12 @@ def search():
         }
         return jsonify(payload), 200
     else:
-        from scripts.search_jsonl import search as kw_search
-        results = kw_search(q, topk=topk)
+        import scripts.search_jsonl
+        from pathlib import Path
+        import os
+        index_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "index", "policies.jsonl")
+        recs = scripts.search_jsonl.load_index(Path(index_path))
+        results = scripts.search_jsonl.search(recs, q, topk=topk)
         sources = [
             {"doc_id": r.get("doc_id"), "chunk_id": int(r.get("chunk_id", 0))}
             for r in results
