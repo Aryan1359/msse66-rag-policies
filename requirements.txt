@@ -1,5 +1,6 @@
 Flask==3.0.3
 python-dotenv==1.0.1
+gunicorn
 httpx
 
 # Phase 3 — embeddings
