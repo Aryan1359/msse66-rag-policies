@@ -35,18 +35,35 @@ def main():
         print("[ERR] Eval file must be a non-empty JSON array", file=sys.stderr)
         sys.exit(1)
 
-    item = data[0]
-    qid = item.get("id")
-    question = item.get("question")
-    expected_doc_ids = item.get("expected_doc_ids", [])
-    print(f"[Q] {question}")
+    import statistics
+    hits = 0
+    total = len(data)
+    latencies = []
+    for item in data:
+        qid = item.get("id")
+        question = item.get("question")
+        expected_doc_ids = item.get("expected_doc_ids", [])
+        print(f"[Q] {question}")
 
-    doc_ids, latency_ms = run_search(question, args.base_url, args.mode, args.topk)
-    print(f"[sources.doc_ids] {doc_ids}")
-    print(f"[latency_ms] {latency_ms:.2f}")
+        doc_ids, latency_ms = run_search(question, args.base_url, args.mode, args.topk)
+        latencies.append(latency_ms)
+        print(f"[sources.doc_ids] {doc_ids}")
+        print(f"[latency_ms] {latency_ms:.2f}")
 
-    overlap = bool(set(doc_ids) & set(expected_doc_ids))
-    print(f"[overlap] {overlap}")
+        overlap = bool(set(doc_ids) & set(expected_doc_ids))
+        print(f"[overlap] {overlap}")
+        if overlap:
+            hits += 1
+
+    percent = (hits / total) * 100 if total else 0
+    print(f"[summary] hits={hits}/{total} ({percent:.0f}%)")
+
+    if latencies:
+        min_ms = min(latencies)
+        avg_ms = statistics.mean(latencies)
+        p50_ms = statistics.median(latencies)
+        p95_ms = max(latencies)  # for N<20, use max as p95~
+        print(f"[latency] min={min_ms:.2f}ms p50={p50_ms:.2f}ms avg={avg_ms:.2f}ms p95~={p95_ms:.2f}ms")
 
 if __name__ == "__main__":
     main()
