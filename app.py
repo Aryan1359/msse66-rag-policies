@@ -119,6 +119,14 @@ def search():
 
     if mode == "vector":
         payload, code = _vector_search(q, topk)
+        # build compact sources list from results (doc_id + chunk_id)
+        results = payload.get("results", []) if isinstance(payload, dict) else []
+        sources = [
+            {"doc_id": r.get("doc_id"), "chunk_id": int(r.get("chunk_id", 0))}
+            for r in results
+            if r.get("doc_id") is not None
+        ]
+        payload["sources"] = sources
         return jsonify(payload), code
 
     # keyword (default)
@@ -126,7 +134,20 @@ def search():
     if not recs:
         return jsonify({"error": f"missing index: {INDEX_JSONL}"}), 400
     results = _keyword_search(recs, q, topk)
-    return jsonify({"mode": "keyword", "query": q, "topk": topk, "results": results}), 200
+    # compact sources list
+    sources = [
+        {"doc_id": r.get("doc_id"), "chunk_id": int(r.get("chunk_id", 0))}
+        for r in results
+        if r.get("doc_id") is not None
+    ]
+    payload = {
+        "mode": "keyword",
+        "query": q,
+        "results": results,
+        "topk": topk,
+        "sources": sources,
+    }
+    return jsonify(payload), 200
 
 
 if __name__ == "__main__":
