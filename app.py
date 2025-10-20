@@ -100,9 +100,35 @@ def _vector_search(query: str, topk: int = 3):
 # ============
 # HTTP routes
 # ============
-@app.get("/")
-def root():
-    return "MSSE66 RAG — placeholder. Try GET /health", 200
+
+# API help block for root
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "app": "msse66-rag-policies",
+        "endpoints": {
+            "/health": "Basic health check",
+            "/search": {
+                "description": "Retrieve policy chunks (keyword or vector).",
+                "params": {
+                    "q": "query string (required)",
+                    "topk": "int, default 3",
+                    "mode": "keyword|vector (default: keyword)"
+                },
+                "examples": [
+                    "/search?q=pto%20accrual",
+                    "/search?q=remote%20work&topk=3&mode=keyword",
+                    "/search?q=bereavement&topk=3&mode=vector"
+                ],
+                "response_fields": [
+                    "mode", "query", "results[]", "topk", "sources[]"
+                ]
+            }
+        },
+        "defaults": {
+            "mode": "keyword"
+        }
+    })
 
 @app.get("/health")
 def health():
