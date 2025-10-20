@@ -34,3 +34,4 @@
 - 2025-10-19: Added compact `sources[]` to /search responses (feat/search-sources) and merged to main.
 - 2025-10-19: Added tiny eval set (5 items) and scripts/eval.py with overlap + latency summary (PR #12).
 - 2025-10-20: Phase 4 Step 1 — Created feat/phase4-llm-setup branch, scaffolded Groq LLM client (scripts/llm_client.py), CI-safe fallback, smoke test, docs, PR opened.
+- 2025-10-20: Phase 4 Step 2 — Created feat/phase4-generator branch, added scripts/generate_answer.py (retrieval→prompt→LLM), fallback, CLI, test, docs, PR opened. See verification outputs below.

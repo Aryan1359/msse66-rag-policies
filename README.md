@@ -211,3 +211,16 @@ A minimal LLM client (`scripts/llm_client.py`) is scaffolded for answer synthesi
 - **CI-safe:** If no API key is present, the client raises `LLMNotConfigured` and callers can gracefully fallback. This keeps CI green and avoids test failures when secrets are missing.
 - **Not yet wired into Flask.**
 - See `scripts/test_llm_client.py` for a smoke test.
+
+---
+
+### scripts/generate_answer.py — Local RAG synthesis
+
+Run end-to-end RAG answer generation from the command line:
+
+```
+python scripts/generate_answer.py --q "How do holidays accrue?" --topk 4
+python scripts/generate_answer.py --q "What’s our PTO carryover limit?" --topk 3 --dump out/pto.json
+```
+
+If `GROQ_API_KEY` is missing, the script returns an extractive summary ending with “(LLM disabled; extractive summary)”.
