@@ -1,4 +1,6 @@
 import requests, json, time, re, argparse
+import sys, os
+import sys
 
 def load_qa(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -10,18 +12,29 @@ def main():
     ap.add_argument("--file", type=str, default="data/eval/qa.jsonl")
     ap.add_argument("--topk", type=int, default=4)
     ap.add_argument("--timeout", type=int, default=10)
+    ap.add_argument("--inproc", action="store_true", help="Run evaluation in-process using Flask test client")
     args = ap.parse_args()
     qa = load_qa(args.file)
     rows = []
+    if args.inproc:
+        sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)) + "/..")
+        import app as app_module
+        client = app_module.app.test_client()
+        def ask_fn(question, topk):
+            r = client.post("/ask", json={"question": question, "topk": topk})
+            return r.get_json()
+    else:
+        def ask_fn(question, topk):
+            r = requests.post(f"{args.server}/ask", json={"question": question, "topk": topk}, timeout=args.timeout)
+            return r.json()
     for item in qa:
         qid = item["id"]
         question = item["question"]
         expected_keywords = item.get("expected_keywords", [])
         t0 = time.time()
         try:
-            r = requests.post(f"{args.server}/ask", json={"question": question, "topk": args.topk}, timeout=args.timeout)
+            data = ask_fn(question, args.topk)
             elapsed = int((time.time() - t0) * 1000)
-            data = r.json()
         except Exception as ex:
             rows.append({"id": qid, "error": str(ex)})
             continue
