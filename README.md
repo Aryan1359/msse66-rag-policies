@@ -165,5 +165,40 @@ numpy==1.26.4
 
 ---
 
+## Phase 3 additions
+
+### `/search` now includes `sources[]`
+The search API returns a compact citation list for evaluation and RAG:
+```json
+{
+  "mode": "keyword",
+  "query": "pto accrual",
+  "results": [ ... ],
+  "topk": 3,
+  "sources": [{"doc_id": "01-pto", "chunk_id": 1}]
+}
+```
+
+### Tiny evaluation
+
+Seed set (5 items): `data/eval/qa_sample.json`
+
+Run the evaluator against the local server:
+
+```bash
+python app.py
+# in another shell:
+python scripts/eval.py --qa data/eval/qa_sample.json --base-url http://127.0.0.1:8000 --mode keyword --topk 3
+```
+
+Outputs per-item overlap and a latency roll-up:
+
+```
+[summary] hits=5/5 (100%)
+[latency] min=..ms p50=..ms avg=..ms p95~=..ms
+```
+
+---
+
 **Maintainer:** Aryan Yaghobi ([https://github.com/Aryan1359](https://github.com/Aryan1359))
 **Mentor / Co‑Developer:** ChatGPT‑5
