@@ -101,7 +101,9 @@ def _vector_search(query: str, topk: int = 3):
 # HTTP routes
 # ============
 
-# API help block for root
+
+from flask import jsonify
+
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({
@@ -109,10 +111,10 @@ def home():
         "endpoints": {
             "/health": "Basic health check",
             "/search": {
-                "description": "Retrieve policy chunks (keyword or vector).",
+                "description": "Retrieve policy chunks via keyword (default) or vector search.",
                 "params": {
                     "q": "query string (required)",
-                    "topk": "int, default 3",
+                    "topk": "int, default 5",
                     "mode": "keyword|vector (default: keyword)"
                 },
                 "examples": [
@@ -120,14 +122,10 @@ def home():
                     "/search?q=remote%20work&topk=3&mode=keyword",
                     "/search?q=bereavement&topk=3&mode=vector"
                 ],
-                "response_fields": [
-                    "mode", "query", "results[]", "topk", "sources[]"
-                ]
+                "response_fields": ["mode", "query", "results[]", "topk", "sources[]"]
             }
         },
-        "defaults": {
-            "mode": "keyword"
-        }
+        "defaults": {"mode": "keyword"}
     })
 
 @app.get("/health")
