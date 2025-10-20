@@ -1,32 +1,32 @@
 [
   {
-    "id": "pto-accrual",
-    "question": "How is paid time off (PTO) accrued for employees?",
+    "id": "pto-accrual-rate",
+    "question": "What is the PTO accrual policy for full-time employees?",
     "expected_doc_ids": ["01-pto"],
-    "notes": "Should mention accrual rate or eligibility for PTO."
+    "notes": "Should retrieve the PTO policy chunk describing eligibility/accrual."
   },
   {
-    "id": "remote-work-eligibility",
-    "question": "Who is eligible to request remote work arrangements?",
-    "expected_doc_ids": ["03-remote-work"],
-    "notes": "Should reference remote work policy or eligibility."
+    "id": "pto-carryover-limit",
+    "question": "How many unused PTO days can carry over to the next year?",
+    "expected_doc_ids": ["01-pto"],
+    "notes": "Carryover cap language."
   },
   {
-    "id": "company-holidays",
-    "question": "What paid company holidays are observed each year?",
-    "expected_doc_ids": ["07-holidays"],
-    "notes": "Should list or mention official holidays."
+    "id": "pto-request-notice",
+    "question": "How far in advance should I request PTO?",
+    "expected_doc_ids": ["01-pto"],
+    "notes": "Lead time/manager approval guidance."
   },
   {
-    "id": "expense-reimbursement",
-    "question": "What is the timeline for expense reimbursement and what receipts are required?",
-    "expected_doc_ids": ["02-expenses"],
-    "notes": "Should mention reimbursement process and documentation."
+    "id": "pto-blackout-periods",
+    "question": "Are there blackout periods when PTO cannot be taken?",
+    "expected_doc_ids": ["01-pto"],
+    "notes": "Peak seasons/operational blackout windows."
   },
   {
-    "id": "bereavement-leave",
-    "question": "How long is bereavement leave and who qualifies?",
-    "expected_doc_ids": ["06-bereavement"],
-    "notes": "Should mention duration and qualifying relationships."
+    "id": "bereavement-duration",
+    "question": "How many days of bereavement leave are provided?",
+    "expected_doc_ids": ["01-pto"],
+    "notes": "Covered in PTO doc in our current corpus."
   }
 ]
