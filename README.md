@@ -214,13 +214,24 @@ A minimal LLM client (`scripts/llm_client.py`) is scaffolded for answer synthesi
 
 ---
 
+
 ### scripts/generate_answer.py — Local RAG synthesis
 
-Run end-to-end RAG answer generation from the command line:
+Run end-to-end RAG answer generation from the command line (module mode recommended):
 
 ```
-python scripts/generate_answer.py --q "How do holidays accrue?" --topk 4
-python scripts/generate_answer.py --q "What’s our PTO carryover limit?" --topk 3 --dump out/pto.json
+# default: keyword
+python -m scripts.generate_answer --q "How do holidays accrue?"
+# force vector via API server:
+RETRIEVAL_MODE=http python -m scripts.generate_answer --q "..."
+# force local vector (requires HF model available):
+RETRIEVAL_MODE=vector python -m scripts.generate_answer --q "..."
 ```
 
 If `GROQ_API_KEY` is missing, the script returns an extractive summary ending with “(LLM disabled; extractive summary)”.
+
+**Retrieval modes:**
+
+- `RETRIEVAL_MODE=keyword` (default, fastest, no HuggingFace download)
+- `RETRIEVAL_MODE=http` (calls local API server `/search?mode=vector`)
+- `RETRIEVAL_MODE=vector` (internal, requires HF model)

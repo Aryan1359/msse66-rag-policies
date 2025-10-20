@@ -1,3 +1,5 @@
+- 2025-10-20: Phase 4 Step 2 — Created feat/phase4-generator branch, added scripts/generate_answer.py (retrieval→prompt→LLM), fallback, CLI, test, docs, PR opened. See verification outputs below.
++- 2025-10-20: Phase 4 Step 2.2 — Added RETRIEVAL_MODE env flag (keyword|http|vector, default keyword), standardized python -m run pattern, and improved reliability for Codespaces/CI. CLI and test now work without PYTHONPATH or HF downloads.
 # PROGRESS LOG — Steps 1–7
 
 ## Step 1: Repo + Codespaces

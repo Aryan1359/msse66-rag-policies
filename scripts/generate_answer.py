@@ -8,68 +8,65 @@ import sys
 
 # --- Retrieval ---
 def retrieve(query: str, topk: int = 4) -> list:
-    # Try vector_search (internal)
-    try:
-        from scripts.vector_search import search as vector_search
-        hits = vector_search(query, topk=topk)
-        out = []
-        for h in hits:
-            t = h.get("text") or h.get("chunk") or h.get("content") or h.get("snippet")
-            if t is not None and str(t).strip():
-                out.append({
-                    "doc_id": h.get("doc_id"),
-                    "chunk_id": h.get("chunk_id"),
-                    "text": str(t).strip(),
-                    "score": float(h.get("score", 0)),
-                })
-        out.sort(key=lambda x: -x["score"])
-        return out[:topk]
-    except Exception:
-        pass
-    # Try HTTP to local API
-    try:
-        import httpx
-        url = f"http://127.0.0.1:8000/search?q={query}&topk={topk}&mode=vector"
-        r = httpx.get(url, timeout=10)
-        r.raise_for_status()
-        data = r.json()
-        results = data.get("results")
-        if results is None and isinstance(data, list):
-            results = data
-        elif results is None:
-            results = []
-        out = []
-        for h in results:
-            t = h.get("text") or h.get("chunk") or h.get("content") or h.get("snippet") or h.get("preview")
-            if t is not None and str(t).strip():
-                out.append({
-                    "doc_id": h.get("doc_id"),
-                    "chunk_id": h.get("chunk_id"),
-                    "text": str(t).strip(),
-                    "score": float(h.get("score", 0)),
-                })
-        out.sort(key=lambda x: -x["score"])
-        return out[:topk]
-    except Exception:
-        pass
-    # Fallback: keyword search
-    try:
-        from scripts.search_jsonl import search as kw_search
-        hits = kw_search(query, topk=topk)
-        out = []
-        for h in hits:
-            t = h.get("text") or h.get("chunk") or h.get("content") or h.get("snippet")
-            if t is not None and str(t).strip():
-                out.append({
-                    "doc_id": h.get("doc_id"),
-                    "chunk_id": h.get("chunk_id"),
-                    "text": str(t).strip(),
-                    "score": float(h.get("score", 0)),
-                })
-        out.sort(key=lambda x: -x["score"])
-        return out[:topk]
-    except Exception:
-        return []
+    mode = os.getenv("RETRIEVAL_MODE", "keyword").lower()
+    out = []
+    if mode == "vector":
+        try:
+            from scripts.vector_search import search as vector_search
+            hits = vector_search(query, topk=topk)
+            for h in hits:
+                t = h.get("text") or h.get("chunk") or h.get("content") or h.get("snippet")
+                if t is not None and str(t).strip():
+                    out.append({
+                        "doc_id": h.get("doc_id"),
+                        "chunk_id": h.get("chunk_id"),
+                        "text": str(t).strip(),
+                        "score": float(h.get("score", 0)),
+                    })
+        except Exception:
+            pass
+    elif mode == "http":
+        try:
+            import httpx
+            url = f"http://127.0.0.1:8000/search?q={query}&topk={topk}&mode=vector"
+            r = httpx.get(url, timeout=10)
+            r.raise_for_status()
+            data = r.json()
+            results = data.get("results")
+            if results is None and isinstance(data, list):
+                results = data
+            elif results is None:
+                results = []
+            for h in results:
+                t = h.get("text") or h.get("chunk") or h.get("content") or h.get("snippet") or h.get("preview")
+                if t is not None and str(t).strip():
+                    out.append({
+                        "doc_id": h.get("doc_id"),
+                        "chunk_id": h.get("chunk_id"),
+                        "text": str(t).strip(),
+                        "score": float(h.get("score", 0)),
+                    })
+        except Exception:
+            pass
+    else:  # keyword (default)
+        try:
+            from scripts.search_jsonl import search as kw_search
+            hits = kw_search(query, topk=topk)
+            for h in hits:
+                t = h.get("text") or h.get("chunk") or h.get("content") or h.get("snippet")
+                if t is not None and str(t).strip():
+                    out.append({
+                        "doc_id": h.get("doc_id"),
+                        "chunk_id": h.get("chunk_id"),
+                        "text": str(t).strip(),
+                        "score": float(h.get("score", 0)),
+                    })
+        except Exception:
+            pass
+    out.sort(key=lambda x: -x["score"])
+    import sys
+    print(f"[retrieval] mode={mode} hits={len(out)}", file=sys.stderr)
+    return out[:topk]
 
 # --- Prompt builder ---
 def build_prompt(question: str, chunks: list) -> str:
@@ -129,7 +126,7 @@ def run(question: str, topk: int = 4):
     }
     return out
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--q", "--question", dest="question", required=True)
     parser.add_argument("--topk", type=int, default=4)
@@ -140,3 +137,6 @@ if __name__ == "__main__":
     if args.dump:
         with open(args.dump, "w", encoding="utf-8") as f:
             json.dump(res, f, indent=2, ensure_ascii=False)
+
+if __name__ == "__main__":
+    main()

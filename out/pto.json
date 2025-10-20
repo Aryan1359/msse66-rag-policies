@@ -2,7 +2,7 @@
   "question": "What’s our PTO carryover limit?",
   "answer": "No relevant policy excerpts found. (LLM disabled; extractive summary)",
   "sources": [],
-  "retrieval_ms": 25709,
+  "retrieval_ms": 7,
   "llm_ms": 0,
   "model": "disabled",
   "tokens": 0
