@@ -1,0 +1,4 @@
+{"id": "pto-accrual", "question": "How does PTO accrue?", "expected_keywords": ["accrue", "1.5 days", "18 days", "PTO"]}
+{"id": "pto-carryover", "question": "What is the PTO carryover limit?", "expected_keywords": ["carry over", "5 unused days", "next calendar year"]}
+{"id": "expenses-receipt", "question": "What is the receipt requirement for expenses?", "expected_keywords": ["receipt", "$25", "itemized"]}
+{"id": "remote-core-hours", "question": "What are the core hours for remote work?", "expected_keywords": ["core hours", "10:00", "15:00", "Slack"]}

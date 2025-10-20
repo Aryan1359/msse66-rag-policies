@@ -1,0 +1,191 @@
+{
+  "rows": [
+    {
+      "id": "pto-accrual",
+      "has_sources": true,
+      "citation_present": false,
+      "citation_correct": true,
+      "keyword_hit": true,
+      "retrieval_ms": 0,
+      "llm_ms": 0,
+      "total_ms": 23,
+      "answer": "# Paid Time Off (PTO) Policy **Purpose:** Provide guidelines for requesting and approving PTO. ## Eligibility All full-time employees are eligible for PTO accrual starting Day 1. ## Accrual Employees accrue 1.5 days per month (18 days/year), pro-rated for partial months. ## Requests - Submit requests in the HR portal at least 7 calendar days in advance. - Manager approval is required.\n\n(LLM disabled; extractive summary)",
+      "sources": [
+        {
+          "chunk_id": 1,
+          "doc_id": "01-pto",
+          "score": 0.0
+        }
+      ],
+      "source_labels": {
+        "S1": {
+          "chunk_id": 1,
+          "doc_id": "01-pto"
+        }
+      }
+    },
+    {
+      "id": "pto-carryover",
+      "has_sources": true,
+      "citation_present": false,
+      "citation_correct": true,
+      "keyword_hit": false,
+      "retrieval_ms": 1,
+      "llm_ms": 0,
+      "total_ms": 1,
+      "answer": "# Paid Time Off (PTO) Policy **Purpose:** Provide guidelines for requesting and approving PTO. ## Eligibility All full-time employees are eligible for PTO accrual starting Day 1. ## Accrual Employees accrue 1.5 days per month (18 days/year), pro-rated for partial months. ## Requests - Submit requests in the HR portal at least 7 calendar days in advance. - Manager approval is required.\n\n(LLM disabled; extractive summary)",
+      "sources": [
+        {
+          "chunk_id": 1,
+          "doc_id": "01-pto",
+          "score": 0.0
+        },
+        {
+          "chunk_id": 2,
+          "doc_id": "01-pto",
+          "score": 0.0
+        },
+        {
+          "chunk_id": 1,
+          "doc_id": "02-expenses",
+          "score": 0.0
+        },
+        {
+          "chunk_id": 2,
+          "doc_id": "02-expenses",
+          "score": 0.0
+        }
+      ],
+      "source_labels": {
+        "S1": {
+          "chunk_id": 1,
+          "doc_id": "01-pto"
+        },
+        "S2": {
+          "chunk_id": 2,
+          "doc_id": "01-pto"
+        },
+        "S3": {
+          "chunk_id": 1,
+          "doc_id": "02-expenses"
+        },
+        "S4": {
+          "chunk_id": 2,
+          "doc_id": "02-expenses"
+        }
+      }
+    },
+    {
+      "id": "expenses-receipt",
+      "has_sources": true,
+      "citation_present": false,
+      "citation_correct": true,
+      "keyword_hit": false,
+      "retrieval_ms": 1,
+      "llm_ms": 0,
+      "total_ms": 1,
+      "answer": "# Paid Time Off (PTO) Policy **Purpose:** Provide guidelines for requesting and approving PTO. ## Eligibility All full-time employees are eligible for PTO accrual starting Day 1. ## Accrual Employees accrue 1.5 days per month (18 days/year), pro-rated for partial months. ## Requests - Submit requests in the HR portal at least 7 calendar days in advance. - Manager approval is required.\n\n(LLM disabled; extractive summary)",
+      "sources": [
+        {
+          "chunk_id": 1,
+          "doc_id": "01-pto",
+          "score": 0.0
+        },
+        {
+          "chunk_id": 1,
+          "doc_id": "02-expenses",
+          "score": 0.0
+        },
+        {
+          "chunk_id": 1,
+          "doc_id": "03-remote-work",
+          "score": 0.0
+        },
+        {
+          "chunk_id": 2,
+          "doc_id": "01-pto",
+          "score": 0.0
+        }
+      ],
+      "source_labels": {
+        "S1": {
+          "chunk_id": 1,
+          "doc_id": "01-pto"
+        },
+        "S2": {
+          "chunk_id": 1,
+          "doc_id": "02-expenses"
+        },
+        "S3": {
+          "chunk_id": 1,
+          "doc_id": "03-remote-work"
+        },
+        "S4": {
+          "chunk_id": 2,
+          "doc_id": "01-pto"
+        }
+      }
+    },
+    {
+      "id": "remote-core-hours",
+      "has_sources": true,
+      "citation_present": false,
+      "citation_correct": true,
+      "keyword_hit": true,
+      "retrieval_ms": 1,
+      "llm_ms": 0,
+      "total_ms": 1,
+      "answer": "# Remote & Hybrid Work Policy **Purpose:** Clarify expectations for remote/hybrid work arrangements. ## Eligibility Roles that can be performed effectively off-site are eligible with manager approval. ## Availability - Core hours: 10:00–15:00 local time - Be reachable on Slack and attend all required meetings. ## Security - Use company-managed devices when possible. - VPN is required for accessing internal systems.\n\n(LLM disabled; extractive summary)",
+      "sources": [
+        {
+          "chunk_id": 1,
+          "doc_id": "03-remote-work",
+          "score": 0.0
+        },
+        {
+          "chunk_id": 1,
+          "doc_id": "01-pto",
+          "score": 0.0
+        },
+        {
+          "chunk_id": 1,
+          "doc_id": "02-expenses",
+          "score": 0.0
+        },
+        {
+          "chunk_id": 2,
+          "doc_id": "02-expenses",
+          "score": 0.0
+        }
+      ],
+      "source_labels": {
+        "S1": {
+          "chunk_id": 1,
+          "doc_id": "03-remote-work"
+        },
+        "S2": {
+          "chunk_id": 1,
+          "doc_id": "01-pto"
+        },
+        "S3": {
+          "chunk_id": 1,
+          "doc_id": "02-expenses"
+        },
+        "S4": {
+          "chunk_id": 2,
+          "doc_id": "02-expenses"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "n": 4,
+    "grounded_rate": 1.0,
+    "citation_rate": 0.0,
+    "citation_correct_rate": 1.0,
+    "keyword_hit_rate": 0.5,
+    "mean_retrieval_ms": 0,
+    "mean_llm_ms": 0,
+    "mean_total_ms": 6
+  }
+}
