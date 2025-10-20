@@ -5,8 +5,8 @@ eval-ask:
 
 # CI Gate with default thresholds; override via env if desired
 # MIN_GROUNDED=0.75 MIN_CITATION=0.75 P95_MS=4000 make eval-gate
-eval-gate:
-	python scripts/eval_ask.py \
+	eval-gate:
+	PYTHONPATH=. python scripts/eval_ask.py \
 		--min-grounded $${MIN_GROUNDED:-0.75} \
 		--min-citation $${MIN_CITATION:-0.75} \
 		--p95-total $${P95_MS:-4000} \
