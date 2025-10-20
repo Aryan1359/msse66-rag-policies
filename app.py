@@ -100,9 +100,33 @@ def _vector_search(query: str, topk: int = 3):
 # ============
 # HTTP routes
 # ============
-@app.get("/")
-def root():
-    return "MSSE66 RAG — placeholder. Try GET /health", 200
+
+
+from flask import jsonify
+
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "app": "msse66-rag-policies",
+        "endpoints": {
+            "/health": "Basic health check",
+            "/search": {
+                "description": "Retrieve policy chunks via keyword (default) or vector search.",
+                "params": {
+                    "q": "query string (required)",
+                    "topk": "int, default 5",
+                    "mode": "keyword|vector (default: keyword)"
+                },
+                "examples": [
+                    "/search?q=pto%20accrual",
+                    "/search?q=remote%20work&topk=3&mode=keyword",
+                    "/search?q=bereavement&topk=3&mode=vector"
+                ],
+                "response_fields": ["mode", "query", "results[]", "topk", "sources[]"]
+            }
+        },
+        "defaults": {"mode": "keyword"}
+    })
 
 @app.get("/health")
 def health():
@@ -119,6 +143,14 @@ def search():
 
     if mode == "vector":
         payload, code = _vector_search(q, topk)
+        # build compact sources list from results (doc_id + chunk_id)
+        results = payload.get("results", []) if isinstance(payload, dict) else []
+        sources = [
+            {"doc_id": r.get("doc_id"), "chunk_id": int(r.get("chunk_id", 0))}
+            for r in results
+            if r.get("doc_id") is not None
+        ]
+        payload["sources"] = sources
         return jsonify(payload), code
 
     # keyword (default)
@@ -126,7 +158,20 @@ def search():
     if not recs:
         return jsonify({"error": f"missing index: {INDEX_JSONL}"}), 400
     results = _keyword_search(recs, q, topk)
-    return jsonify({"mode": "keyword", "query": q, "topk": topk, "results": results}), 200
+    # compact sources list
+    sources = [
+        {"doc_id": r.get("doc_id"), "chunk_id": int(r.get("chunk_id", 0))}
+        for r in results
+        if r.get("doc_id") is not None
+    ]
+    payload = {
+        "mode": "keyword",
+        "query": q,
+        "results": results,
+        "topk": topk,
+        "sources": sources,
+    }
+    return jsonify(payload), 200
 
 
 if __name__ == "__main__":
