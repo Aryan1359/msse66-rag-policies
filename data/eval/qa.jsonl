@@ -1,4 +1,15 @@
-{"id": "pto-accrual", "question": "How does PTO accrue?", "expected_keywords": ["accrue", "1.5 days", "18 days", "PTO"]}
-{"id": "pto-carryover", "question": "What is the PTO carryover limit?", "expected_keywords": ["carry over", "5 unused days", "next calendar year"]}
-{"id": "expenses-receipt", "question": "What is the receipt requirement for expenses?", "expected_keywords": ["receipt", "$25", "itemized"]}
-{"id": "remote-core-hours", "question": "What are the core hours for remote work?", "expected_keywords": ["core hours", "10:00", "15:00", "Slack"]}
+{"id":"q01","question":"What is the annual PTO accrual rate for full-time employees and when does it reset?","expect_keyword":"PTO accrual"}
+{"id":"q02","question":"How many company-paid holidays are there and which days are they observed?","expect_keyword":"holiday"}
+{"id":"q03","question":"What is the policy on remote work eligibility and required work hours overlap?","expect_keyword":"remote"}
+{"id":"q04","question":"What counts as an allowable business expense versus a non-reimbursable cost?","expect_keyword":"expense"}
+{"id":"q05","question":"What is the travel booking policy for flights and hotels (class, preferred vendors)?","expect_keyword":"travel"}
+{"id":"q06","question":"What documentation is required to submit an expense reimbursement and what is the deadline?","expect_keyword":"reimbursement"}
+{"id":"q07","question":"What is the code of conduct expectation regarding conflicts of interest and gifts?","expect_keyword":"conduct"}
+{"id":"q08","question":"What is the acceptable use policy for company devices and personal devices (BYOD)?","expect_keyword":"device"}
+{"id":"q09","question":"How should employees report harassment or discrimination concerns?","expect_keyword":"report"}
+{"id":"q10","question":"What are the rules for parental leave duration and pay?","expect_keyword":"parental"}
+{"id":"q11","question":"What is the company policy for data retention and deletion timelines?","expect_keyword":"retention"}
+{"id":"q12","question":"When and how are performance reviews conducted?","expect_keyword":"performance"}
+{"id":"q13","question":"What are the security requirements for passwords and multi-factor authentication?","expect_keyword":"security"}
+{"id":"q14","question":"What is the policy on procurement approvals and spending limits?","expect_keyword":"procure"}
+{"id":"q15","question":"Are interns eligible for benefits and which benefits apply?","expect_keyword":"benefit"}

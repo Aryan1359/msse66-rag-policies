@@ -1,29 +1,49 @@
-name: Eval /ask endpoint
+name: Evaluation Gate
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 jobs:
-  eval-ask:
+  eval:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - name: Install dependencies
+          python-version: "3.12"
+
+      - name: Install deps
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install requests
-      - name: Import app smoke
+
+      - name: Smoke import
         run: python -c "import app; print('app import OK')"
-      - name: Run eval-ask
-        run: make eval-ask
-      - name: Upload eval results
+
+      - name: Run evaluation gate (continue on error to upload artifacts)
+        id: eval
+        continue-on-error: true
+        run: |
+          make eval-gate
+
+      - name: Upload eval artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: eval_ask.json
-          path: out/eval_ask.json
+          name: eval-artifacts
+          path: |
+            data/eval/latest_metrics.json
+            data/eval/latest_metrics.md
+          if-no-files-found: warn
+
+      - name: Fail if gate failed
+        if: steps.eval.outcome == 'failure'
+        run: |
+          echo "Evaluation gate failed. See artifacts." >&2
+          exit 2
