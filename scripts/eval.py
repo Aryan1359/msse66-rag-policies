@@ -38,11 +38,15 @@ def main():
     item = data[0]
     qid = item.get("id")
     question = item.get("question")
+    expected_doc_ids = item.get("expected_doc_ids", [])
     print(f"[Q] {question}")
 
     doc_ids, latency_ms = run_search(question, args.base_url, args.mode, args.topk)
     print(f"[sources.doc_ids] {doc_ids}")
     print(f"[latency_ms] {latency_ms:.2f}")
+
+    overlap = bool(set(doc_ids) & set(expected_doc_ids))
+    print(f"[overlap] {overlap}")
 
 if __name__ == "__main__":
     main()
