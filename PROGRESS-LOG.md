@@ -30,3 +30,6 @@
 - `.github/workflows/ci.yml` runs on push/PR:
   - Setup Python, install deps, **import app** (smoke test).
 - Why: early detection of breakages.
+
+- 2025-10-19: Added compact `sources[]` to /search responses (feat/search-sources) and merged to main.
+- 2025-10-19: Added tiny eval set (5 items) and scripts/eval.py with overlap + latency summary (PR #12).
