@@ -1,3 +1,6 @@
+
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import time
 import json
 import argparse
@@ -9,15 +12,16 @@ def retrieve(query: str, topk: int = 4) -> list:
     try:
         from scripts.vector_search import search as vector_search
         hits = vector_search(query, topk=topk)
-        # Normalize
         out = []
         for h in hits:
-            out.append({
-                "doc_id": h.get("doc_id"),
-                "chunk_id": h.get("chunk_id"),
-                "text": h.get("text", ""),
-                "score": float(h.get("score", 0)),
-            })
+            t = h.get("text") or h.get("chunk") or h.get("content") or h.get("snippet")
+            if t is not None and str(t).strip():
+                out.append({
+                    "doc_id": h.get("doc_id"),
+                    "chunk_id": h.get("chunk_id"),
+                    "text": str(t).strip(),
+                    "score": float(h.get("score", 0)),
+                })
         out.sort(key=lambda x: -x["score"])
         return out[:topk]
     except Exception:
@@ -29,14 +33,21 @@ def retrieve(query: str, topk: int = 4) -> list:
         r = httpx.get(url, timeout=10)
         r.raise_for_status()
         data = r.json()
+        results = data.get("results")
+        if results is None and isinstance(data, list):
+            results = data
+        elif results is None:
+            results = []
         out = []
-        for h in data.get("results", []):
-            out.append({
-                "doc_id": h.get("doc_id"),
-                "chunk_id": h.get("chunk_id"),
-                "text": h.get("preview", ""),
-                "score": float(h.get("score", 0)),
-            })
+        for h in results:
+            t = h.get("text") or h.get("chunk") or h.get("content") or h.get("snippet") or h.get("preview")
+            if t is not None and str(t).strip():
+                out.append({
+                    "doc_id": h.get("doc_id"),
+                    "chunk_id": h.get("chunk_id"),
+                    "text": str(t).strip(),
+                    "score": float(h.get("score", 0)),
+                })
         out.sort(key=lambda x: -x["score"])
         return out[:topk]
     except Exception:
@@ -47,12 +58,14 @@ def retrieve(query: str, topk: int = 4) -> list:
         hits = kw_search(query, topk=topk)
         out = []
         for h in hits:
-            out.append({
-                "doc_id": h.get("doc_id"),
-                "chunk_id": h.get("chunk_id"),
-                "text": h.get("text", ""),
-                "score": float(h.get("score", 0)),
-            })
+            t = h.get("text") or h.get("chunk") or h.get("content") or h.get("snippet")
+            if t is not None and str(t).strip():
+                out.append({
+                    "doc_id": h.get("doc_id"),
+                    "chunk_id": h.get("chunk_id"),
+                    "text": str(t).strip(),
+                    "score": float(h.get("score", 0)),
+                })
         out.sort(key=lambda x: -x["score"])
         return out[:topk]
     except Exception:
@@ -88,9 +101,9 @@ def synthesize(question: str, chunks: list):
             # fallback to extractive
             pass
     # fallback: extractive summary
-    snippets = [c["text"] for c in chunks[:3] if c["text"]]
-    answer = " ".join(snippets).strip()
-    if answer:
+    snippets = [c["text"].strip().replace("\n", " ") for c in chunks[:3] if c.get("text") and str(c["text"]).strip()]
+    if snippets:
+        answer = " ".join(snippets)
         answer += "\n\n(LLM disabled; extractive summary)"
     else:
         answer = "No relevant policy excerpts found. (LLM disabled; extractive summary)"
