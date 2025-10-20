@@ -281,3 +281,44 @@ RETRIEVAL_MODE=vector python -m scripts.generate_answer --q "PTO accrual policy?
 
 - If 404 on `/ask`: kill old process, restart with `python app.py`.
 - If zero hits: ensure `data/index/policies.jsonl` exists (rebuild with `python scripts/index_jsonl.py`) and try `RETRIEVAL_MODE=keyword`.
+
+---
+
+## 📊 Evaluation & CI Gate
+
+This repo includes an automated evaluation for the `/ask` endpoint:
+
+**Metrics**
+- **Groundedness**: % of answers that include at least one citation (heuristic).
+- **Citation Accuracy**: % of answers where at least one cited source matches the retrieved/returned sources.
+- **Latency**: end-to-end time per question; we report p50 and p95 in milliseconds.
+
+**Thresholds (defaults)**
+- `--min-grounded 0.75`
+- `--min-citation 0.75`
+- `--p95-total 4000` (ms)
+
+The gate **fails** (exit code `2`) if *any* threshold is not met.
+
+**Run locally**
+```bash
+# quick sample run
+python scripts/eval_ask.py --limit 5
+
+# full gate with defaults
+make eval-gate
+
+# override thresholds
+MIN_GROUNDED=0.8 MIN_CITATION=0.8 P95_MS=3500 make eval-gate
+```
+
+**Artifacts**
+
+* `data/eval/latest_metrics.json` — machine-readable summary and per-item results
+* `data/eval/latest_metrics.md` — human-readable report shown in CI artifacts
+
+**CI Behavior**
+
+* On push/PR, GitHub Actions runs the evaluation gate.
+* Artifacts are uploaded even if the gate fails (for debugging).
+* The job fails at the end if thresholds aren’t met.
