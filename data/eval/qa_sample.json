@@ -1,0 +1,32 @@
+[
+  {
+    "id": "pto-accrual",
+    "question": "How is paid time off (PTO) accrued for employees?",
+    "expected_doc_ids": ["01-pto"],
+    "notes": "Should mention accrual rate or eligibility for PTO."
+  },
+  {
+    "id": "remote-work-eligibility",
+    "question": "Who is eligible to request remote work arrangements?",
+    "expected_doc_ids": ["03-remote-work"],
+    "notes": "Should reference remote work policy or eligibility."
+  },
+  {
+    "id": "company-holidays",
+    "question": "What paid company holidays are observed each year?",
+    "expected_doc_ids": ["07-holidays"],
+    "notes": "Should list or mention official holidays."
+  },
+  {
+    "id": "expense-reimbursement",
+    "question": "What is the timeline for expense reimbursement and what receipts are required?",
+    "expected_doc_ids": ["02-expenses"],
+    "notes": "Should mention reimbursement process and documentation."
+  },
+  {
+    "id": "bereavement-leave",
+    "question": "How long is bereavement leave and who qualifies?",
+    "expected_doc_ids": ["06-bereavement"],
+    "notes": "Should mention duration and qualifying relationships."
+  }
+]
