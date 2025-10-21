@@ -1,324 +1,181 @@
-# MSSE66 RAG — Company Policies Q&A
-## 🌐 Live Demo
 
+# MSSE66 RAG — Company Policies Q&A
+
+## 🌐 Live Demo
 Deployed on Render (Free Tier):  
 https://msse66-rag-policies.onrender.com
 
 **Health check**
 ```bash
 curl -sS https://msse66-rag-policies.onrender.com/health
-```
+````
 
 **Sample question**
+
+**Features:**
+* Fast keyword retrieval (local, simple)
+* Grounded answers with citations (`sources[]`)
+* Automated evaluation & CI gate (groundedness, citation, latency)
+* One-click deploy on Render (Procfile + gunicorn)
+* Extractive summary (LLM disabled)
+
+
 ```bash
 curl -sS -X POST https://msse66-rag-policies.onrender.com/ask \
   -H "Content-Type: application/json" \
   -d '{"question":"What is the PTO policy?"}'
 ```
 
-Retrieval‑Augmented Generation (RAG) app that answers questions about a small corpus of **company policies**. Built as part of the **MSSE66+ AI Engineering Project**, aligned to the rubric (environment, CI, ingestion, retrieval, embeddings, evaluation).
+---
+
 
 ---
 
-## 📌 Status (end of Phase 3)
+## 🤝 How to contribute
 
-✅ Repo + CI green
-✅ Keyword retrieval working (`/search?mode=keyword`)
-✅ Local sentence‑transformer embeddings created (`all‑MiniLM‑L6‑v2`)
-✅ Vector retrieval working (`/search?mode=vector`)
-✅ Consistent JSON responses (`mode`, `query`, `topk`, `results`, `doc_id`, `chunk_id`, `score`, `preview`)
-✅ Next step → add `sources` array + mini evaluation dataset
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+---
+## 🧭 Overview
+
+A Retrieval-Augmented Generation (RAG) app that answers questions about a small corpus of **company policies**.
+Focus areas:
+
+* **Ingestion & keyword retrieval** (local, simple & fast)
+* **Grounded answers** with citations via `sources[]`
+* **Automated evaluation & CI gate** (groundedness, citation accuracy, latency)
+* **One-click deploy** on Render (Procfile + `gunicorn`)
+
+Current `/ask` behavior: **extractive summary** (LLM disabled), with returned `sources[]` for grounding.
 
 ---
 
-## 🚀 Quickstart (GitHub Codespaces)
+## ✅ Current Status (v0.7.1)
+
+* Endpoints: `/`, `/health`, `/search`, `/ask`
+* Keyword retrieval working end-to-end
+* `/ask` returns: `answer`, `question`, `sources[]`, `source_labels`, timing fields
+* **Evaluation Gate** in CI with thresholds (p95 latency + grounding/citation rates)
+* Deployment scaffold merged; live service on **Render**
+
+Tag history:
+`v0.4.0` (RAG synthesis scaffold) → `v0.5.0` (eval hook) → `v0.6.0` (CI gate) → `v0.7.0` (deploy scaffold) → **`v0.7.1` (Live Demo docs)**
+
+---
+
+## 🚀 Quickstart (Local / Codespaces)
 
 ```bash
-# 1) Activate virtual env
-source .venv/bin/activate
+# 1) Activate virtual env
+source .venv/bin/activate
 
-# 2) (Re)build JSONL index if policies changed
-python scripts/index_jsonl.py
+# 2) (Re)build the lightweight keyword index
+python scripts/index_jsonl.py
 
-# 3) Generate embeddings (if not yet done)
-python scripts/embed_index.py
-
-# 4) Run the Flask app (port 8000)
-python app.py
+# 3) Run the Flask app on port 8000
+python app.py
 ```
 
-**Test endpoints:**
+**Test endpoints (local):**
 
 ```bash
-# Health check
-curl "http://127.0.0.1:8000/health"
+# Health
+curl "http://127.0.0.1:8000/health"
 
-# Keyword search (default)
-curl "http://127.0.0.1:8000/search?q=pto%20accrual&topk=3"
+# Keyword search
+curl "http://127.0.0.1:8000/search?q=pto%20policy&topk=3"
 
-# Vector search
-curl "http://127.0.0.1:8000/search?q=pto%20accrual%20policy&mode=vector&topk=3"
+# Ask (POST)
+curl -s -X POST http://127.0.0.1:8000/ask \
+  -H "Content-Type: application/json" \
+  -d '{"question":"What is the PTO policy?"}'
 ```
 
->  If you’re using Codespaces browser preview, use your forwarded URL like `https://<id>-8000.app.github.dev/`.
+> Using Codespaces preview? Open the forwarded URL like `https://<id>-8000.app.github.dev/`.
 
 ---
 
-## 📁 Repository Structure
+## 🧩 API
 
-```
-msse66‑rag‑policies/
-├─ app.py                        # Flask app (/, /health, /search)
-├─ data/
-│  ├─ policies/                    # Markdown policy documents
-│  │  ├─ 01‑pto.md
-│  │  ├─ 02‑expenses.md
-│  │  └─ 03‑remote‑work.md
-│  └─ index/
-│    ├─ policies.jsonl            # Chunked index
-│    ├─ policies.npy              # Embedding matrix
-│    └─ meta.json                  # Model metadata + id map
-├─ scripts/
-│  ├─ ingest.py                  # Document stats
-│  ├─ chunk.py                   # Overlapping chunker
-│  ├─ index_jsonl.py            # Build index
-│  ├─ embed_index.py            # Encode chunks → vectors
-│  └─ vector_search.py         # NumPy cosine retriever
-├─ .github/workflows/ci.yml        # CI smoke test
-├─ requirements.txt
-├─ Instruction.md
-├─ LEARNING‑GUIDE.md
-├─ checklist.md
-└─ PROGRESS‑LOG.md
-```
+### GET `/health`
 
----
+Returns `{"status":"ok"}`.
 
-## 🧩 Implemented Endpoints
+### GET `/search`
 
-### GET `/health`
-→ `{"status":"ok"}`
+Query string parameters:
 
-### GET `/search`
+| Param  | Type   | Default   | Description                             |
+| :----- | :----- | :-------- | :-------------------------------------- |
+| `q`    | string | —         | Query text                              |
+| `topk` | int    | `3`       | Number of results                       |
+| `mode` | string | `keyword` | Retrieval mode (`keyword` or `vector`)* |
 
-|  Param   |  Type    |  Default    |  Description                          |
-| :------- | :------- | :---------- | :------------------------------------ |
-|  `q`     |  string  |  —          |  Query text                           |
-|  `topk`  |  int     |  3          |  Top‑k results                        |
-|  `mode`  |  string  |  `keyword`  |  Search type (`keyword` or `vector`)  |
+> *Vector mode is scaffolded; keyword is the default and used in production today.
 
-**Example (keyword):**
+**Response shape (example):**
 
-```bash
-curl "http://127.0.0.1:8000/search?q=vacation%20policy&topk=3"
-```
-
-Response:
-
-```json
-{
- "mode": "keyword",
- "query": "vacation policy",
- "topk": 3,
- "results": [
-  {"doc_id": "01‑pto", "chunk_id": 1, "score": 5.0, "preview": "# Paid Time Off…"}
- ]
-}
-```
-
-**Example (vector):**
-
-```bash
-curl "http://127.0.0.1:8000/search?q=pto%20accrual%20policy&mode=vector&topk=3"
-```
-
-Response:
-
-```json
-{
- "mode": "vector",
- "query": "pto accrual policy",
- "topk": 3,
- "results": [
-  {"doc_id": "01‑pto", "chunk_id": 1, "score": 0.65, "preview": "# Paid Time Off…"},
-  {"doc_id": "02‑expenses", "chunk_id": 1, "score": 0.42, "preview": "# Employee Expense…"}
- ]
-}
-```
-
----
-
-## 🧠 Phase Summary
-
-|  Phase  |  Goal                           |  Key Outputs                                         |
-| :------ | :------------------------------ | :--------------------------------------------------- |
-|  1      |  Environment + Flask setup      |  `app.py` (/, /health)                               |
-|  2      |  Ingestion + keyword retrieval  |  `policies.jsonl`, `/search?mode=keyword`            |
-|  3      |  Embeddings + vector search     |  `policies.npy`, `meta.json`, `/search?mode=vector`  |
-|  4      |  Answer synthesis (LLM)         |  pending                                             |
-|  5      |  Evaluation metrics             |  pending                                             |
-|  6      |  Deployment (Render/Vercel)     |  pending                                             |
-
----
-
-## 🧮 Dependencies
-
-```
-Flask==3.0.3
-python‑dotenv==1.0.1
-sentence‑transformers==2.7.0
-numpy==1.26.4
-```
-
----
-
-## 🧭 Next Phase Plan
-
-1️⃣ Add `sources` array to each response (`[{doc_id, chunk_id}]`).
-2️⃣ Keep default `mode=keyword`, document `mode=vector`.
-3️⃣ Seed tiny Q&A evaluation dataset (`data/eval/`).
-4️⃣ Add CI latency + groundedness metrics.
-
----
-
-## Phase 3 additions
-
-### `/search` now includes `sources[]`
-The search API returns a compact citation list for evaluation and RAG:
 ```json
 {
   "mode": "keyword",
-  "query": "pto accrual",
-  "results": [ ... ],
+  "query": "pto policy",
   "topk": 3,
-  "sources": [{"doc_id": "01-pto", "chunk_id": 1}]
+  "results": [
+    {"doc_id":"01-pto","chunk_id":1,"score":5.0,"preview":"# Paid Time Off …"}
+  ],
+  "sources": [{"doc_id":"01-pto","chunk_id":1}]
 }
 ```
 
-### Tiny evaluation
+### POST `/ask`
 
-Seed set (5 items): `data/eval/qa_sample.json`
+Body:
 
-Run the evaluator against the local server:
-
-```bash
-python app.py
-# in another shell:
-python scripts/eval.py --qa data/eval/qa_sample.json --base-url http://127.0.0.1:8000 --mode keyword --topk 3
+```json
+{"question": "<your question>", "topk": 4}
 ```
 
-Outputs per-item overlap and a latency roll-up:
+**Response shape (example):**
 
+```json
+{
+  "answer": "…extractive summary…",
+  "question": "What is the PTO policy?",
+  "retrieval_ms": 18,
+  "llm_ms": 0,
+  "model": "disabled",
+  "source_labels": {"S1":{"doc_id":"01-pto","chunk_id":1}},
+  "sources": [
+    {"doc_id":"01-pto","chunk_id":1,"score":0.0}
+  ],
+  "tokens": 0
+}
 ```
-[summary] hits=5/5 (100%)
-[latency] min=..ms p50=..ms avg=..ms p95~=..ms
-```
-
----
-
-## Phase 4 – RAG Answer Synthesis (WIP)
-
-
-## Phase 4 – RAG Answer Synthesis
-
-### scripts/generate_answer.py (retrieval → prompt → LLM → citations)
-
-- End-to-end RAG answer generation: retrieves top policy chunks, builds a prompt, calls the LLM (if configured), and post-processes the answer.
-- If LLM is not configured, falls back to extractive summary with a clear note.
-- CLI usage (module mode recommended):
-
-  ```bash
-  python -m scripts.generate_answer --q "What’s our PTO carryover limit?" --topk 3
-  # Retrieval modes:
-  #   RETRIEVAL_MODE=keyword (default, no embeddings needed)
-  #   RETRIEVAL_MODE=http (calls /search?mode=vector)
-  #   RETRIEVAL_MODE=vector (local, needs embeddings)
-  ```
-
-### /ask endpoint (POST + GET)
-
-- Unified endpoint for RAG answer synthesis.
-- Returns JSON with:
-  - `question`, `answer`, `sources`, `source_labels`, `retrieval_ms`, `llm_ms`, `model`, `tokens`
-- `source_labels` is a mapping `{S1: {doc_id, chunk_id}, ...}` matching the order of `sources[]`.
-- **Citation format:** Answers include inline `[S1]`, `[S2]`, ... that correspond 1:1 to the returned `sources[]` and `source_labels`.
-
-#### Quickstart
-
-Run server:
-
-```bash
-python app.py
-```
-
-Ask a question (POST):
-
-```bash
-curl -s -X POST http://127.0.0.1:8000/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question":"How do holidays accrue?","topk":4}' | jq
-```
-
-Ask a question (GET):
-
-```bash
-curl -s "http://127.0.0.1:8000/ask?q=PTO%20accrual%20policy%3F&topk=3" | jq
-```
-
-CLI generator (module mode):
-
-```bash
-python -m scripts.generate_answer --q "What’s our PTO carryover limit?" --topk 3
-```
-
-#### Retrieval modes
-
-Set the environment variable `RETRIEVAL_MODE=keyword|http|vector` (default: `keyword`).
-
-```bash
-# default keyword (no embeddings required)
-python -m scripts.generate_answer --q "PTO accrual policy?" --topk 4
-
-# force HTTP vector (server must be running)
-RETRIEVAL_MODE=http python -m scripts.generate_answer --q "PTO accrual policy?" --topk 4
-
-# force local vector (requires embeddings available)
-RETRIEVAL_MODE=vector python -m scripts.generate_answer --q "PTO accrual policy?" --topk 4
-```
-
-#### LLM configuration
-
-- `GROQ_API_KEY` (required for LLM calls)
-- `RAG_MODEL` (default: llama-3.1-8b-instruct)
-- `RAG_MAX_TOKENS` (default: 512)
-- If no API key is present, the system falls back to extractive summary with a note: `(LLM disabled; extractive summary)`
-
-#### Troubleshooting
-
-- If 404 on `/ask`: kill old process, restart with `python app.py`.
-- If zero hits: ensure `data/index/policies.jsonl` exists (rebuild with `python scripts/index_jsonl.py`) and try `RETRIEVAL_MODE=keyword`.
 
 ---
 
 ## 📊 Evaluation & CI Gate
 
-This repo includes an automated evaluation for the `/ask` endpoint:
+Automated evaluation for `/ask` lives in **`scripts/eval_ask.py`** and is wired into CI (**`.github/workflows/eval.yml`**).
 
 **Metrics**
-- **Groundedness**: % of answers that include at least one citation (heuristic).
-- **Citation Accuracy**: % of answers where at least one cited source matches the retrieved/returned sources.
-- **Latency**: end-to-end time per question; we report p50 and p95 in milliseconds.
+
+* **Groundedness**: % of answers returning a non-empty `sources[]`.
+* **Citation Accuracy**: (heuristic) at least one cited source matches returned sources.
+* **Latency**: end-to-end time; we report p50 and p95 (ms) without NumPy.
 
 **Thresholds (defaults)**
-- `--min-grounded 0.75`
-- `--min-citation 0.75`
-- `--p95-total 4000` (ms)
 
-The gate **fails** (exit code `2`) if *any* threshold is not met.
+* `--min-grounded 0.75`
+* `--min-citation 0.75`
+* `--p95-total 4000` (ms)
+
+The gate **fails** (exit code `2`) if any threshold is missed.
 
 **Run locally**
+
 ```bash
-# quick sample run
+# quick sample
 python scripts/eval_ask.py --limit 5
 
 # full gate with defaults
@@ -328,35 +185,68 @@ make eval-gate
 MIN_GROUNDED=0.8 MIN_CITATION=0.8 P95_MS=3500 make eval-gate
 ```
 
-**Artifacts**
+**Artifacts** (written locally and uploaded in CI)
 
-* `data/eval/latest_metrics.json` — machine-readable summary and per-item results
-* `data/eval/latest_metrics.md` — human-readable report shown in CI artifacts
+* `data/eval/latest_metrics.json` — machine-readable summary + per-item results
+* `data/eval/latest_metrics.md` — human-readable report
 
-**CI Behavior**
+---
 
-* On push/PR, GitHub Actions runs the evaluation gate.
-* Artifacts are uploaded even if the gate fails (for debugging).
-* The job fails at the end if thresholds aren’t met.
+## 📁 Repository Structure
+
+```
+msse66-rag-policies/
+├─ app.py                      # Flask app (/, /health, /search, /ask)
+├─ data/
+│  ├─ policies/                # Markdown policy docs
+│  └─ index/                   # Built indexes (keyword; vector hooks)
+├─ scripts/
+│  ├─ index_jsonl.py           # Build keyword index
+│  ├─ search_jsonl.py          # Local keyword search CLI
+│  ├─ embed_index.py           # (scaffold) Build embeddings
+│  ├─ vector_search.py         # (scaffold) Cosine similarity search
+│  └─ eval_ask.py              # Eval metrics + CI gate (p95, thresholds, artifacts)
+├─ .github/workflows/eval.yml  # Evaluation workflow
+├─ Makefile                    # `make eval-gate`
+├─ Procfile                    # Production entrypoint (gunicorn)
+├─ render/render.yaml          # Render service config (free plan)
+├─ requirements.txt
+├─ PROGRESS-LOG.md
+├─ LEARNING-GUIDE.md
+├─ checklist.md
+└─ Instruction.md
+```
 
 ---
 
 ## 🚀 Deployment (Render Free Tier)
 
-**What’s included**
-- `Procfile` for a production entrypoint (`gunicorn app:app`).
-- `render/render.yaml` service definition (free plan).
-- `requirements.txt` includes `gunicorn`.
+Included:
 
-**One-time setup**
-1. Push `main` to GitHub (already done).
-2. In Render, click **New > Web Service** and select this repo.
-3. Confirm the build/start commands match `render.yaml`.
-4. Set **Health Check Path** to `/health`.
+* `Procfile` → `gunicorn app:app --bind 0.0.0.0:${PORT} --timeout 120`
+* `render/render.yaml` (free plan)
+* `requirements.txt` includes `gunicorn`
+
+One-time setup:
+
+1. In Render: **New → Web Service → select repo**
+2. Build command: `pip install -r requirements.txt`
+3. Start command: `gunicorn app:app --bind 0.0.0.0:${PORT} --timeout 120`
+4. Health check path: `/health`
+5. Env vars: `PYTHON_VERSION=3.12.1`, `FLASK_ENV=production`
 
 **Local prod-like run**
+
 ```bash
 pip install -r requirements.txt
 PORT=8000 gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120
 # open http://127.0.0.1:8000/health
 ```
+
+---
+
+## 👤 Maintainer
+
+* Aryan Yaghobi — [https://github.com/Aryan1359](https://github.com/Aryan1359)
+
+````
