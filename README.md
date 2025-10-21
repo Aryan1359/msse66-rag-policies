@@ -33,6 +33,11 @@ curl -sS https://msse66-rag-policies.onrender.com/health
 * One-click deploy on Render (Procfile + gunicorn)
 * Extractive summary (LLM disabled)
 
+**Supported file types:**
+- Markdown (.md), text (.txt), and PDF (.pdf) files can be uploaded, indexed, and used for Q&A.
+- Deleting a file removes its content from the index and future answers.
+- PDF support requires PyPDF2 (included in requirements.txt).
+
 
 ```bash
 curl -sS -X POST https://msse66-rag-policies.onrender.com/ask \

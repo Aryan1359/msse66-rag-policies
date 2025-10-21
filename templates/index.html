@@ -5,15 +5,13 @@
     <p class="muted">This section will list indexed policy files and allow upload/delete. Coming next.</p>
     <div class="row">
       <div class="col">
-        <label class="muted">Upload (coming next)</label><br/>
-        <input type="file" disabled />
-        <button class="primary" disabled>Upload</button>
+  <input type="file" id="upload-file" />
+  <button class="primary" id="btn-upload">Upload</button>
+  <div id="upload-msg" class="muted" style="margin-top:6px;"></div>
       </div>
       <div class="col">
-        <label class="muted">Indexed Files (placeholder)</label>
-        <ul id="file-list">
-          <li class="muted">No files loaded (scaffold)</li>
-        </ul>
+        <label class="muted">Indexed Files</label>
+        <ul id="file-list" class="muted"><li>Loading…</li></ul>
       </div>
     </div>
   </section>
