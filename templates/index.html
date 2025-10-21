@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+  <section>
+    <h2>Files</h2>
+    <p class="muted">This section will list indexed policy files and allow upload/delete. Coming next.</p>
+    <div class="row">
+      <div class="col">
+        <label class="muted">Upload (coming next)</label><br/>
+        <input type="file" disabled />
+        <button class="primary" disabled>Upload</button>
+      </div>
+      <div class="col">
+        <label class="muted">Indexed Files (placeholder)</label>
+        <ul id="file-list">
+          <li class="muted">No files loaded (scaffold)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Ask a Question</h2>
+    <p class="muted">Ask about company policies. Answers will include citations. (Disabled in scaffold.)</p>
+    <textarea rows="3" id="q" placeholder="e.g., How does PTO accrual work?" disabled></textarea>
+    <div style="margin-top:8px;">
+      <button class="primary" disabled>Ask</button>
+    </div>
+    <div id="answer" class="muted" style="margin-top:10px;">No answer yet.</div>
+  </section>
+
+  <section>
+    <h2>System</h2>
+    <p class="muted">Health: <code class="kbd">/health</code> • Search API: <code class="kbd">/search?q=pto&topk=3</code></p>
+  </section>
+{% endblock %}

@@ -1,12 +1,12 @@
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import sys
 
 app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
-def home():
-    return "OK", 200
+def ui_home():
+    return render_template("index.html")
 
 @app.route("/health", methods=["GET"])
 def health():
