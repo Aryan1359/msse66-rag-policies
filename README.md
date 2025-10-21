@@ -1,6 +1,20 @@
 
 # MSSE66 RAG — Company Policies Q&A
 
+## Live Demo
+Deployed on Render:
+https://example-render-url.onrender.com
+
+**Health check**
+```bash
+curl -sSL https://example-render-url.onrender.com/health
+```
+
+**Sample /ask request**
+```bash
+curl -sSL -X POST https://example-render-url.onrender.com/ask -H 'Content-Type: application/json' -d '{"question": "What is the PTO policy?"}'
+```
+
 ## 🌐 Live Demo
 Deployed on Render (Free Tier):  
 https://msse66-rag-policies.onrender.com
