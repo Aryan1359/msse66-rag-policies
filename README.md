@@ -1,4 +1,20 @@
 # MSSE66 RAG — Company Policies Q&A
+## 🌐 Live Demo
+
+Deployed on Render (Free Tier):  
+https://msse66-rag-policies.onrender.com
+
+**Health check**
+```bash
+curl -sS https://msse66-rag-policies.onrender.com/health
+```
+
+**Sample question**
+```bash
+curl -sS -X POST https://msse66-rag-policies.onrender.com/ask \
+  -H "Content-Type: application/json" \
+  -d '{"question":"What is the PTO policy?"}'
+```
 
 Retrieval‑Augmented Generation (RAG) app that answers questions about a small corpus of **company policies**. Built as part of the **MSSE66+ AI Engineering Project**, aligned to the rubric (environment, CI, ingestion, retrieval, embeddings, evaluation).
 
