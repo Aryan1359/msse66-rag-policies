@@ -1,8 +1,59 @@
 
+import os
+import json
+import time
 from flask import Flask, request, jsonify, render_template
-import sys
-
 app = Flask(__name__)
+
+
+
+# --- Files API (read-only) ---
+INDEX_JSONL = os.path.join("data", "index", "policies.jsonl")
+POLICIES_DIR = os.path.join("data", "policies")
+
+def _infer_name(rec):
+    for k in ("source", "path", "file"):
+        v = rec.get(k)
+        if isinstance(v, str) and v.strip():
+            return os.path.basename(v)
+    meta = rec.get("meta") or {}
+    for k in ("source", "path", "file"):
+        v = meta.get(k)
+        if isinstance(v, str) and v.strip():
+            return os.path.basename(v)
+    v = rec.get("doc_id") or meta.get("doc_id")
+    if isinstance(v, str) and v.strip():
+        return v
+    return "unknown"
+
+@app.route("/api/files")
+def api_files():
+    files = {}
+    if os.path.exists(INDEX_JSONL):
+        with open(INDEX_JSONL, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rec = json.loads(line)
+                except Exception:
+                    continue
+                name = _infer_name(rec)
+                info = files.setdefault(name, {"name": name, "chunk_count": 0, "mtime": None})
+                info["chunk_count"] += 1
+    for name, info in files.items():
+        p = os.path.join(POLICIES_DIR, name)
+        if os.path.exists(p):
+            try:
+                info["mtime"] = os.path.getmtime(p)
+            except Exception:
+                info["mtime"] = None
+    return jsonify({
+        "files": sorted(files.values(), key=lambda x: x["name"].lower()),
+        "count": len(files)
+    })
+
 
 @app.route("/", methods=["GET"])
 def ui_home():
