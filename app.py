@@ -177,12 +177,21 @@ def ask():
         return jsonify({"error": "question is required"}), 400
     from scripts.generate_answer import run as rag_run
     res = rag_run(question, topk=topk)
-    source_labels = {f"S{i+1}": {"doc_id": s["doc_id"], "chunk_id": s["chunk_id"]} for i, s in enumerate(res.get("sources", []))}
+    answer_text = res.get("answer", "")
+    sources = res.get("sources", [])
+    # Build a clean sources array for frontend rendering
+    sources_list = []
+    for i, s in enumerate(sources, 1):
+        sources_list.append({
+            "label": f"S{i}",
+            "doc_id": s.get("doc_id", "?"),
+            "chunk_id": s.get("chunk_id", "?"),
+            "score": s.get("score", 0)
+        })
     payload = {
         "question": res.get("question", question),
-        "answer": res.get("answer", ""),
-        "sources": res.get("sources", []),
-        "source_labels": source_labels,
+        "answer": answer_text,
+        "sources": sources_list,
         "retrieval_ms": res.get("retrieval_ms", 0),
         "llm_ms": res.get("llm_ms", 0),
         "model": res.get("model", ""),

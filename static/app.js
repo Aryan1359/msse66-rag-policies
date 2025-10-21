@@ -1,29 +1,43 @@
 async function loadFiles() {
-	const ul = document.getElementById("file-list");
-	if (!ul) return;
+	const table = document.getElementById("file-list");
+	if (!table) return;
+	console.log("loadFiles called");
+	let tbody = table.querySelector("tbody");
+	if (!tbody) {
+		tbody = document.createElement("tbody");
+		table.appendChild(tbody);
+	}
 	try {
 		const r = await fetch("/api/files");
 		if (!r.ok) throw new Error("HTTP " + r.status);
 		const data = await r.json();
-		ul.innerHTML = "";
+		tbody.innerHTML = "";
 		if (!data.files || data.files.length === 0) {
-			ul.innerHTML = '<li class="muted">No indexed files</li>';
+			tbody.innerHTML = '<tr><td colspan="4" class="muted" style="text-align:center;">No indexed files</td></tr>';
 			return;
 		}
-						for (const f of data.files) {
-								const when = f.mtime ? new Date(f.mtime * 1000).toLocaleString() : "—";
-								const li = document.createElement("li");
-								li.innerHTML = `
-									<a href="/api/files/raw/${encodeURIComponent(f.name)}" target="_blank" rel="noopener">
-										<strong>${f.name}</strong>
-									</a>
-									<span class="muted">(${f.chunk_count} chunks, mtime: ${when})</span>
-									<button class="danger" data-name="${f.name}" style="margin-left:10px;">Delete</button>
-								`;
-								ul.appendChild(li);
+		for (const f of data.files) {
+			const name = (f.name || "").trim();
+			const when = f.mtime ? new Date(f.mtime * 1000).toLocaleString() : "—";
+			const tr = document.createElement("tr");
+			tr.innerHTML = `
+				<td style="padding:6px 8px;">
+					<a href="/api/files/raw/${encodeURIComponent(name)}" target="_blank" rel="noopener">
+						<strong>${name}</strong>
+					</a>
+				</td>
+				<td style="text-align:center; padding:6px 8px;">${f.chunk_count}</td>
+				<td style="text-align:center; padding:6px 8px;">${when}</td>
+				<td style="text-align:center; padding:6px 8px;">
+					<button class="danger" data-name="${name}" title="Delete" style="border:none; background:none; padding:0; cursor:pointer;">
+						<span style="font-size:18px; color:#991b1b;">&#128465;</span>
+					</button>
+				</td>
+			`;
+			tbody.appendChild(tr);
 		}
 	} catch (e) {
-		ul.innerHTML = `<li class="muted">Failed to load: ${e.message}</li>`;
+		tbody.innerHTML = `<tr><td colspan="4" class="muted" style="text-align:center;">Failed to load: ${e.message}</td></tr>`;
 	}
 }
 
@@ -70,12 +84,54 @@ document.addEventListener("DOMContentLoaded", () => {
 	loadFiles();
 	const btn = document.getElementById("btn-upload");
 	if (btn) btn.addEventListener("click", uploadFile);
-	const ul = document.getElementById("file-list");
-	if (ul) {
-		ul.addEventListener("click", (ev) => {
-			const t = ev.target;
-			if (t && t.matches("button.danger[data-name]")) {
+	const table = document.getElementById("file-list");
+	if (table) {
+		table.addEventListener("click", (ev) => {
+			const t = ev.target.closest("button.danger[data-name]");
+			if (t) {
 				deleteFile(t.getAttribute("data-name"));
+			}
+		});
+	}
+
+	// Ask a Question logic
+	const askBtn = document.getElementById("btn-ask");
+	const qBox = document.getElementById("q");
+	const answerDiv = document.getElementById("answer");
+	if (askBtn && qBox && answerDiv) {
+		askBtn.addEventListener("click", async () => {
+			const question = qBox.value.trim();
+			if (!question) {
+				answerDiv.textContent = "Please enter a question.";
+				return;
+			}
+			askBtn.disabled = true;
+			answerDiv.textContent = "Thinking...";
+			try {
+				const r = await fetch("/ask", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ question })
+				});
+				const text = await r.text();
+				let data = null;
+				try { data = JSON.parse(text); } catch {}
+				if (!r.ok) throw new Error((data && data.error) || text || `HTTP ${r.status}`);
+				// Format answer and sources
+				let html = "";
+				html += `<div style='font-size:16px; margin-bottom:10px;'><strong>Answer:</strong><br>${data.answer || "No answer."}</div>`;
+				if (data.sources && data.sources.length > 0) {
+					html += `<div style='margin-top:8px;'><strong>Sources:</strong><ul style='margin:6px 0 0 16px; padding:0;'>`;
+					for (const s of data.sources) {
+						html += `<li>[${s.label}] <span style='color:#374151;'>doc_id:</span> <code>${s.doc_id}</code>, <span style='color:#374151;'>chunk_id:</span> <code>${s.chunk_id}</code></li>`;
+					}
+					html += `</ul></div>`;
+				}
+				answerDiv.innerHTML = html;
+			} catch (e) {
+				answerDiv.textContent = `Error: ${e.message}`;
+			} finally {
+				askBtn.disabled = false;
 			}
 		});
 	}

@@ -1,33 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
   <section>
-    <h2>Files</h2>
-    <p class="muted">This section will list indexed policy files and allow upload/delete. Coming next.</p>
+    <h2>File Management</h2>
     <div class="row">
-      <div class="col">
-  <input type="file" id="upload-file" />
-  <button class="primary" id="btn-upload">Upload</button>
-  <div id="upload-msg" class="muted" style="margin-top:6px;"></div>
+      <div class="col" style="min-width:260px;">
+        <label for="upload-file" class="muted" style="font-weight:500;">Upload New Policy File</label>
+        <input type="file" id="upload-file" style="margin-top:8px;" />
+        <button class="primary" id="btn-upload" style="margin-top:8px;">Upload</button>
+        <div id="upload-msg" class="muted" style="margin-top:10px;"></div>
       </div>
-      <div class="col">
-        <label class="muted">Indexed Files</label>
-        <ul id="file-list" class="muted"><li>Loading…</li></ul>
+      <div class="col" style="min-width:320px;">
+        <label class="muted" style="font-weight:500;">Indexed Files</label>
+        <table id="file-list" style="margin-top:8px; width:100%; border-collapse:collapse;">
+          <thead>
+            <tr style="background:#f3f4f6;">
+              <th style="text-align:left; padding:6px 8px; font-size:15px;">File Name</th>
+              <th style="text-align:center; padding:6px 8px; font-size:15px;">Chunks</th>
+              <th style="text-align:center; padding:6px 8px; font-size:15px;">Modified</th>
+              <th style="text-align:center; padding:6px 8px; font-size:15px;">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="4" class="muted" style="text-align:center;">Loading…</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
   <section>
     <h2>Ask a Question</h2>
-    <p class="muted">Ask about company policies. Answers will include citations. (Disabled in scaffold.)</p>
-    <textarea rows="3" id="q" placeholder="e.g., How does PTO accrual work?"></textarea>
-    <div style="margin-top:8px;">
-      <button class="primary" id="btn-ask">Ask</button>
+    <p class="muted">Ask about company policies. Answers include citations from indexed files below.</p>
+    <div style="display:flex; flex-direction:column; gap:8px; max-width:520px;">
+      <textarea rows="3" id="q" placeholder="e.g., How does PTO accrual work?" style="resize:vertical;"></textarea>
+      <button class="primary" id="btn-ask" style="align-self:flex-end; min-width:100px;">Ask</button>
+      <div id="answer" class="muted" style="margin-top:10px; min-height:24px;">No answer yet.</div>
     </div>
-    <div id="answer" class="muted" style="margin-top:10px;">No answer yet.</div>
   </section>
 
   <section>
     <h2>System</h2>
-    <p class="muted">Health: <code class="kbd">/health</code> • Search API: <code class="kbd">/search?q=pto&topk=3</code></p>
+    <p class="muted">Health: <code class="kbd">/health</code> &nbsp;|&nbsp; Search API: <code class="kbd">/search?q=pto&topk=3</code></p>
   </section>
 {% endblock %}

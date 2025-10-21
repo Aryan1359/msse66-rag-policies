@@ -1,19 +1,6 @@
 
+
 # MSSE66 RAG — Company Policies Q&A
-
-## Live Demo
-Deployed on Render:
-https://example-render-url.onrender.com
-
-**Health check**
-```bash
-curl -sSL https://example-render-url.onrender.com/health
-```
-
-**Sample /ask request**
-```bash
-curl -sSL -X POST https://example-render-url.onrender.com/ask -H 'Content-Type: application/json' -d '{"question": "What is the PTO policy?"}'
-```
 
 ## 🌐 Live Demo
 Deployed on Render (Free Tier):  
@@ -22,11 +9,17 @@ https://msse66-rag-policies.onrender.com
 **Health check**
 ```bash
 curl -sS https://msse66-rag-policies.onrender.com/health
-````
+```
 
-**Sample question**
+**Sample /ask request**
+```bash
+curl -sS -X POST https://msse66-rag-policies.onrender.com/ask -H 'Content-Type: application/json' -d '{"question": "What is the PTO policy?"}'
+```
 
 **Features:**
+* Modern, organized homepage UI
+* Indexed Files table with delete icons
+* Ask a Question box with clear answer and sources formatting
 * Fast keyword retrieval (local, simple)
 * Grounded answers with citations (`sources[]`)
 * Automated evaluation & CI gate (groundedness, citation, latency)
@@ -37,6 +30,11 @@ curl -sS https://msse66-rag-policies.onrender.com/health
 - Markdown (.md), text (.txt), and PDF (.pdf) files can be uploaded, indexed, and used for Q&A.
 - Deleting a file removes its content from the index and future answers.
 - PDF support requires PyPDF2 (included in requirements.txt).
+
+**Latest update:**
+- Homepage UI improved for clarity and organization
+- Answers now show first, with sources listed below
+- All changes live on Render
 
 
 ```bash

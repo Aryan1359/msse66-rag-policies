@@ -1,5 +1,9 @@
+
 # PROGRESS LOG — MSSE66 RAG Policies
 # ✨ Features at a Glance
+* Modern, organized homepage UI
+* Indexed Files table with delete icons
+* Ask a Question box with clear answer and sources formatting
 * Fast keyword retrieval
 * Grounded answers with citations
 * Automated evaluation & CI gate
@@ -38,6 +42,15 @@
 * Added `sources[]` array for compact citation info.
 * Seeded small evaluation QA set in `data/eval/`.
 * CI smoke tests green.
+
+---
+
+## ✅ Phase 4 — UI & Answer Formatting (2025-10-21)
+
+* Homepage UI redesigned for clarity and organization
+* Indexed Files now shown in a table with delete icons
+* Ask a Question box displays answer first, sources below
+* All changes deployed and live on Render
 
 ---
 
