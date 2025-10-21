@@ -80,3 +80,33 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 });
+	const askBtn = document.getElementById("btn-ask");
+	const qBox = document.getElementById("q");
+	const answerDiv = document.getElementById("answer");
+	if (askBtn && qBox && answerDiv) {
+		askBtn.addEventListener("click", async () => {
+			const question = qBox.value.trim();
+			if (!question) {
+				answerDiv.textContent = "Please enter a question.";
+				return;
+			}
+			askBtn.disabled = true;
+			answerDiv.textContent = "Thinking...";
+			try {
+				const r = await fetch("/ask", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ question })
+				});
+				const text = await r.text();
+				let data = null;
+				try { data = JSON.parse(text); } catch {}
+				if (!r.ok) throw new Error((data && data.error) || text || `HTTP ${r.status}`);
+				answerDiv.textContent = data.answer || "No answer.";
+			} catch (e) {
+				answerDiv.textContent = `Error: ${e.message}`;
+			} finally {
+				askBtn.disabled = false;
+			}
+		});
+	}
