@@ -27,17 +27,33 @@ def rough_token_count(text: str) -> int:
     return len(re.findall(r"\b\w+\b", text))
 
 def main():
-    files = sorted(CORPUS_DIR.glob("*.md"))
+    files = sorted(list(CORPUS_DIR.glob("*.md")) + list(CORPUS_DIR.glob("*.txt")) + list(CORPUS_DIR.glob("*.pdf")))
     if not files:
-        print(f"[ERROR] No Markdown files found in {CORPUS_DIR}/", file=sys.stderr)
+        print(f"[ERROR] No supported files found in {CORPUS_DIR}/", file=sys.stderr)
         sys.exit(1)
 
     INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
     written = 0
 
+    try:
+        import PyPDF2
+    except ImportError:
+        PyPDF2 = None
+
     with INDEX_PATH.open("w", encoding="utf-8") as f:
         for doc_idx, p in enumerate(files, start=1):
-            text = p.read_text(encoding="utf-8", errors="replace")
+            if p.suffix.lower() == ".pdf":
+                if not PyPDF2:
+                    print(f"[WARN] Skipping PDF {p} (PyPDF2 not installed)", file=sys.stderr)
+                    continue
+                try:
+                    reader = PyPDF2.PdfReader(str(p))
+                    text = "\n".join(page.extract_text() or "" for page in reader.pages)
+                except Exception as e:
+                    print(f"[ERROR] Failed to extract PDF {p}: {e}", file=sys.stderr)
+                    continue
+            else:
+                text = p.read_text(encoding="utf-8", errors="replace")
             chunks = chunk.split_with_overlap(text, max_chars=600, overlap=100)
             for i, ch in enumerate(chunks, start=1):
                 rec = {

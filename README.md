@@ -1,6 +1,20 @@
 
 # MSSE66 RAG — Company Policies Q&A
 
+## Live Demo
+Deployed on Render:
+https://example-render-url.onrender.com
+
+**Health check**
+```bash
+curl -sSL https://example-render-url.onrender.com/health
+```
+
+**Sample /ask request**
+```bash
+curl -sSL -X POST https://example-render-url.onrender.com/ask -H 'Content-Type: application/json' -d '{"question": "What is the PTO policy?"}'
+```
+
 ## 🌐 Live Demo
 Deployed on Render (Free Tier):  
 https://msse66-rag-policies.onrender.com
@@ -18,6 +32,11 @@ curl -sS https://msse66-rag-policies.onrender.com/health
 * Automated evaluation & CI gate (groundedness, citation, latency)
 * One-click deploy on Render (Procfile + gunicorn)
 * Extractive summary (LLM disabled)
+
+**Supported file types:**
+- Markdown (.md), text (.txt), and PDF (.pdf) files can be uploaded, indexed, and used for Q&A.
+- Deleting a file removes its content from the index and future answers.
+- PDF support requires PyPDF2 (included in requirements.txt).
 
 
 ```bash
