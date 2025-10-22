@@ -16,7 +16,8 @@
     <div class="logo">RAG Q&A</div>
     <ul>
       <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
-      {% for i in range(1, 21) %}
+      <li><a href="/steps/1" class="{% if request.path.startswith('/steps/1') %}active{% endif %}">step1-uploadfiles</a></li>
+      {% for i in range(2, 21) %}
         <li><a href="/steps/{{ i }}" class="{% if request.path == '/steps/' ~ i %}active{% endif %}">Step {{ i }}</a></li>
       {% endfor %}
     </ul>

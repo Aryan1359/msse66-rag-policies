@@ -47,8 +47,10 @@ def _list_files_payload():
         if os.path.exists(p):
             try:
                 info["mtime"] = os.path.getmtime(p)
+                info["size"] = os.path.getsize(p)
             except Exception:
                 info["mtime"] = None
+                info["size"] = None
     return {"files": sorted(files.values(), key=lambda x: x["name"].lower()), "count": len(files)}
 
 def _allowed(filename: str) -> bool:

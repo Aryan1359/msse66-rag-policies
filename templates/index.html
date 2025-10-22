@@ -1,62 +1,11 @@
 {% extends "base.html" %}
 {% block page_title %}Home{% endblock %}
 {% block content %}
-  <div class="hero">
-    <div class="hero-title">RAG — Company Policies Q&A</div>
-    <div class="hero-desc">Upload your company policies, parse and chunk them, embed for semantic search, and ask questions with grounded answers and citations. Metrics and deployment included.</div>
-    <a href="/steps/1" class="cta-btn">Get started</a>
-    <div class="callouts">
-      <div class="callout">
-        <strong>Start at Step 1</strong>
-        Begin the ingestion and indexing pipeline.
-      </div>
-      <div class="callout">
-        <strong>See Docs</strong>
-        Learn more about the workflow and supported features.
-      </div>
+  <div class="hero" style="padding:64px 0 32px 0; text-align:center;">
+    <div class="hero-title" style="font-size:2.8rem; font-weight:700; color:#111827; margin-bottom:22px;">RAG — Company Policies Q&A</div>
+    <div class="hero-desc" style="font-size:1.25rem; color:#374151; margin-bottom:32px; max-width:600px; margin-left:auto; margin-right:auto;">
+      Upload your company policies, parse and chunk them, embed for semantic search, and ask questions with grounded answers and citations. Metrics and deployment included.
     </div>
+    <a href="/steps/1" class="cta-btn" style="font-size:1.2rem; padding:16px 40px;">Get started</a>
   </div>
-
-  <section>
-    <h2>File Management</h2>
-    <div class="row">
-      <div class="col" style="min-width:260px;">
-        <label for="upload-file" class="muted" style="font-weight:500;">Upload New Policy File</label>
-        <input type="file" id="upload-file" style="margin-top:8px;" />
-        <button class="primary" id="btn-upload" style="margin-top:8px;">Upload</button>
-        <div id="upload-msg" class="muted" style="margin-top:10px;"></div>
-      </div>
-      <div class="col" style="min-width:320px;">
-        <label class="muted" style="font-weight:500;">Indexed Files</label>
-        <table id="file-list" style="margin-top:8px; width:100%; border-collapse:collapse;">
-          <thead>
-            <tr style="background:#f3f4f6;">
-              <th style="text-align:left; padding:6px 8px; font-size:15px;">File Name</th>
-              <th style="text-align:center; padding:6px 8px; font-size:15px;">Chunks</th>
-              <th style="text-align:center; padding:6px 8px; font-size:15px;">Modified</th>
-              <th style="text-align:center; padding:6px 8px; font-size:15px;">Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td colspan="4" class="muted" style="text-align:center;">Loading…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>Ask a Question</h2>
-    <p class="muted">Ask about company policies. Answers include citations from indexed files below.</p>
-    <div style="display:flex; flex-direction:column; gap:8px; max-width:520px;">
-      <textarea rows="3" id="q" placeholder="e.g., How does PTO accrual work?" style="resize:vertical;"></textarea>
-      <button class="primary" id="btn-ask" style="align-self:flex-end; min-width:100px;">Ask</button>
-      <div id="answer" class="muted" style="margin-top:10px; min-height:24px;">No answer yet.</div>
-    </div>
-  </section>
-
-  <section>
-    <h2>System</h2>
-    <p class="muted">Health: <code class="kbd">/health</code> &nbsp;|&nbsp; Search API: <code class="kbd">/search?q=pto&topk=3</code></p>
-  </section>
 {% endblock %}
