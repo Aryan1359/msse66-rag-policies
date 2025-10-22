@@ -1,7 +1,25 @@
 {% extends "base.html" %}
-{% block page_title %}Step 3{% endblock %}
+{% block page_title %}Step 3 — Clean{% endblock %}
 {% block content %}
-  <h1>Step 3</h1>
-  <p>This page will handle a portion of the pipeline. Placeholder content for Step 3.</p>
-  <div class="secondary-panel"></div>
+<div class="container" style="max-width:900px;">
+  <h1>Step 3 — Clean</h1>
+  <button id="btn-clean-top" class="btn btn-warning" style="margin-bottom:24px;">Clean All Files</button>
+  <h2>Files from Step 2</h2>
+  <div id="file-list-empty" class="muted" style="margin-bottom:12px; display:none;">No files found in Step 2.</div>
+  <table id="file-list-table" class="table table-striped" style="background:#fff;">
+    <thead>
+      <tr>
+        <th>Filename</th>
+        <th>Size</th>
+        <th>Modified</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Populated by JS -->
+    </tbody>
+  </table>
+  <button id="btn-clean-bottom" class="btn btn-warning" style="margin-top:24px;">Clean All Files</button>
+  <div id="clean-results" style="margin-top:32px;"></div>
+</div>
+<script src="/static/js/step3_clean.js"></script>
 {% endblock %}

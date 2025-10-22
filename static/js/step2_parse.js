@@ -68,3 +68,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fetchStats();
 });
+
+// JS for Step 2: List files from Step 1 and trigger parse
+
+document.addEventListener('DOMContentLoaded', function() {
+  const fileListTable = document.getElementById('file-list-table');
+  const fileListEmpty = document.getElementById('file-list-empty');
+  const btnParseTop = document.getElementById('btn-parse-top');
+  const btnParseBottom = document.getElementById('btn-parse-bottom');
+  const parseResults = document.getElementById('parse-results');
+
+  function refreshFileList() {
+    fetch('/api/step2/files').then(r => r.json()).then(data => {
+      const files = data.files || [];
+      const tbody = fileListTable.querySelector('tbody');
+      tbody.innerHTML = '';
+      if (!files.length) {
+        fileListEmpty.style.display = '';
+        fileListTable.style.display = 'none';
+        return;
+      }
+      fileListEmpty.style.display = 'none';
+      fileListTable.style.display = '';
+      files.forEach(f => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${f.name}</td><td>${(f.size/1024).toFixed(1)} KB</td><td>${new Date(f.mtime * 1000).toLocaleString()}</td>`;
+        tbody.appendChild(tr);
+      });
+    }).catch(() => {
+      fileListEmpty.style.display = '';
+      fileListTable.style.display = 'none';
+    });
+  }
+
+  function doParse() {
+    btnParseTop.disabled = true;
+    btnParseBottom.disabled = true;
+    parseResults.textContent = 'Parsing...';
+    fetch('/api/step2/parse', {method: 'POST'}).then(r => r.json()).then(data => {
+      btnParseTop.disabled = false;
+      btnParseBottom.disabled = false;
+      const results = data.results || [];
+      if (!results.length) {
+        parseResults.textContent = 'No files parsed.';
+        return;
+      }
+  parseResults.innerHTML = '<b>Parse Results:</b><ul>' + results.map(r => `<li>${r.doc_id} → ${r.parsed_raw_path}</li>`).join('') + '</ul>';
+    });
+  }
+
+  btnParseTop.addEventListener('click', doParse);
+  btnParseBottom.addEventListener('click', doParse);
+
+  refreshFileList();
+});

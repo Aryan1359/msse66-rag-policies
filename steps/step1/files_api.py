@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 
 POLICIES_DIR = os.path.join(os.path.dirname(__file__), 'data-Policies')
 INDEX_JSONL = os.path.join(os.path.dirname(__file__), 'data-Policies', 'index.jsonl')
-ALLOWED_EXTS = {'.md', '.txt', '.pdf'}
+ALLOWED_EXTS = {'.md', '.txt', '.pdf', '.html', '.htm'}
 
 def _infer_name(rec):
 	for k in ('source', 'path', 'file'):

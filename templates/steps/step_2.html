@@ -1,46 +1,26 @@
-{% extends 'base.html' %}
-{% block title %}Step 2: Parse & Clean{% endblock %}
+{% extends "base.html" %}
+{% block page_title %}Step 2 — Parse{% endblock %}
 {% block content %}
-<div class="container mt-4">
-  <h2>Step 2: Parse & Clean Uploaded Files</h2>
-  <div class="mb-3">
-    <button id="btn-parse-all" class="btn btn-primary">Parse All</button>
-    <button id="btn-clean-all" class="btn btn-warning">Clean All</button>
-    <button id="btn-parse-clean-all" class="btn btn-success">Parse+Clean All</button>
-    <span id="result-msg" class="ms-3 text-muted"></span>
-  </div>
-  <table id="parse-table" class="table table-bordered table-hover">
-    <thead class="table-light">
+<div class="container" style="max-width:900px;">
+  <h1>Step 2 — Parse</h1>
+  <div class="alert alert-info" style="margin-bottom:24px;">To add or change files, please <a href="/steps/1">go back to Step 1</a>.</div>
+  <button id="btn-parse-top" class="btn btn-primary" style="margin-bottom:24px;">Parse All Files</button>
+  <h2>Files from Step 1</h2>
+  <div id="file-list-empty" class="muted" style="margin-bottom:12px; display:none;">No files found in Step 1.</div>
+  <table id="file-list-table" class="table table-striped" style="background:#fff;">
+    <thead>
       <tr>
-        <th>File</th>
-        <th>Type</th>
-        <th>Status</th>
-        <th>Chars</th>
-        <th>Words</th>
-        <th>Last Parsed</th>
-        <th>Actions</th>
+        <th>Filename</th>
+        <th>Size</th>
+        <th>Modified</th>
       </tr>
     </thead>
     <tbody>
       <!-- Populated by JS -->
     </tbody>
   </table>
+  <button id="btn-parse-bottom" class="btn btn-primary" style="margin-top:24px;">Parse All Files</button>
+  <div id="parse-results" style="margin-top:32px;"></div>
 </div>
-
-<!-- Preview Modal -->
-<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="previewModalLabel">Parsed File Preview</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <pre id="previewContent" style="white-space: pre-wrap; word-break: break-word; max-height: 60vh; overflow-y: auto;"></pre>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="/static/js/step2_parse_clean.js"></script>
+<script src="/static/js/step2_parse.js"></script>
 {% endblock %}

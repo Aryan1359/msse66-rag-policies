@@ -1,109 +1,187 @@
-# Moved from scripts/ingest_utils.py
+
 import os
+import re
 import json
 import csv
+import unicodedata
 from datetime import datetime
-from werkzeug.utils import secure_filename
+from pdfminer.high_level import extract_text
+from bs4 import BeautifulSoup
+from html import unescape
+from typing import List
 
-POLICIES_DIR = os.path.join('data', 'policies')
-PARSED_DIR = os.path.join('data', 'parsed')
-PARSED_STATS_CSV = os.path.join('data', 'index', 'parsed_stats.csv')
-PARSE_LOG = os.path.join('logs', 'parse.jsonl')
-CLEAN_LOG = os.path.join('logs', 'clean.jsonl')
+POLICIES_DIR = os.path.join("steps", "step1", "data-Policies")
+PARSED_RAW_DIR = os.path.join("steps", "step2", "Parse-Results")
+PARSED_DIR = os.path.join("steps", "step3", "Clean-Results")
+PARSED_STATS_CSV = os.path.join("data", "index", "parsed_stats.csv")
+PARSE_LOG = os.path.join("logs", "parse.jsonl")
+CLEAN_LOG = os.path.join("logs", "clean.jsonl")
 
-# Utility functions
+# 1. Slugify filename
+def slugify(filename: str) -> str:
+    base = os.path.splitext(os.path.basename(filename))[0]
+    slug = re.sub(r"[^a-zA-Z0-9]+", "_", base.lower()).strip("_")
+    return slug
 
-def list_uploaded_files(base_dir=POLICIES_DIR):
-    files = []
-    for fname in os.listdir(base_dir):
-        ext = os.path.splitext(fname)[1].lower()
-        if ext in {'.md', '.txt', '.pdf', '.html', '.htm'}:
-            files.append({
-                'doc_id': fname,
-                'ext': ext,
-                'size': os.path.getsize(os.path.join(base_dir, fname)),
-                'path': os.path.join(base_dir, fname)
-            })
-    return files
-
-def parse_file(path):
-    ext = os.path.splitext(path)[1].lower()
-    doc_id = os.path.basename(path)
-    out_path = os.path.join(PARSED_DIR, doc_id + '.txt')
-    result = {'doc_id': doc_id, 'status': 'error', 'chars': 0, 'words': 0, 'ts': None, 'error': None}
+# 2. Parse file to raw text
+def parse_file(src_path: str) -> dict:
+    t0 = datetime.utcnow()
+    ext = os.path.splitext(src_path)[1].lower()
+    doc_id = slugify(src_path)
+    out_path = os.path.join(PARSED_RAW_DIR, f"{doc_id}.txt")
+    os.makedirs(PARSED_RAW_DIR, exist_ok=True)
+    status = "ok"
+    error = None
+    text = ""
+    bytes_in = 0
     try:
-        os.makedirs(PARSED_DIR, exist_ok=True)
-        if not os.path.exists(path):
-            raise Exception('File not found')
-        if ext == '.pdf':
-            from pdfminer.high_level import extract_text
-            text = extract_text(path)
-        elif ext in {'.html', '.htm'}:
-            from bs4 import BeautifulSoup
-            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
-                soup = BeautifulSoup(f.read(), 'lxml')
-                for tag in soup(['script', 'style']): tag.decompose()
-                text = soup.get_text(separator='\n')
-        elif ext in {'.md', '.txt'}:
-            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+        if ext == ".pdf":
+            text = extract_text(src_path)
+            if not text.strip():
+                status = "no_text"
+        elif ext in {".html", ".htm"}:
+            with open(src_path, "r", encoding="utf-8", errors="ignore") as f:
+                soup = BeautifulSoup(f.read(), "lxml")
+                for tag in soup(["script", "style"]): tag.decompose()
+                text = soup.get_text(separator="\n")
+                text = unescape(text)
+        elif ext in {".md", ".txt"}:
+            with open(src_path, "r", encoding="utf-8", errors="ignore") as f:
                 text = f.read()
         else:
-            raise Exception('Unsupported file type')
-        text = '\n'.join(line.strip() for line in text.splitlines())
-        result['chars'] = len(text)
-        result['words'] = len(text.split())
-        result['status'] = 'parsed'
-        result['ts'] = datetime.utcnow().isoformat()
-        with open(out_path, 'w', encoding='utf-8') as f:
+            status = "error"
+            error = f"Unsupported file type: {ext}"
+        bytes_in = os.path.getsize(src_path)
+        # Normalize newlines
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
+        # Write output
+        with open(out_path, "w", encoding="utf-8") as f:
             f.write(text)
-        with open(PARSE_LOG, 'a', encoding='utf-8') as logf:
-            logf.write(json.dumps({**result, 'action': 'parse'}) + '\n')
     except Exception as e:
-        result['error'] = str(e)
-    return result
+        status = "error"
+        error = str(e)
+    ms_elapsed = int((datetime.utcnow() - t0).total_seconds() * 1000)
+    chars_out = len(text)
+    log_entry = {
+        "ts": datetime.utcnow().isoformat(),
+        "doc_id": doc_id,
+        "ext": ext,
+        "bytes_in": bytes_in,
+        "chars_out": chars_out,
+        "ms_elapsed": ms_elapsed,
+        "status": status,
+        "error": error
+    }
+    os.makedirs(os.path.dirname(PARSE_LOG), exist_ok=True)
+    with open(PARSE_LOG, "a", encoding="utf-8") as logf:
+        logf.write(json.dumps(log_entry) + "\n")
+    update_parsed_stats(doc_id, ext, bytes_in, chars_out, None, status, datetime.utcnow().isoformat(), error)
+    return {
+        "status": status,
+        "doc_id": doc_id,
+        "ext": ext,
+        "bytes_in": bytes_in,
+        "chars_out": chars_out,
+        "parsed_raw_path": out_path,
+        "error": error
+    }
 
-def clean_text_file(parsed_path):
-    doc_id = os.path.basename(parsed_path).replace('.txt', '')
-    result = {'doc_id': doc_id, 'status': 'error', 'chars': 0, 'words': 0, 'ts': None, 'error': None}
+# 3. Clean parsed text
+def clean_text(parsed_raw_path: str) -> dict:
+    t0 = datetime.utcnow()
+    doc_id = slugify(parsed_raw_path)
+    cleaned_path = os.path.join(PARSED_DIR, f"{doc_id}.txt")
+    os.makedirs(PARSED_DIR, exist_ok=True)
+    status = "ok"
+    error = None
+    chars_in = 0
+    chars_out = 0
     try:
-        if not os.path.exists(parsed_path):
-            raise Exception('Parsed file not found')
-        with open(parsed_path, 'r', encoding='utf-8') as f:
+        with open(parsed_raw_path, "r", encoding="utf-8") as f:
             text = f.read()
-        cleaned = '\n'.join(line.strip() for line in text.splitlines() if line.strip())
-        cleaned = ' '.join(cleaned.split())
-        result['chars'] = len(cleaned)
-        result['words'] = len(cleaned.split())
-        result['status'] = 'cleaned'
-        result['ts'] = datetime.utcnow().isoformat()
-        with open(parsed_path, 'w', encoding='utf-8') as f:
-            f.write(cleaned)
-        with open(CLEAN_LOG, 'a', encoding='utf-8') as logf:
-            logf.write(json.dumps({**result, 'action': 'clean'}) + '\n')
+        chars_in = len(text)
+        # Collapse 3+ newlines to max 2
+        text = re.sub(r"\n{3,}", "\n\n", text)
+        # Convert tabs to spaces
+        text = text.replace("\t", " ")
+        # Trim trailing spaces per line
+        text = "\n".join([line.rstrip() for line in text.splitlines()])
+        # Normalize Unicode (smart quotes, dashes, etc.)
+        text = unicodedata.normalize("NFKC", text)
+        # Decode HTML entities (if any)
+        text = unescape(text)
+        # Write output
+        with open(cleaned_path, "w", encoding="utf-8") as f:
+            f.write(text)
+        chars_out = len(text)
     except Exception as e:
-        result['error'] = str(e)
-    return result
+        status = "error"
+        error = str(e)
+    ms_elapsed = int((datetime.utcnow() - t0).total_seconds() * 1000)
+    log_entry = {
+        "ts": datetime.utcnow().isoformat(),
+        "doc_id": doc_id,
+        "chars_in": chars_in,
+        "chars_out": chars_out,
+        "ms_elapsed": ms_elapsed,
+        "status": status,
+        "error": error
+    }
+    os.makedirs(os.path.dirname(CLEAN_LOG), exist_ok=True)
+    with open(CLEAN_LOG, "a", encoding="utf-8") as logf:
+        logf.write(json.dumps(log_entry) + "\n")
+    update_parsed_stats(doc_id, None, None, chars_out, None, status, datetime.utcnow().isoformat(), error, chars_in=chars_in)
+    return {
+        "status": status,
+        "doc_id": doc_id,
+        "chars_in": chars_in,
+        "chars_out": chars_out,
+        "cleaned_path": cleaned_path,
+        "error": error
+    }
 
-def update_parsed_stats(doc_id, ext, status, chars, words, last_parsed_iso):
+# 4. Update parsed stats CSV
+def update_parsed_stats(doc_id, ext, bytes_in, chars_raw, chars_clean, status, last_parsed_iso, error, chars_in=None):
     os.makedirs(os.path.dirname(PARSED_STATS_CSV), exist_ok=True)
-    row = [doc_id, ext, status, chars, words, last_parsed_iso]
-    with open(PARSED_STATS_CSV, 'a', encoding='utf-8', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(row)
+    stats = get_parsed_stats()
+    found = False
+    for row in stats:
+        if row["doc_id"] == doc_id:
+            row.update({
+                "ext": ext if ext is not None else row.get("ext"),
+                "bytes_in": bytes_in if bytes_in is not None else row.get("bytes_in"),
+                "chars_raw": chars_raw if chars_raw is not None else row.get("chars_raw"),
+                "chars_clean": chars_clean if chars_clean is not None else row.get("chars_clean"),
+                "status": status,
+                "last_parsed_iso": last_parsed_iso,
+                "error": error
+            })
+            if chars_in is not None:
+                row["chars_in"] = chars_in
+            found = True
+    if not found:
+        stats.append({
+            "doc_id": doc_id,
+            "ext": ext,
+            "bytes_in": bytes_in,
+            "chars_raw": chars_raw,
+            "chars_clean": chars_clean,
+            "status": status,
+            "last_parsed_iso": last_parsed_iso,
+            "error": error,
+            "chars_in": chars_in
+        })
+    with open(PARSED_STATS_CSV, "w", encoding="utf-8", newline='') as csvf:
+        writer = csv.DictWriter(csvf, fieldnames=["doc_id","ext","bytes_in","chars_raw","chars_clean","status","last_parsed_iso","error","chars_in"])
+        writer.writeheader()
+        writer.writerows(stats)
 
-def get_parsed_stats():
+# 5. Get parsed stats for table
+def get_parsed_stats() -> List[dict]:
     stats = []
     if os.path.exists(PARSED_STATS_CSV):
-        with open(PARSED_STATS_CSV, 'r', encoding='utf-8') as f:
-            reader = csv.reader(f)
+        with open(PARSED_STATS_CSV, "r", encoding="utf-8") as csvf:
+            reader = csv.DictReader(csvf)
             for row in reader:
-                if len(row) == 6:
-                    stats.append({
-                        'doc_id': row[0],
-                        'ext': row[1],
-                        'status': row[2],
-                        'chars': int(row[3]),
-                        'words': int(row[4]),
-                        'last_parsed_iso': row[5]
-                    })
+                stats.append(row)
     return stats

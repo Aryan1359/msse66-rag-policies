@@ -27,7 +27,7 @@ def rough_token_count(text: str) -> int:
     return len(re.findall(r"\b\w+\b", text))
 
 def main():
-    files = sorted(list(CORPUS_DIR.glob("*.md")) + list(CORPUS_DIR.glob("*.txt")) + list(CORPUS_DIR.glob("*.pdf")))
+    files = sorted(list(CORPUS_DIR.glob("*.md")) + list(CORPUS_DIR.glob("*.txt")) + list(CORPUS_DIR.glob("*.pdf")) + list(CORPUS_DIR.glob("*.html")) + list(CORPUS_DIR.glob("*.htm")))
     if not files:
         print(f"[ERROR] No supported files found in {CORPUS_DIR}/", file=sys.stderr)
         sys.exit(1)

@@ -173,6 +173,10 @@ def step_page(step_id):
 
 from routes.files import files_bp
 app.register_blueprint(files_bp)
+from routes.step2 import step2_bp
+app.register_blueprint(step2_bp)
+from routes.step3 import step3_bp
+app.register_blueprint(step3_bp)
 
 if __name__ == "__main__":
     print('Registered routes:', app.url_map, file=sys.stderr)

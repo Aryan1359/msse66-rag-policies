@@ -1,7 +1,7 @@
-doc_id,ext,status,chars,words,last_parsed_iso
-03-remote-work.md,.md,cleaned,618,93,2025-10-22T09:11:37.426021
-01-pto.md,.md,cleaned,602,100,2025-10-22T09:11:37.428114
-rubric.pdf,.pdf,cleaned,10823,1654,2025-10-22T09:11:38.352132
-02-expenses.md,.md,cleaned,595,82,2025-10-22T09:11:38.354998
-temp_policy.md,.md,cleaned,32,6,2025-10-22T09:11:38.356145
-LEARNING-GUIDE.md,.md,cleaned,3354,422,2025-10-22T09:11:38.353745
+doc_id,ext,bytes_in,chars_raw,chars_clean,status,last_parsed_iso,error,chars_in
+rubric,.pdf,273901,11561,,ok,2025-10-22T17:53:11.553567,,11561
+readme,.md,5624,5236,,ok,2025-10-22T17:53:11.600939,,5236
+etops_5503_50605121425,.pdf,103691,453,,ok,2025-10-22T17:53:11.595790,,453
+tasks_now,.txt,230,210,,ok,2025-10-22T17:53:11.601654,,210
+subtitle_1,.txt,8447,8447,,ok,2025-10-22T17:53:11.602365,,8447
+hydropower_formula_live_demo_html,.html,10706,1568,,ok,2025-10-22T17:53:11.600190,,
