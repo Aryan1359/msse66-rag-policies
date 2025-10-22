@@ -2,7 +2,7 @@ import os
 import json
 import time
 import sys
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory, abort
 from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app = Flask(__name__)
@@ -198,6 +198,12 @@ def ask():
         "tokens": res.get("tokens", 0),
     }
     return jsonify(payload), 200
+
+@app.route("/steps/<int:step_id>", methods=["GET"])
+def step_page(step_id):
+    if not (1 <= step_id <= 20):
+        abort(404)
+    return render_template(f"steps/step_{step_id}.html", step_id=step_id)
 
 if __name__ == "__main__":
     print(app.url_map, file=sys.stderr)
