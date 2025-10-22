@@ -1,239 +1,3 @@
-
-import os
-import json
-import csv
-import time
-import sys
-from flask import Flask, request, jsonify, render_template, send_from_directory, abort
-from werkzeug.utils import secure_filename
-
-# --- App Config ---
-app = Flask(__name__)
-INDEX_JSONL = os.path.join("data", "index", "policies.jsonl")
-POLICIES_DIR = os.path.join("data", "policies")
-ALLOWED_EXTS = {".md", ".txt", ".pdf"}
-PARSED_DIR = os.path.join("data", "parsed")
-PARSED_STATS_CSV = os.path.join("data", "index", "parsed_stats.csv")
-PARSE_LOG = os.path.join("logs", "parse.jsonl")
-
-from scripts.ingest_utils import (
-    list_uploaded_files, parse_file, clean_text_file,
-    update_parsed_stats, get_parsed_stats, POLICIES_DIR, PARSED_DIR
-)
-
-@app.route("/api/parse", methods=["POST"])
-def api_parse():
-    data = request.get_json(silent=True) or {}
-    doc_ids = data.get("doc_ids")
-    files = list_uploaded_files()
-    if not doc_ids:
-        doc_ids = [f["doc_id"] for f in files]
-    parsed, errors = [], []
-    for doc_id in doc_ids:
-        f = next((x for x in files if x["doc_id"] == doc_id), None)
-        if not f:
-            errors.append({"doc_id": doc_id, "error": "File not found"})
-            continue
-        res = parse_file(f["path"])
-        update_parsed_stats(doc_id, f["ext"], res["status"], res["chars"], res["words"], res["ts"])
-        if res["status"] == "parsed":
-            parsed.append(doc_id)
-        else:
-            errors.append({"doc_id": doc_id, "error": res["error"]})
-    return jsonify({"parsed": parsed, "errors": errors}), 200
-
-@app.route("/api/clean", methods=["POST"])
-def api_clean():
-    data = request.get_json(silent=True) or {}
-    doc_ids = data.get("doc_ids")
-    files = list_uploaded_files()
-    if not doc_ids:
-        doc_ids = [f["doc_id"] for f in files]
-    cleaned, errors = [], []
-    for doc_id in doc_ids:
-        parsed_path = os.path.join(PARSED_DIR, doc_id + ".txt")
-        if not os.path.exists(parsed_path):
-            errors.append({"doc_id": doc_id, "error": "Parsed file not found"})
-            continue
-        res = clean_text_file(parsed_path)
-        update_parsed_stats(doc_id, os.path.splitext(doc_id)[1].lower(), res["status"], res["chars"], res["words"], res["ts"])
-        if res["status"] == "cleaned":
-            cleaned.append(doc_id)
-        else:
-            errors.append({"doc_id": doc_id, "error": res["error"]})
-    return jsonify({"cleaned": cleaned, "errors": errors}), 200
-
-@app.route("/api/parse_clean", methods=["POST"])
-def api_parse_clean():
-    data = request.get_json(silent=True) or {}
-    doc_ids = data.get("doc_ids")
-    files = list_uploaded_files()
-    if not doc_ids:
-        doc_ids = [f["doc_id"] for f in files]
-    results = []
-    for doc_id in doc_ids:
-        f = next((x for x in files if x["doc_id"] == doc_id), None)
-        if not f:
-            results.append({"doc_id": doc_id, "error": "File not found"})
-            continue
-        res_parse = parse_file(f["path"])
-        update_parsed_stats(doc_id, f["ext"], res_parse["status"], res_parse["chars"], res_parse["words"], res_parse["ts"])
-        if res_parse["status"] == "parsed":
-            res_clean = clean_text_file(os.path.join(PARSED_DIR, doc_id + ".txt"))
-            update_parsed_stats(doc_id, f["ext"], res_clean["status"], res_clean["chars"], res_clean["words"], res_clean["ts"])
-            results.append({"doc_id": doc_id, "parse": res_parse, "clean": res_clean})
-        else:
-            results.append({"doc_id": doc_id, "parse": res_parse, "error": res_parse["error"]})
-    return jsonify(results), 200
-
-@app.route("/api/parsed/<doc_id>", methods=["GET"])
-def api_parsed(doc_id):
-    safe_id = secure_filename(doc_id)
-    parsed_path = os.path.join(PARSED_DIR, safe_id + ".txt")
-    if not os.path.exists(parsed_path):
-        return "Not parsed yet.", 404
-    with open(parsed_path, "r", encoding="utf-8") as f:
-        txt = f.read()
-    return txt[:2000], 200, {"Content-Type": "text/plain; charset=utf-8"}
-
-@app.route("/api/parse/stats", methods=["GET"])
-def api_parse_stats():
-    stats = get_parsed_stats()
-    return jsonify(stats), 200
-
-
-# --- Health Route ---
-@app.route("/health", methods=["GET"])
-def health():
-    return jsonify({"status": "ok"}), 200
-
-# --- Step 1: File Management APIs ---
-def _infer_name(rec):
-    for k in ("source", "path", "file"):
-        v = rec.get(k)
-        if isinstance(v, str) and v.strip():
-            return os.path.basename(v)
-    meta = rec.get("meta") or {}
-    for k in ("source", "path", "file"):
-        v = meta.get(k)
-        if isinstance(v, str) and v.strip():
-            return os.path.basename(v)
-    v = rec.get("doc_id") or meta.get("doc_id")
-    if isinstance(v, str) and v.strip():
-        return v
-    return "unknown"
-
-def _list_files_payload():
-    files = {}
-    if os.path.exists(INDEX_JSONL):
-        with open(INDEX_JSONL, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    rec = json.loads(line)
-                except Exception:
-                    continue
-                name = _infer_name(rec)
-                info = files.setdefault(name, {"name": name, "chunk_count": 0, "mtime": None})
-                info["chunk_count"] += 1
-    for name, info in files.items():
-        p = os.path.join(POLICIES_DIR, name)
-        if os.path.exists(p):
-            try:
-                info["mtime"] = os.path.getmtime(p)
-                info["size"] = os.path.getsize(p)
-            except Exception:
-                info["mtime"] = None
-                info["size"] = None
-    return {"files": sorted(files.values(), key=lambda x: x["name"].lower()), "count": len(files)}
-
-def _allowed(filename: str) -> bool:
-    return os.path.splitext(filename)[1].lower() in ALLOWED_EXTS
-
-@app.route("/api/files", methods=["GET", "POST"])
-def api_files():
-    if request.method == "POST":
-        if "file" not in request.files:
-            return jsonify({"ok": False, "error": "missing file"}), 400
-        f = request.files["file"]
-        if not f or not f.filename:
-            return jsonify({"ok": False, "error": "empty filename"}), 400
-        name = secure_filename(f.filename)
-        if not _allowed(name):
-            return jsonify({"ok": False, "error": "unsupported extension"}), 400
-        os.makedirs(POLICIES_DIR, exist_ok=True)
-        dst = os.path.join(POLICIES_DIR, name)
-        f.save(dst)
-        # Rebuild index
-        import subprocess
-        subprocess.run(["python", "scripts/index_jsonl.py"], check=True)
-        # Fall through to return the updated list with 201
-        payload = _list_files_payload()
-        return jsonify(payload), 201
-    # GET
-    payload = _list_files_payload()
-    return jsonify(payload), 200
-
-@app.route("/api/files/<path:fname>", methods=["DELETE"])
-def api_files_delete(fname):
-    name = secure_filename(os.path.basename(fname))
-    if not name:
-        return jsonify({"ok": False, "error": "invalid name"}), 400
-    p = os.path.join(POLICIES_DIR, name)
-    if not os.path.exists(p):
-        return jsonify({"ok": False, "error": "not found"}), 404
-    # Delete the file
-    try:
-        os.remove(p)
-    except Exception as e:
-        return jsonify({"ok": False, "error": f"delete failed: {e}"}), 500
-    # Rebuild index
-    import subprocess
-    subprocess.run(["python", "scripts/index_jsonl.py"], check=True)
-    # Return updated list
-    return jsonify(_list_files_payload()), 200
-
-@app.route("/api/files/raw/<path:fname>", methods=["GET"])
-def api_files_raw(fname):
-    name = secure_filename(os.path.basename(fname))
-    p = os.path.join(POLICIES_DIR, name)
-    if not os.path.exists(p):
-        return jsonify({"ok": False, "error": "not found"}), 404
-    return send_from_directory(POLICIES_DIR, name)
-
-# --- Step 2: Parse & Clean APIs (to be implemented next) ---
-
-# --- Page Routes ---
-@app.route("/", methods=["GET"])
-def ui_home():
-    return render_template("index.html")
-
-@app.route("/steps/2", methods=["GET"])
-def step_2_page():
-    files = []
-    for fname in os.listdir(POLICIES_DIR):
-        ext = os.path.splitext(fname)[1].lower()
-        if ext in {".md", ".txt", ".pdf", ".html", ".htm"}:
-            files.append({
-                "doc_id": fname,
-                "ext": ext,
-                "size": os.path.getsize(os.path.join(POLICIES_DIR, fname)),
-            })
-    return render_template("steps/step_2.html", files=files)
-
-@app.route("/steps/<int:step_id>", methods=["GET"])
-def step_page(step_id):
-    if step_id == 2:
-        return step_2_page()
-    if not (1 <= step_id <= 20):
-        abort(404)
-    return render_template(f"steps/step_{step_id}.html", step_id=step_id)
-
-if __name__ == "__main__":
-    print('Registered routes:', app.url_map, file=sys.stderr)
-    app.run(host="0.0.0.0", port=8000)
 import csv
 from datetime import datetime
 import os
@@ -265,7 +29,35 @@ PARSED_DIR = os.path.join("data", "parsed")
 PARSED_STATS_CSV = os.path.join("data", "index", "parsed_stats.csv")
 PARSE_LOG = os.path.join("logs", "parse.jsonl")
 
-
+app = Flask(__name__)
+    src_path = os.path.join(POLICIES_DIR, doc_id)
+    out_path = os.path.join(PARSED_DIR, doc_id + ".txt")
+    result = {"doc_id": doc_id, "ok": False, "error": None, "chars": 0}
+    try:
+        os.makedirs(PARSED_DIR, exist_ok=True)
+        if not os.path.exists(src_path):
+            raise Exception("File not found")
+        if ext == ".pdf":
+            from pdfminer.high_level import extract_text
+            text = extract_text(src_path)
+        elif ext in {".html", ".htm"}:
+            from bs4 import BeautifulSoup
+            with open(src_path, "r", encoding="utf-8", errors="ignore") as f:
+                soup = BeautifulSoup(f.read(), "lxml")
+                for tag in soup(["script", "style"]): tag.decompose()
+                text = soup.get_text(separator="\n")
+        elif ext in {".md", ".txt"}:
+            with open(src_path, "r", encoding="utf-8", errors="ignore") as f:
+                text = f.read()
+        else:
+            raise Exception("Unsupported file type")
+        result["chars"] = len(text)
+        result["ok"] = True
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(text)
+    except Exception as e:
+        result["error"] = str(e)
+    return result
 
 def clean_file(doc_id):
     out_path = os.path.join(PARSED_DIR, doc_id + ".txt")
