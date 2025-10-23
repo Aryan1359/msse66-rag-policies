@@ -19,13 +19,14 @@
       <li><a href="/steps/1" class="{% if request.path.startswith('/steps/1') %}active{% endif %}">Step 1 - Upload Files</a></li>
       <li><a href="/steps/2" class="{% if request.path.startswith('/steps/2') %}active{% endif %}">Step 2 - Parse</a></li>
       <li><a href="/steps/3" class="{% if request.path.startswith('/steps/3') %}active{% endif %}">Step 3 - Clean</a></li>
-  <li><a href="/steps/4" class="{% if request.path.startswith('/steps/4') %}active{% endif %}">Step 4 — Chunk</a></li>
-      {% for i in range(4, 21) %}
+      <li><a href="/steps/4" class="{% if request.path.startswith('/steps/4') %}active{% endif %}">Step 4 — Chunk</a></li>
+      <li><a href="/steps/5" class="{% if request.path.startswith('/steps/5') %}active{% endif %}">Step 5 — Embed</a></li>
+      {% for i in range(6, 21) %}
         <li><a href="/steps/{{ i }}" class="{% if request.path == '/steps/' ~ i %}active{% endif %}">Step {{ i }}</a></li>
       {% endfor %}
     </ul>
   </nav>
-  <main class="content">
+  <main class="content" style="padding-left:220px;">
     <div class="header-strip">
       <h2>{% block page_title %}{% endblock %}</h2>
     </div>

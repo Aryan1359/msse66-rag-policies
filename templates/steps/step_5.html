@@ -1,7 +1,125 @@
 {% extends "base.html" %}
-{% block page_title %}Step 5{% endblock %}
+{% block page_title %}Step 5 — Embed{% endblock %}
 {% block content %}
-  <h1>Step 5</h1>
-  <p>This page will handle a portion of the pipeline. Placeholder content for Step 5.</p>
-  <div class="secondary-panel"></div>
+<form method="POST" action="/steps/5/embed" id="embed-form" style="margin-bottom:8px;display:inline-block;">
+  <input type="hidden" name="chunk_source" value="{{ chunk_source }}">
+  <input type="hidden" name="embed_method" value="{{ embed_method }}">
+  <input type="hidden" name="selected_doc_ids" id="selected_doc_ids">
+  <button type="submit" name="submit" value="selected" class="btn btn-primary btn-sm">Embed Selected</button>
+  <button type="submit" name="submit" value="all" class="btn btn-success btn-sm" style="margin-left:8px;">Embed All</button>
+</form>
+<form method="POST" action="/steps/5/delete_db" style="display:inline-block;margin-left:18px;">
+  <input type="hidden" name="chunk_source" value="{{ chunk_source }}">
+  <input type="hidden" name="embed_method" value="{{ embed_method }}">
+  <button type="submit" class="btn btn-danger btn-sm">Delete DB for this Method</button>
+</form>
+<table class="table table-bordered table-sm" style="margin-top:18px;">
+  <thead class="table-light">
+    <tr>
+      <th style="width:60px;">Select</th>
+      <th>doc_id</th>
+      <th>filename</th>
+      <th>n_chunks</th>
+      <th>mtime</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for doc in docs %}
+    <tr>
+      <td><input type="checkbox" name="doc_id" value="{{ doc.doc_id }}"></td>
+      <td>{{ doc.doc_id }}</td>
+      <td>{{ doc.filename }}</td>
+      <td>{{ doc.n_chunks }}</td>
+      <td>{{ doc.mtime }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<hr>
+<div class="row" style="margin-top:24px;">
+  <div class="col-md-6">
+    <h4>Build Summary</h4>
+    {% if stats %}
+      <ul>
+        <li>Chunks: {{ stats.n_chunks }}</li>
+        <li>Vector Dim: {{ stats.dim }}</li>
+        <li>Elapsed: {{ stats.build_ms }} ms</li>
+        <li>Output Folder: <code>{{ embed_subdir }}</code></li>
+      </ul>
+    {% else %}
+      <span style="color:#64748b;">No build yet for this method/source.</span>
+    {% endif %}
+    <h4>Preview (meta.json)</h4>
+    {% if preview %}
+      <ul>
+      {% for row in preview %}
+        <li>{{ row.doc_id }} | chunk {{ row.chunk_id }} | vector_index {{ row.vector_index }} | method {{ row.method }}</li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <span style="color:#64748b;">No preview available.</span>
+    {% endif %}
+    <div style="font-size:13px;color:#64748b;margin-top:8px;">Artifacts are saved in <code>{{ embed_subdir }}</code>.</div>
+  </div>
+  <div class="col-md-6">
+    <h4>Method Help</h4>
+    <div class="card mb-2 p-2" style="border:1px solid #e5e7eb;border-radius:8px;">
+      <b>MiniLM (local)</b>: Fast, free, runs on CPU. Uses <code>all-MiniLM-L6-v2</code> (384-dim). Good for most use cases.
+    </div>
+    <div class="card mb-2 p-2" style="border:1px solid #e5e7eb;border-radius:8px;">
+      <b>OpenAI</b>: Uses <code>text-embedding-3-small</code>. Requires API key. Higher quality, but costs money and is rate-limited.
+      {% if not embed_methods['openai']['enabled'] %}
+        <div style="color:#ef4444;">OpenAI embedding is disabled (no API key found).</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<div style="height:32px;"></div>
+<div class="howto-box" style="background:#f8fafc;border:1px solid #e5e7eb;padding:16px 20px;margin:48px auto 32px auto;border-radius:8px;max-width:700px;">
+  <h4 style="margin-top:0;color:#2563eb;font-weight:600;">How to Use Step 5 — Embed</h4>
+  <ul>
+    <li><b>Choose Chunk Source:</b> Select <b>Headings</b> or <b>Token Windows</b> to pick which chunked files to embed. These are created in Step 4.</li>
+    <li><b>Choose Embedding Method:</b> <b>MiniLM</b> is fast and free (local CPU). <b>OpenAI</b> uses the API (costs money, requires key).</li>
+    <li><b>Embed Selected / All:</b> Check files in the table and click <b>Embed Selected</b>, or use <b>Embed All</b> to process every file.</li>
+    <li><b>Delete DB for this Method:</b> Wipes all embeddings for the current chunk source + method. Use to start over or clear space.</li>
+    <li><b>Artifacts:</b> Results are saved in <code>steps/step5/Embeddings/{chunk_source}__{embed_method}</code> (vectors, meta, config, stats, FAISS index).</li>
+    <li><b>Preview & Summary:</b> After embedding, see a summary and preview of metadata below.</li>
+  </ul>
+  <div style="font-size:13px;color:#64748b;margin-top:8px;">Tip: Use <b>MiniLM</b> for quick local tests. Use <b>OpenAI</b> for production or higher quality (API key required).</div>
+</div>
+
+<div class="howto-box" style="background:#f1f5f9;border:1px solid #cbd5e1;padding:16px 20px;margin:32px auto 32px auto;border-radius:8px;max-width:700px;">
+  <h4 style="margin-top:0;color:#0f172a;font-weight:600;">What do the output files mean?</h4>
+  <ul>
+    <li><b>config.json</b>: Contains the configuration for the embedding run (chunk source, method, model, timestamp). Lets you track how the embeddings were created and with what settings.</li>
+    <li><b>meta.json</b>: A list of metadata for each chunk/vector (doc_id, chunk_id, source file, method, params, vector_index). Maps each vector to its original chunk and document.</li>
+    <li><b>stats.json</b>: Summary statistics for the embedding run (number of chunks, vector dimension, build time). Quick overview of the embedding job’s size and performance.</li>
+    <li><b>vectors.npy</b>: The actual embeddings as a NumPy array (shape: number of chunks × embedding dimension). Used for fast similarity search, retrieval, or downstream ML tasks.</li>
+  </ul>
+  <div style="font-size:13px;color:#64748b;margin-top:8px;">These files let you reproduce, analyze, and use your embeddings for search, RAG, or other applications.</div>
+</div>
 {% endblock %}
+<h2>Step 5 — Embed</h2>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for category, message in messages %}
+      <li class="flash-{{ category }}">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<form method="GET" action="/steps/5">
+  <label>Chunk Source:</label>
+  <select name="chunk_source" onchange="this.form.submit()">
+    <option value="headings" {% if chunk_source == 'headings' %}selected{% endif %}>Headings</option>
+    <option value="token" {% if chunk_source == 'token' %}selected{% endif %}>Token Windows</option>
+  </select>
+  <label>Embedding Method:</label>
+  <select name="embed_method" onchange="this.form.submit()">
+    <option value="minilm" {% if embed_method == 'minilm' %}selected{% endif %}>MiniLM (local)</option>
+    <option value="openai" {% if embed_method == 'openai' %}selected{% endif %} {% if not embed_methods['openai']['enabled'] %}disabled{% endif %}>OpenAI</option>
+  </select>
+</form>
+<hr>
+<h3>Available Chunk Files (from Step 4)</h3>

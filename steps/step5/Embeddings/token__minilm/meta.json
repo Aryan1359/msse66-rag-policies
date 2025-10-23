@@ -1,0 +1,146 @@
+[
+  {
+    "doc_id": "etops_5503_50605121425",
+    "chunk_id": 0,
+    "source_file": "etops_5503_50605121425.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 0
+  },
+  {
+    "doc_id": "hydropower_formula_live_demo_html",
+    "chunk_id": 0,
+    "source_file": "hydropower_formula_live_demo_html.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 1
+  },
+  {
+    "doc_id": "readme",
+    "chunk_id": 0,
+    "source_file": "readme.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 2
+  },
+  {
+    "doc_id": "readme",
+    "chunk_id": 1,
+    "source_file": "readme.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 3
+  },
+  {
+    "doc_id": "rubric",
+    "chunk_id": 0,
+    "source_file": "rubric.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 4
+  },
+  {
+    "doc_id": "rubric",
+    "chunk_id": 1,
+    "source_file": "rubric.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 5
+  },
+  {
+    "doc_id": "rubric",
+    "chunk_id": 2,
+    "source_file": "rubric.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 6
+  },
+  {
+    "doc_id": "rubric",
+    "chunk_id": 3,
+    "source_file": "rubric.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 7
+  },
+  {
+    "doc_id": "subtitle_1",
+    "chunk_id": 0,
+    "source_file": "subtitle_1.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 8
+  },
+  {
+    "doc_id": "subtitle_1",
+    "chunk_id": 1,
+    "source_file": "subtitle_1.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 9
+  },
+  {
+    "doc_id": "subtitle_1",
+    "chunk_id": 2,
+    "source_file": "subtitle_1.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 10
+  },
+  {
+    "doc_id": "tasks_now",
+    "chunk_id": 0,
+    "source_file": "tasks_now.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "vector_index": 11
+  }
+]

@@ -179,6 +179,9 @@ def step_page(step_id):
 
 from routes.files import files_bp
 app.register_blueprint(files_bp)
+
+from steps.step5.step5_routes import step5_bp
+app.register_blueprint(step5_bp)
 from routes.step2 import step2_bp
 app.register_blueprint(step2_bp)
 from routes.step3 import step3_bp
