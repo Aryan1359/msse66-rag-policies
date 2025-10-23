@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 {% block page_title %}Step 5 — Embed{% endblock %}
 {% block content %}
+<!-- Current Selection Banner -->
+<div class="alert alert-info" style="margin-bottom:16px;">
+  <b>Current Selection:</b>
+  Chunk Source: <code>{{ chunk_source }}</code> · Embedding: <code>{{ embed_method }}</code>
+  <span style="margin-left:18px;">Output Folder: <code>{{ embed_subdir }}</code></span>
+</div>
+{% if staleness_warning %}
+<div class="alert alert-warning" style="font-weight:500;">This embedding DB is out of date with Step-4 chunks. Please Delete DB and re-embed.</div>
+{% endif %}
 <form method="POST" action="/steps/5/embed" id="embed-form" style="margin-bottom:8px;display:inline-block;">
   <input type="hidden" name="chunk_source" value="{{ chunk_source }}">
   <input type="hidden" name="embed_method" value="{{ embed_method }}">
   <input type="hidden" name="selected_doc_ids" id="selected_doc_ids">
-  <button type="submit" name="submit" value="selected" class="btn btn-primary btn-sm">Embed Selected</button>
-  <button type="submit" name="submit" value="all" class="btn btn-success btn-sm" style="margin-left:8px;">Embed All</button>
+  <button type="submit" name="submit" value="selected" class="btn btn-primary btn-sm" {% if staleness_warning %}disabled{% endif %}>Embed Selected</button>
+  <button type="submit" name="submit" value="all" class="btn btn-success btn-sm" style="margin-left:8px;" {% if staleness_warning %}disabled{% endif %}>Embed All</button>
 </form>
 <form method="POST" action="/steps/5/delete_db" style="display:inline-block;margin-left:18px;">
   <input type="hidden" name="chunk_source" value="{{ chunk_source }}">
@@ -45,17 +54,34 @@
         <li>Vector Dim: {{ stats.dim }}</li>
         <li>Elapsed: {{ stats.build_ms }} ms</li>
         <li>Output Folder: <code>{{ embed_subdir }}</code></li>
+        {% if config and config.faiss is defined %}
+        <li>FAISS Index: <b>{% if config.faiss %}Created{% else %}Not available{% endif %}</b></li>
+        {% endif %}
+        {% if config and config.metric is defined %}
+        <li>Metric: {{ config.metric }}</li>
+        {% endif %}
+        {% if config and config.source_hashes is defined %}
+        <li>Source Hashes: <code>config["source_hashes"]</code> (see config.json)</li>
+        {% endif %}
       </ul>
     {% else %}
       <span style="color:#64748b;">No build yet for this method/source.</span>
     {% endif %}
     <h4>Preview (meta.json)</h4>
     {% if preview %}
-      <ul>
-      {% for row in preview %}
-        <li>{{ row.doc_id }} | chunk {{ row.chunk_id }} | vector_index {{ row.vector_index }} | method {{ row.method }}</li>
-      {% endfor %}
-      </ul>
+      <table class="table table-bordered table-sm">
+        <thead><tr><th>vector_index</th><th>doc_id</th><th>chunk_id</th><th>method</th></tr></thead>
+        <tbody>
+        {% for row in preview %}
+          <tr>
+            <td>{{ row.vector_index }}</td>
+            <td>{{ row.doc_id }}</td>
+            <td>{{ row.chunk_id }}</td>
+            <td>{{ row.method }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
     {% else %}
       <span style="color:#64748b;">No preview available.</span>
     {% endif %}

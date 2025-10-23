@@ -48,14 +48,15 @@ def step5_page():
     chunk_dir = CHUNK_DIRS.get(chunk_source, CHUNK_DIRS['headings'])
     docs = list_chunk_docs(chunk_dir)
     preview = None
-    summary = None
     meta_rows = []
     config = None
     stats = None
+    staleness_warning = False
     embed_subdir = get_embed_subdir(chunk_source, embed_method)
     meta_path = os.path.join(embed_subdir, 'meta.json')
     config_path = os.path.join(embed_subdir, 'config.json')
     stats_path = os.path.join(embed_subdir, 'stats.json')
+    # Load meta/config/stats
     if os.path.exists(meta_path):
         try:
             with open(meta_path, 'r', encoding='utf-8') as f:
@@ -69,6 +70,32 @@ def step5_page():
     if os.path.exists(stats_path):
         with open(stats_path, 'r', encoding='utf-8') as f:
             stats = json.load(f)
+    # Staleness detection
+    if config and 'source_hashes' in config:
+        for doc in docs:
+            found = next((h for h in config['source_hashes'] if h['doc_id'] == doc['doc_id']), None)
+            if found:
+                # Recompute hash
+                try:
+                    with open(doc['path'], 'rb') as fbin:
+                        file_bytes = fbin.read()
+                        current_hash = hashlib.sha256(file_bytes).hexdigest()
+                    if found['source_hash'] != current_hash:
+                        staleness_warning = True
+                        break
+                except Exception:
+                    continue
+    if staleness_warning:
+        flash('This embedding DB is out of date with Step-4 chunks. Please Delete DB and re-embed.', 'warning')
+        # Log staleness
+        log_entry = {
+            'ts': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+            'chunk_source': chunk_source,
+            'embed_method': embed_method,
+            'status': 'stale_detected'
+        }
+        with open(LOG_PATH, 'a', encoding='utf-8') as f:
+            f.write(json.dumps(log_entry) + '\n')
     return render_template('steps/step_5.html',
         chunk_source=chunk_source,
         embed_method=embed_method,
@@ -77,7 +104,8 @@ def step5_page():
         config=config,
         stats=stats,
         embed_methods=EMBED_METHODS,
-        embed_subdir=embed_subdir
+        embed_subdir=embed_subdir,
+        staleness_warning=staleness_warning
     )
 
 @step5_bp.route('/embed', methods=['POST'])
@@ -115,7 +143,7 @@ def embed_route():
             'model': model_name,
             'created_iso': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
         }
-        save_artifacts(out_dir, vectors, meta_rows, config_dict)
+        faiss_status = save_artifacts(out_dir, vectors, meta_rows, config_dict, chunk_docs=selected_docs)
         ms_elapsed = int((time.time() - t0) * 1000)
         stats = {'n_chunks': len(texts), 'dim': vectors.shape[1], 'build_ms': ms_elapsed}
         with open(os.path.join(out_dir, 'stats.json'), 'w', encoding='utf-8') as f:
@@ -127,6 +155,7 @@ def embed_route():
             'n_chunks': len(texts),
             'dim': vectors.shape[1],
             'ms_elapsed': ms_elapsed,
+            'faiss': faiss_status,
             'status': 'ok'
         }
         with open(LOG_PATH, 'a', encoding='utf-8') as f:
@@ -140,6 +169,7 @@ def embed_route():
             'n_chunks': len(texts),
             'dim': None,
             'ms_elapsed': int((time.time() - t0) * 1000),
+            'faiss': False,
             'status': 'error',
             'error': str(e)
         }
@@ -154,8 +184,9 @@ def delete_db_route():
     embed_method = request.form.get('embed_method', 'minilm')
     out_dir = get_embed_subdir(chunk_source, embed_method)
     try:
+        # Confirm deletion (could be improved with JS confirm in UI)
         delete_db_folder(out_dir)
-        flash(f'Database for {chunk_source}__{embed_method} deleted.', 'success')
+        flash(f'Database for {chunk_source}__{embed_method} deleted and folder recreated empty.', 'success')
     except Exception as e:
         flash(f'Error deleting DB: {e}', 'danger')
     return redirect(url_for('step5_bp.step5_page', chunk_source=chunk_source, embed_method=embed_method))
