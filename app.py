@@ -1,14 +1,20 @@
 import os
 import json
 import time
+import os
+import json
+import time
 import sys
-from flask import Flask, request, jsonify, render_template, send_from_directory, abort
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from werkzeug.utils import secure_filename
-app = Flask(__name__)
 
-# --- Files API (list + upload) ---
-INDEX_JSONL = os.path.join("data", "index", "policies.jsonl")
+app = Flask(__name__)
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'dev-secret-key')
 POLICIES_DIR = os.path.join("data", "policies")
+
+# Register Step 4 blueprint
+from steps.step4.step4_routes import step4_bp
+app.register_blueprint(step4_bp)
 ALLOWED_EXTS = {".md", ".txt", ".pdf"}
 
 def _infer_name(rec):

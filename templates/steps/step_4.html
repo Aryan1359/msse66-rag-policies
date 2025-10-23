@@ -1,7 +1,133 @@
 {% extends "base.html" %}
 {% block page_title %}Step 4{% endblock %}
 {% block content %}
-  <h1>Step 4</h1>
-  <p>This page will handle a portion of the pipeline. Placeholder content for Step 4.</p>
-  <div class="secondary-panel"></div>
+<h2>Step 4 — Chunk</h2>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for category, message in messages %}
+      <li class="flash-{{ category }}">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Select</th>
+      <th>doc_id</th>
+      <th>filename</th>
+      <th>size</th>
+      <th>modified</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for f in files %}
+    <tr>
+      <td><input type="checkbox" name="doc_id" value="{{ f.doc_id }}"></td>
+      <td>{{ f.doc_id }}</td>
+      <td>{{ f.filename }}</td>
+      <td>{{ f.size }}</td>
+  <td>{{ f.mtime }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="col">
+    <h3>Chunk by Headings</h3>
+  <form method="POST" action="/steps/4/chunk_headings" id="form-headings">
+      <label>Mode:
+        <select name="mode">
+          <option value="markdown_atx">markdown_atx</option>
+          <option value="setext">setext</option>
+          <option value="heuristic">heuristic</option>
+        </select>
+      </label>
+      <label>Min Heading Gap:
+        <input type="number" name="min_heading_gap" value="1" min="1">
+      </label>
+      <label>Max Chunk Len:
+        <input type="number" name="max_chunk_len">
+      </label>
+      <input type="hidden" name="selected_doc_ids" id="selected_doc_ids_headings">
+      <button type="submit" name="submit" value="selected">Chunk Selected</button>
+      <button type="submit" name="submit" value="all">Chunk All</button>
+    </form>
+    <div class="howto-box" style="background:#f8fafc;border:1px solid #e5e7eb;padding:14px 18px;margin:12px 0 18px 0;border-radius:8px;">
+      <h5 style="margin-top:0;color:#2563eb;font-weight:600;">How to Use: Chunk by Headings</h5>
+      <ul style="margin-bottom:0;">
+        <li><b>Mode</b>:<br>
+          <ul>
+            <li><b>markdown_atx</b>: Splits on lines starting with <code>#</code> (Markdown headers).</li>
+            <li><b>setext</b>: Splits on lines followed by <code>===</code> or <code>---</code> (Setext headers).</li>
+            <li><b>heuristic</b>: Uses both above plus extra rules (lines ending with <code>:</code>, ALL-CAPS, or starting with <code>Section</code>, <code>Policy</code>, etc.).</li>
+          </ul>
+        </li>
+        <li><b>Min Heading Gap</b>: Minimum number of words required between headings. If chunks are too small, adjacent headings are merged. <span style="color:#64748b;">(Default: 1)</span></li>
+        <li><b>Max Chunk Len</b>: Soft limit for chunk size (words). Chunks longer than this are split. Leave blank for no limit.</li>
+        <li><b>Chunk Selected / Chunk All</b>: Choose specific files or all files to process.</li>
+      </ul>
+      <div style="font-size:13px;color:#64748b;margin-top:8px;">Tip: Use <b>heuristic</b> mode for documents with non-standard headings.</div>
+    </div>
+    <h4>Preview (Headings)</h4>
+    {% if preview_headings_chunks %}
+      <ul>
+      {% for chunk in preview_headings_chunks %}
+        <li><pre>{{ chunk.text }}</pre></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+  <div class="col">
+    <h3>Chunk by Token Windows</h3>
+  <form method="POST" action="/steps/4/chunk_token" id="form-token">
+      <label>Window Size:
+        <input type="number" name="window_size" value="700" min="1">
+      </label>
+      <label>Overlap:
+        <input type="number" name="overlap" value="150" min="0">
+      </label>
+      <label>Tokenization:
+        <select name="tokenization">
+          <option value="whitespace_approx">whitespace_approx</option>
+        </select>
+      </label>
+      <input type="hidden" name="selected_doc_ids" id="selected_doc_ids_token">
+      <button type="submit" name="submit" value="selected">Chunk Selected</button>
+      <button type="submit" name="submit" value="all">Chunk All</button>
+    </form>
+    <div class="howto-box" style="background:#f8fafc;border:1px solid #e5e7eb;padding:14px 18px;margin:12px 0 18px 0;border-radius:8px;">
+      <h5 style="margin-top:0;color:#2563eb;font-weight:600;">How to Use: Chunk by Token Windows</h5>
+      <ul style="margin-bottom:0;">
+        <li><b>Window Size</b>: Number of tokens (words) per chunk. <span style="color:#64748b;">(Default: 700)</span></li>
+        <li><b>Overlap</b>: Number of tokens shared between adjacent chunks. <span style="color:#64748b;">(Default: 150)</span></li>
+        <li><b>Tokenization</b>: <b>whitespace_approx</b> splits text on spaces. (Other modes may be added in future.)</li>
+        <li><b>Chunk Selected / Chunk All</b>: Choose specific files or all files to process.</li>
+      </ul>
+      <div style="font-size:13px;color:#64748b;margin-top:8px;">Tip: Increase <b>overlap</b> for more context in each chunk, or decrease <b>window size</b> for smaller chunks.</div>
+    </div>
+    <h4>Preview (Token)</h4>
+    {% if preview_token_chunks %}
+      <ul>
+      {% for chunk in preview_token_chunks %}
+        <li><pre>{{ chunk.text }}</pre></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function collectSelectedDocIds(formId, hiddenId) {
+  var form = document.getElementById(formId);
+  var checkboxes = document.querySelectorAll('input[type="checkbox"][name="doc_id"]');
+  var selected = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+  document.getElementById(hiddenId).value = selected.join(',');
+}
+document.getElementById('form-headings').onsubmit = function() { collectSelectedDocIds('form-headings', 'selected_doc_ids_headings'); };
+document.getElementById('form-token').onsubmit = function() { collectSelectedDocIds('form-token', 'selected_doc_ids_token'); };
+</script>
 {% endblock %}
