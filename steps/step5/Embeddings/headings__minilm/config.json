@@ -2,5 +2,38 @@
   "chunk_source": "headings",
   "embed_method": "minilm",
   "model": "all-MiniLM-L6-v2",
-  "created_iso": "2025-10-23T22:52:04Z"
+  "created_iso": "2025-10-23T23:18:18Z",
+  "source_hashes": [
+    {
+      "doc_id": "etops_5503_50605121425",
+      "source_file": "etops_5503_50605121425.jsonl",
+      "source_hash": "8c26dbded11e6ebf7f4fe83889e73c6b80ec2e2bc81f7894e95c4b362e18fc6f"
+    },
+    {
+      "doc_id": "hydropower_formula_live_demo_html",
+      "source_file": "hydropower_formula_live_demo_html.jsonl",
+      "source_hash": "40862dae9118cc2b94afe88f5a2cd1742c8ed0ef86d400f05586e6b300bc0275"
+    },
+    {
+      "doc_id": "readme",
+      "source_file": "readme.jsonl",
+      "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e"
+    },
+    {
+      "doc_id": "rubric",
+      "source_file": "rubric.jsonl",
+      "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906"
+    },
+    {
+      "doc_id": "subtitle_1",
+      "source_file": "subtitle_1.jsonl",
+      "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "doc_id": "tasks_now",
+      "source_file": "tasks_now.jsonl",
+      "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "faiss": false
 }

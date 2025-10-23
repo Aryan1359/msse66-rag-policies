@@ -89,3 +89,9 @@
 {"ts": "2025-10-23T20:54:39.611131", "doc_id": "readme", "ext": ".md", "bytes_in": 5624, "chars_out": 5236, "ms_elapsed": 0, "status": "ok", "error": null}
 {"ts": "2025-10-23T20:54:39.611830", "doc_id": "tasks_now", "ext": ".txt", "bytes_in": 230, "chars_out": 210, "ms_elapsed": 0, "status": "ok", "error": null}
 {"ts": "2025-10-23T20:54:39.612486", "doc_id": "subtitle_1", "ext": ".txt", "bytes_in": 8447, "chars_out": 8447, "ms_elapsed": 0, "status": "ok", "error": null}
+{"ts": "2025-10-23T23:15:14.676965", "doc_id": "rubric", "ext": ".pdf", "bytes_in": 273901, "chars_out": 11561, "ms_elapsed": 1035, "status": "ok", "error": null}
+{"ts": "2025-10-23T23:15:14.718118", "doc_id": "etops_5503_50605121425", "ext": ".pdf", "bytes_in": 103691, "chars_out": 453, "ms_elapsed": 40, "status": "ok", "error": null}
+{"ts": "2025-10-23T23:15:14.724057", "doc_id": "hydropower_formula_live_demo_html", "ext": ".html", "bytes_in": 10706, "chars_out": 1568, "ms_elapsed": 5, "status": "ok", "error": null}
+{"ts": "2025-10-23T23:15:14.724747", "doc_id": "readme", "ext": ".md", "bytes_in": 5624, "chars_out": 5236, "ms_elapsed": 0, "status": "ok", "error": null}
+{"ts": "2025-10-23T23:15:14.725348", "doc_id": "tasks_now", "ext": ".txt", "bytes_in": 230, "chars_out": 210, "ms_elapsed": 0, "status": "ok", "error": null}
+{"ts": "2025-10-23T23:15:14.725975", "doc_id": "subtitle_1", "ext": ".txt", "bytes_in": 8447, "chars_out": 8447, "ms_elapsed": 0, "status": "ok", "error": null}

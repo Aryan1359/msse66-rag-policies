@@ -1,27 +1,48 @@
 {% extends "base.html" %}
 {% block page_title %}Step 5 — Embed{% endblock %}
 {% block content %}
-<!-- Current Selection Banner -->
-<div class="alert alert-info" style="margin-bottom:16px;">
-  <b>Current Selection:</b>
-  Chunk Source: <code>{{ chunk_source }}</code> · Embedding: <code>{{ embed_method }}</code>
-  <span style="margin-left:18px;">Output Folder: <code>{{ embed_subdir }}</code></span>
+<div class="card mb-3 p-3" style="border:1px solid #e5e7eb;border-radius:10px;">
+  <form method="GET" action="/steps/5" class="row g-3 align-items-center mb-0">
+    <div class="col-auto">
+      <label for="chunk_source" class="col-form-label"><b>Chunk Source:</b></label>
+    </div>
+    <div class="col-auto">
+      <select id="chunk_source" name="chunk_source" class="form-select form-select-sm" onchange="this.form.submit()">
+        <option value="headings" {% if chunk_source == 'headings' %}selected{% endif %}>Headings</option>
+        <option value="token" {% if chunk_source == 'token' %}selected{% endif %}>Token Windows</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <label for="embed_method" class="col-form-label"><b>Embedding Method:</b></label>
+    </div>
+    <div class="col-auto">
+      <select id="embed_method" name="embed_method" class="form-select form-select-sm" onchange="this.form.submit()">
+        <option value="minilm" {% if embed_method == 'minilm' %}selected{% endif %}>MiniLM (local)</option>
+        <option value="openai" {% if embed_method == 'openai' %}selected{% endif %} {% if not embed_methods['openai']['enabled'] %}disabled{% endif %}>OpenAI</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <span class="text-muted" style="margin-left:12px;">Output Folder: <code>{{ embed_subdir }}</code></span>
+    </div>
+  </form>
+  {% if staleness_warning %}
+    <div class="alert alert-warning mt-2 mb-0" style="font-weight:500;">This embedding DB is out of date with Step-4 chunks. Please Delete DB and re-embed.</div>
+  {% endif %}
 </div>
-{% if staleness_warning %}
-<div class="alert alert-warning" style="font-weight:500;">This embedding DB is out of date with Step-4 chunks. Please Delete DB and re-embed.</div>
-{% endif %}
-<form method="POST" action="/steps/5/embed" id="embed-form" style="margin-bottom:8px;display:inline-block;">
-  <input type="hidden" name="chunk_source" value="{{ chunk_source }}">
-  <input type="hidden" name="embed_method" value="{{ embed_method }}">
-  <input type="hidden" name="selected_doc_ids" id="selected_doc_ids">
-  <button type="submit" name="submit" value="selected" class="btn btn-primary btn-sm" {% if staleness_warning %}disabled{% endif %}>Embed Selected</button>
-  <button type="submit" name="submit" value="all" class="btn btn-success btn-sm" style="margin-left:8px;" {% if staleness_warning %}disabled{% endif %}>Embed All</button>
-</form>
-<form method="POST" action="/steps/5/delete_db" style="display:inline-block;margin-left:18px;">
-  <input type="hidden" name="chunk_source" value="{{ chunk_source }}">
-  <input type="hidden" name="embed_method" value="{{ embed_method }}">
-  <button type="submit" class="btn btn-danger btn-sm">Delete DB for this Method</button>
-</form>
+<div class="mb-3">
+  <form method="POST" action="/steps/5/embed" id="embed-form" style="display:inline-block;">
+    <input type="hidden" name="chunk_source" value="{{ chunk_source }}">
+    <input type="hidden" name="embed_method" value="{{ embed_method }}">
+    <input type="hidden" name="selected_doc_ids" id="selected_doc_ids">
+    <button type="submit" name="submit" value="selected" class="btn btn-primary btn-sm" {% if staleness_warning %}disabled{% endif %}>Embed Selected</button>
+    <button type="submit" name="submit" value="all" class="btn btn-success btn-sm" style="margin-left:8px;" {% if staleness_warning %}disabled{% endif %}>Embed All</button>
+  </form>
+  <form method="POST" action="/steps/5/delete_db" style="display:inline-block;margin-left:18px;">
+    <input type="hidden" name="chunk_source" value="{{ chunk_source }}">
+    <input type="hidden" name="embed_method" value="{{ embed_method }}">
+    <button type="submit" class="btn btn-danger btn-sm">Delete DB for this Method</button>
+  </form>
+</div>
 <table class="table table-bordered table-sm" style="margin-top:18px;">
   <thead class="table-light">
     <tr>
@@ -46,57 +67,70 @@
 </table>
 <hr>
 <div class="row" style="margin-top:24px;">
-  <div class="col-md-6">
-    <h4>Build Summary</h4>
-    {% if stats %}
-      <ul>
-        <li>Chunks: {{ stats.n_chunks }}</li>
-        <li>Vector Dim: {{ stats.dim }}</li>
-        <li>Elapsed: {{ stats.build_ms }} ms</li>
-        <li>Output Folder: <code>{{ embed_subdir }}</code></li>
-        {% if config and config.faiss is defined %}
-        <li>FAISS Index: <b>{% if config.faiss %}Created{% else %}Not available{% endif %}</b></li>
-        {% endif %}
-        {% if config and config.metric is defined %}
-        <li>Metric: {{ config.metric }}</li>
-        {% endif %}
-        {% if config and config.source_hashes is defined %}
-        <li>Source Hashes: <code>config["source_hashes"]</code> (see config.json)</li>
-        {% endif %}
-      </ul>
-    {% else %}
-      <span style="color:#64748b;">No build yet for this method/source.</span>
-    {% endif %}
-    <h4>Preview (meta.json)</h4>
-    {% if preview %}
-      <table class="table table-bordered table-sm">
-        <thead><tr><th>vector_index</th><th>doc_id</th><th>chunk_id</th><th>method</th></tr></thead>
-        <tbody>
-        {% for row in preview %}
-          <tr>
-            <td>{{ row.vector_index }}</td>
-            <td>{{ row.doc_id }}</td>
-            <td>{{ row.chunk_id }}</td>
-            <td>{{ row.method }}</td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <span style="color:#64748b;">No preview available.</span>
-    {% endif %}
-    <div style="font-size:13px;color:#64748b;margin-top:8px;">Artifacts are saved in <code>{{ embed_subdir }}</code>.</div>
-  </div>
-  <div class="col-md-6">
-    <h4>Method Help</h4>
-    <div class="card mb-2 p-2" style="border:1px solid #e5e7eb;border-radius:8px;">
-      <b>MiniLM (local)</b>: Fast, free, runs on CPU. Uses <code>all-MiniLM-L6-v2</code> (384-dim). Good for most use cases.
-    </div>
-    <div class="card mb-2 p-2" style="border:1px solid #e5e7eb;border-radius:8px;">
-      <b>OpenAI</b>: Uses <code>text-embedding-3-small</code>. Requires API key. Higher quality, but costs money and is rate-limited.
-      {% if not embed_methods['openai']['enabled'] %}
-        <div style="color:#ef4444;">OpenAI embedding is disabled (no API key found).</div>
+  <div class="col-md-7">
+    <div class="card mb-3 p-3" style="border:1px solid #e5e7eb;border-radius:10px;">
+      <h4>Build Summary</h4>
+      {% if stats %}
+        <ul>
+          <li>Chunks: {{ stats.n_chunks }}</li>
+          <li>Vector Dim: {{ stats.dim }}</li>
+          <li>Elapsed: {{ stats.build_ms }} ms</li>
+          <li>Output Folder: <code>{{ embed_subdir }}</code></li>
+          {% if config and config.faiss is defined %}
+          <li>FAISS Index: <b>{% if config.faiss %}Created{% else %}Not available{% endif %}</b></li>
+          {% endif %}
+          {% if config and config.metric is defined %}
+          <li>Metric: {{ config.metric }}</li>
+          {% endif %}
+          {% if config and config.source_hashes is defined %}
+          <li>Source Hashes: <code>config["source_hashes"]</code> (see config.json)</li>
+          {% endif %}
+        </ul>
+      {% else %}
+        <span style="color:#64748b;">No build yet for this method/source.</span>
       {% endif %}
+    </div>
+    <div class="card mb-3 p-3" style="border:1px solid #e5e7eb;border-radius:10px;">
+      <h4>Preview (meta.json)</h4>
+      {% if preview %}
+        <table class="table table-bordered table-sm">
+          <thead><tr><th>vector_index</th><th>doc_id</th><th>chunk_id</th><th>method</th></tr></thead>
+          <tbody>
+          {% for row in preview %}
+            <tr>
+              <td>{{ row.vector_index }}</td>
+              <td>{{ row.doc_id }}</td>
+              <td>{{ row.chunk_id }}</td>
+              <td>{{ row.method }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <div class="text-muted" style="font-size:13px;margin-top:8px;">
+          <b>What is this?</b> This table previews the first 3 rows of <code>meta.json</code>, which maps each embedding vector to its original chunk and document.<br>
+          <b>Columns:</b>
+          <ul style="margin-bottom:0;">
+            <li><b>vector_index</b>: Row number in the embedding matrix (matches <code>vectors.npy</code>).</li>
+            <li><b>doc_id</b>: The document slug this chunk came from.</li>
+            <li><b>chunk_id</b>: The chunk number within the document.</li>
+            <li><b>method</b>: The chunking method used (e.g., headings or token).</li>
+          </ul>
+        </div>
+      {% else %}
+        <span style="color:#64748b;">No preview available.</span>
+      {% endif %}
+      <div style="font-size:13px;color:#64748b;margin-top:8px;">Artifacts are saved in <code>{{ embed_subdir }}</code>.</div>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="card mb-3 p-3" style="border:1px solid #e5e7eb;border-radius:10px;">
+      <h4>Method Help</h4>
+      <div class="mb-2"><b>MiniLM (local)</b>: Fast, free, runs on CPU. Uses <code>all-MiniLM-L6-v2</code> (384-dim). Good for most use cases.</div>
+      <div class="mb-2"><b>OpenAI</b>: Uses <code>text-embedding-3-small</code>. Requires API key. Higher quality, but costs money and is rate-limited.
+        {% if not embed_methods['openai']['enabled'] %}
+          <div style="color:#ef4444;">OpenAI embedding is disabled (no API key found).</div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
