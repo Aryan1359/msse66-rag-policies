@@ -7,7 +7,16 @@ step4_bp = Blueprint('step4_bp', __name__, url_prefix='/steps/4')
 @step4_bp.route('', methods=['GET'])
 def step4_page():
 	files = list_clean_files()
-	return render_template('steps/step_4.html', files=files, preview_headings_chunks=None, preview_token_chunks=None)
+	chunked_headings_files = []
+	chunked_token_files = []
+	headings_dir = os.path.join(os.path.dirname(__file__), 'Chunked-by-Heading')
+	token_dir = os.path.join(os.path.dirname(__file__), 'Chunked-by-Token')
+	if os.path.exists(headings_dir):
+		chunked_headings_files = sorted([f for f in os.listdir(headings_dir) if f.endswith('.jsonl')])
+	if os.path.exists(token_dir):
+		chunked_token_files = sorted([f for f in os.listdir(token_dir) if f.endswith('.jsonl')])
+	return render_template('steps/step_4.html', files=files, preview_headings_chunks=None, preview_token_chunks=None,
+						   chunked_headings_files=chunked_headings_files, chunked_token_files=chunked_token_files)
 
 @step4_bp.route('/chunk_headings', methods=['POST'])
 def chunk_headings():
@@ -47,7 +56,12 @@ def chunk_headings():
 		except Exception as e:
 			flash(f'Error chunking {doc_id}: {e}', 'danger')
 	flash(f'Chunked {len(doc_ids)} docs. ' + ', '.join(summary), 'success')
-	return render_template('steps/step_4.html', files=files, preview_headings_chunks=preview_chunks, preview_token_chunks=None)
+	chunked_headings_files = []
+	headings_dir = os.path.join(os.path.dirname(__file__), 'Chunked-by-Heading')
+	if os.path.exists(headings_dir):
+		chunked_headings_files = sorted([f for f in os.listdir(headings_dir) if f.endswith('.jsonl')])
+	return render_template('steps/step_4.html', files=files, preview_headings_chunks=preview_chunks, preview_token_chunks=None,
+						   chunked_headings_files=chunked_headings_files, chunked_token_files=[])
 
 @step4_bp.route('/chunk_token', methods=['POST'])
 def chunk_token():
@@ -86,4 +100,9 @@ def chunk_token():
 		except Exception as e:
 			flash(f'Error chunking {doc_id}: {e}', 'danger')
 	flash(f'Chunked {len(doc_ids)} docs. ' + ', '.join(summary), 'success')
-	return render_template('steps/step_4.html', files=files, preview_headings_chunks=None, preview_token_chunks=preview_chunks)
+	chunked_token_files = []
+	token_dir = os.path.join(os.path.dirname(__file__), 'Chunked-by-Token')
+	if os.path.exists(token_dir):
+		chunked_token_files = sorted([f for f in os.listdir(token_dir) if f.endswith('.jsonl')])
+	return render_template('steps/step_4.html', files=files, preview_headings_chunks=None, preview_token_chunks=preview_chunks,
+						   chunked_headings_files=[], chunked_token_files=chunked_token_files)

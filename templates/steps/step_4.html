@@ -80,6 +80,16 @@
       {% endfor %}
       </ul>
     {% endif %}
+    <div class="chunked-files-list" style="margin-top:18px;">
+      <h5 style="color:#059669;font-weight:600;">Chunked Files (Headings)</h5>
+      <ul style="font-size:14px;">
+        {% for fname in chunked_headings_files %}
+          <li><code>{{ fname }}</code></li>
+        {% else %}
+          <li style="color:#64748b;">No files chunked yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
   <div class="col">
     <h3>Chunk by Token Windows</h3>
@@ -117,6 +127,16 @@
       {% endfor %}
       </ul>
     {% endif %}
+    <div class="chunked-files-list" style="margin-top:18px;">
+      <h5 style="color:#059669;font-weight:600;">Chunked Files (Token Windows)</h5>
+      <ul style="font-size:14px;">
+        {% for fname in chunked_token_files %}
+          <li><code>{{ fname }}</code></li>
+        {% else %}
+          <li style="color:#64748b;">No files chunked yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
 </div>
 
