@@ -8,3 +8,5 @@ httpx
 sentence-transformers==2.7.0
 numpy==1.26.4
 requests
+
+pdfminer.six
