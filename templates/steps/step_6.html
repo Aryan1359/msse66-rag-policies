@@ -1,7 +1,127 @@
 {% extends "base.html" %}
-{% block page_title %}Step 6{% endblock %}
+{% block page_title %}Step 6 — Vector Search{% endblock %}
 {% block content %}
-  <h1>Step 6</h1>
-  <p>This page will handle a portion of the pipeline. Placeholder content for Step 6.</p>
-  <div class="secondary-panel"></div>
+<div class="card mb-3 p-3" style="border:1px solid #e5e7eb;border-radius:10px;">
+  <h3>Step 6 — Vector Search</h3>
+  <div class="mb-2 text-muted">This page lets you semantically search your policy chunks using the embeddings you created in Step 5. Enter a question, pick which embedding database to search, and we’ll return the most similar chunks by meaning (cosine similarity), not just keywords.</div>
+</div>
+<div class="card mb-3 p-3" style="border:1px solid #e5e7eb;border-radius:10px;">
+  <form method="POST" action="/steps/6/search">
+    <div class="row mb-2">
+      <div class="col-md-4">
+        <label for="db_key"><b>Embedding DB:</b></label>
+        <select name="db_key" id="db_key" class="form-select">
+          {% for db in dbs %}
+            <option value="{{ db.key }}" {% if db.key == selected_db %}selected{% endif %}>{{ db.key }}</option>
+          {% endfor %}
+        </select>
+        {% if selected_db_obj %}
+        <div class="text-muted" style="font-size:13px;">
+          Model: <code>{{ selected_db_obj.config.model }}</code> · Chunks: {{ selected_db_obj.stats.n_chunks }} · Dim: {{ selected_db_obj.stats.dim }}
+        </div>
+        {% endif %}
+      </div>
+      <div class="col-md-2">
+        <label for="topk"><b>Top-K:</b></label>
+        <input type="number" name="topk" id="topk" class="form-control" value="{{ topk }}" min="1" max="20">
+        <div class="text-muted" style="font-size:13px;">How many results to show (1–20)</div>
+      </div>
+      <div class="col-md-6">
+        <label for="query"><b>Query:</b></label>
+        <textarea name="query" id="query" class="form-control" rows="2" placeholder="Type your question or search phrase here...">{{ query }}</textarea>
+      </div>
+    </div>
+    <div class="mb-2">
+      <button type="submit" class="btn btn-primary">Search</button>
+      <button type="submit" formaction="/steps/6/clear" class="btn btn-secondary">Clear</button>
+    </div>
+  </form>
+</div>
+{% if results %}
+<div class="card mb-3 p-3" style="border:1px solid #e5e7eb;border-radius:10px;">
+  <h4>Search Results</h4>
+  <div class="mb-2 text-muted">Showing top {{ topk }} results from <code>{{ selected_db }}</code>. Scores are cosine similarity (0–1+). Higher is more similar.</div>
+  <form method="POST" action="/steps/6/download_csv" style="display:inline;">
+    <input type="hidden" name="db_key" value="{{ selected_db }}">
+    <input type="hidden" name="topk" value="{{ topk }}">
+    <input type="hidden" name="query" value="{{ query }}">
+    <button type="submit" class="btn btn-success btn-sm mb-2">Download CSV</button>
+  </form>
+  <div style="overflow-x:auto;">
+    <table class="table table-bordered table-sm" style="font-size:13px;min-width:900px;">
+      <thead style="position:sticky;top:0;background:#f8fafc;z-index:2;">
+        <tr>
+          <th>Rank</th>
+          <th>Score</th>
+          <th>doc_id</th>
+          <th>chunk_id</th>
+          <th>method</th>
+          <th>source file</th>
+          <th>Snippet</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for r in results %}
+        <tr>
+          <td>{{ r.rank }}</td>
+          <td>{{ '%.3f'|format(r.score) }}</td>
+          <td>{{ r.doc_id }}</td>
+          <td>{{ r.chunk_id }}</td>
+          <td>{{ r.method }}</td>
+          <td>{{ r.source_file }}</td>
+          <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ r.snippet|e }}</td>
+          <td>
+            <button class="btn btn-link btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#details{{ loop.index }}">Show</button>
+          </td>
+        </tr>
+        <tr class="collapse" id="details{{ loop.index }}">
+          <td colspan="8" style="background:#f8fafc;">
+            <b>Full Text:</b> <div style="white-space:pre-wrap;font-size:13px;max-height:300px;overflow:auto;">{{ r.full_text|e }}</div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-2 mb-1">
+    <b>Provenance:</b>
+    <div class="text-muted" style="font-size:13px;">
+    DB: <code>{{ selected_db }}</code> · Dim: {{ selected_db_obj.stats.dim }} · Model: <code>{{ selected_db_obj.config.model }}</code> · Created: {{ selected_db_obj.config.created_iso }} · Chunks: {{ selected_db_obj.stats.n_chunks }}
+    </div>
+    <div class="text-muted" style="font-size:13px;">Search latency: <b>{{ latency_ms }} ms</b> {% if faiss_used %}(FAISS){% else %}(NumPy){% endif %}</div>
+  </div>
+</div>
+{% endif %}
+<div class="card mb-3 p-3" style="border:1px solid #e5e7eb;border-radius:10px;">
+  <h4>Help & Explanations</h4>
+  <ul>
+    <li><b>What this step does:</b> Loads precomputed embeddings from Step 5, embeds your query, and retrieves the most similar chunks using cosine similarity.</li>
+    <li><b>Which DB to choose:</b> Headings-based chunks produce broader sections; Token window chunks are evenly sized and may match short queries more precisely.</li>
+    <li><b>How Top-K works:</b> Top-K is how many results we return. Start with 5; increase if needed.</li>
+    <li><b>What the scores mean:</b> Scores are cosine similarity (0–1+ with normalized vectors). Higher is more similar.</li>
+    <li><b>Where data comes from:</b> Vectors and metadata are loaded directly from Step-5 folders. No files are modified here.</li>
+  </ul>
+</div>
+{% if embed_history %}
+<div class="card mb-3 p-3" style="border:1px solid #e5e7eb;border-radius:10px;">
+  <h4>Embed History (Step 5)</h4>
+  <table class="table table-bordered table-sm">
+    <thead><tr><th>Time</th><th>DB</th><th>Chunks</th><th>Dim</th><th>Elapsed (ms)</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for e in embed_history[-5:] %}
+      <tr>
+        <td>{{ e.ts }}</td>
+        <td>{{ e.chunk_source }}__{{ e.embed_method }}</td>
+        <td>{{ e.n_chunks }}</td>
+        <td>{{ e.dim }}</td>
+        <td>{{ e.ms_elapsed }}</td>
+        <td>{{ e.status }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <div class="text-muted" style="font-size:13px;">Showing last 5 embedding jobs from Step 5.</div>
+</div>
+{% endif %}
 {% endblock %}

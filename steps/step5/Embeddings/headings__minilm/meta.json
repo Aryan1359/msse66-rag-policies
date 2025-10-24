@@ -10,6 +10,7 @@
       "max_chunk_len": null
     },
     "source_hash": "8c26dbded11e6ebf7f4fe83889e73c6b80ec2e2bc81f7894e95c4b362e18fc6f",
+    "text": "Boeing Pilots\nFlight Training Bulletin\n\nRevision Cycle 2 Updates\n\nFlight Ops Division │ 6/5/25",
     "vector_index": 0
   },
   {
@@ -23,6 +24,7 @@
       "max_chunk_len": null
     },
     "source_hash": "8c26dbded11e6ebf7f4fe83889e73c6b80ec2e2bc81f7894e95c4b362e18fc6f",
+    "text": "For supplemental information please review the following RC2 Updates:\n\nETOPS 1. Preflight Procedures\n\nETOPS 2. Enroute Procedures\n\nBefore Start - CA\n\nRC2 – Training Highlights Podcast\n\nYou can also find these videos and podcast on Alaska Pilot Training App.\n\nThank you,\n\nYour Flight Training Team\n\nPage | 1",
     "vector_index": 1
   },
   {
@@ -36,6 +38,7 @@
       "max_chunk_len": null
     },
     "source_hash": "40862dae9118cc2b94afe88f5a2cd1742c8ed0ef86d400f05586e6b300bc0275",
+    "text": "Hydropower Formula – Live Demo\n\nHydropower Formula – Live Demo\n\nInteractive calculator for\nP\n =\nη\n · ρ · g ·\nQ\n ·\nh\n (all SI units). Adjust inputs and see power update instantly.\n\nInputs\n\nEfficiency η\n\nFlow rate Q\n(m3/s)\n\nHead h\n(m)\n\nAdvanced (density ρ and gravity g)\n\nDensity ρ\n(kg/m3)\n\nGravity g\n(m/s2)\n\nReset\n\nThree Gorges example\n\nUnits: SI (W, m, m3/s)\n\nOutput",
     "vector_index": 2
   },
   {
@@ -49,6 +52,7 @@
       "max_chunk_len": null
     },
     "source_hash": "40862dae9118cc2b94afe88f5a2cd1742c8ed0ef86d400f05586e6b300bc0275",
+    "text": "— MW\n\nP = η·ρ·g·Q·h = — W\n\nScale reference: bar fills at 25 GW\n\nPer‐m3 energy and intuition\n\nQuantity\nExpression\nValue\n\nEnergy per m3 of water (at head h)\nE/m3 = ρ·g·h\n— J/m3\n\nPower per (m3/s) of flow\nP/(m3/s) = η·ρ·g·h\n— W per (m3/s)\n\nShow full breakdown\n\nη (efficiency)\n—\n\nρ (kg/m3)\n—\n\ng (m/s2)\n—\n\nQ (m3/s)\n—\n\nh (m)\n—\n\nProduct η·ρ·g·Q·h\n—",
     "vector_index": 3
   },
   {
@@ -62,6 +66,7 @@
       "max_chunk_len": null
     },
     "source_hash": "40862dae9118cc2b94afe88f5a2cd1742c8ed0ef86d400f05586e6b300bc0275",
+    "text": "Nearest MW:\n—",
     "vector_index": 4
   },
   {
@@ -75,6 +80,7 @@
       "max_chunk_len": null
     },
     "source_hash": "40862dae9118cc2b94afe88f5a2cd1742c8ed0ef86d400f05586e6b300bc0275",
+    "text": "Also:",
     "vector_index": 5
   },
   {
@@ -88,6 +94,7 @@
       "max_chunk_len": null
     },
     "source_hash": "40862dae9118cc2b94afe88f5a2cd1742c8ed0ef86d400f05586e6b300bc0275",
+    "text": "— GW\n\nHow to talk about it in your presentation\n\nP\n (power) grows when either the drop is taller (\nh\n increases) or more water moves each second (\nQ\n increases). The constant terms ρ (water density) and g (gravity) turn height into energy, and η captures real‐world losses in the turbine/generator. Together:\nP = η·ρ·g·Q·h\n.\n\nUse the sliders live while presenting to show how doubling\nQ\n doubles power, or how raising\nh\n boosts power linearly.\n\nOpen “Advanced” to explain why we typically fix ρ≈1000 kg/m3 and g≈9.81 m/s2.\n\nQuote the “Power per (m3/s)” number to make quick mental math: each extra m3/s of flow adds that many Watts at your chosen head and η.",
     "vector_index": 6
   },
   {
@@ -101,6 +108,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# MSSE66 RAG — Company Policies Q&A\n\nRetrieval‐Augmented Generation (RAG) app that answers questions about a small corpus of **company policies**. Built as part of the **MSSE66+ AI Engineering Project** and aligned to the rubric (env + CI, ingestion, retrieval, deploy, evaluation).",
     "vector_index": 7
   },
   {
@@ -114,6 +122,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "---",
     "vector_index": 8
   },
   {
@@ -127,6 +136,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "## 📌 Status (end of Phase 2)\n\n**Done:**\n\n* Repo + Codespaces, `.venv`, Python pinned (3.12.1 via `.python-version`, `runtime.txt`)\n* Minimal deps: `Flask`, `python-dotenv`\n* Flask endpoints: `/` and `/health`\n* CI: `.github/workflows/ci.yml` smoke‐tests `import app`\n* Corpus: `data/policies/*.md` (PTO, Expenses, Remote Work)",
     "vector_index": 9
   },
   {
@@ -140,6 +150,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "* Ingestion & Indexing scripts:\n\n  * `scripts/ingest.py` → doc stats\n  * `scripts/chunk.py` → overlapping chunks\n  * `scripts/index_jsonl.py` → writes `data/index/policies.jsonl`\n  * `scripts/search_jsonl.py` → tiny keyword search (CLI)\n* API: `/search?q=...&topk=...` returns keyword‐matched chunks (JSON)\n\n**Next:** Phase 3 (Embeddings + vector search) → Phase 4 (UI) → Phase 5 (Deploy) → Phase 6 (Eval)",
     "vector_index": 10
   },
   {
@@ -153,6 +164,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "---",
     "vector_index": 11
   },
   {
@@ -166,6 +178,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "## 🚀 Quickstart (GitHub Codespaces)\n\n```bash",
     "vector_index": 12
   },
   {
@@ -179,6 +192,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# 1) Activate the virtualenv\nsource .venv/bin/activate",
     "vector_index": 13
   },
   {
@@ -192,6 +206,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# 2) (Re)build JSONL index if you changed policies\npython scripts/index_jsonl.py",
     "vector_index": 14
   },
   {
@@ -205,6 +220,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# 3) Run the app (serves on port 8000)\npython app.py\n```\n\n**Test locally from the terminal inside Codespaces:**\n\n```bash",
     "vector_index": 15
   },
   {
@@ -218,6 +234,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# Health\ncurl \"http://127.0.0.1:8000/health\"",
     "vector_index": 16
   },
   {
@@ -231,6 +248,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# Keyword search\ncurl \"http://127.0.0.1:8000/search?q=pto%20accrual&topk=3\"\n```\n\n> In the browser, use your **forwarded URL** (looks like `https://<id>-8000.app.github.dev/`). In the terminal, prefer `http://127.0.0.1:8000`.",
     "vector_index": 17
   },
   {
@@ -244,6 +262,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "---",
     "vector_index": 18
   },
   {
@@ -257,6 +276,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "## 🧩 What’s implemented (Phase 2)\n\n* **Corpus** in `data/policies/`: small, legal‐to‐use Markdown files.\n* **Loader (`scripts/ingest.py`)** prints words/lines/headings per file.\n* **Chunker (`scripts/chunk.py`)** creates ~600‐char chunks with ~100‐char overlap, preferring breaks on blank lines/headings.\n* **Index writer (`scripts/index_jsonl.py`)** emits one JSON object per chunk to `data/index/policies.jsonl` with ids, text, and rough token counts.\n* **Keyword search (CLI)** scores by simple term frequencies with word boundaries.\n* **Flask `/search`** mirrors the CLI search and returns top‐k results with previews and metadata.",
     "vector_index": 19
   },
   {
@@ -270,6 +290,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "---",
     "vector_index": 20
   },
   {
@@ -283,6 +304,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "## 📁 Repository Structure\n\n```\nmsse66-rag-policies/\n├─ app.py                          # Flask app with /, /health, /search\n├─ data/\n│  ├─ policies/                    # Policy corpus (Markdown)\n│  │  ├─ 01-pto.md\n│  │  ├─ 02-expenses.md\n│  │  └─ 03-remote-work.md\n│  └─ index/\n│     └─ policies.jsonl            # Generated JSONL index (build via scripts)\n├─ scripts/\n│  ├─ ingest.py                    # Corpus stats\n│  ├─ chunk.py                     # Overlapping chunker\n│  ├─ index_jsonl.py               # Write JSONL index\n│  └─ search_jsonl.py              # CLI keyword search over JSONL\n├─ .github/workflows/ci.yml        # CI: install deps + smoke test\n├─ requirements.txt\n├─ .python-version\n├─ runtime.txt\n├─ Instruction.md                  # Mentor/working-mode instructions\n├─ LEARNING-GUIDE.md               # Beginner guide (what/why/how)\n├─ checklist.md                    # Master checklist (rubric aligned)\n└─ PROGRESS-LOG.md                 # Chronological log\n```",
     "vector_index": 21
   },
   {
@@ -296,6 +318,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "---",
     "vector_index": 22
   },
   {
@@ -309,6 +332,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "## 🔄 Branch / PR Workflow (beginner‐proof)\n\n1. Create a feature branch: `git checkout -b <feature>`\n2. Make a tiny change; verify locally\n3. `git add ... && git commit -m \"<scope>: <message>\"`\n4. `git push -u origin <feature>` → Open PR → Merge → Delete branch\n5. Sync: `git checkout main && git pull`",
     "vector_index": 23
   },
   {
@@ -322,6 +346,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "---",
     "vector_index": 24
   },
   {
@@ -335,6 +360,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "## 🧪 Verification Cheatsheet\n\n```bash",
     "vector_index": 25
   },
   {
@@ -348,6 +374,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# Stats\npython scripts/ingest.py",
     "vector_index": 26
   },
   {
@@ -361,6 +388,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# Chunking\npython scripts/chunk.py",
     "vector_index": 27
   },
   {
@@ -374,6 +402,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# Index build\npython scripts/index_jsonl.py && wc -l data/index/policies.jsonl",
     "vector_index": 28
   },
   {
@@ -387,6 +416,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# CLI search\npython scripts/search_jsonl.py \"pto accrual\" --topk 3",
     "vector_index": 29
   },
   {
@@ -400,6 +430,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "# API search\ncurl \"http://127.0.0.1:8000/search?q=pto%20accrual&topk=3\"\n```",
     "vector_index": 30
   },
   {
@@ -413,6 +444,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "---",
     "vector_index": 31
   },
   {
@@ -426,6 +458,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "## 🧭 Roadmap (Phases 3–6)\n\n**Phase 3 — Embeddings & Vector Search**\n\n* Choose embeddings: local (`sentence-transformers`) vs API provider\n* `scripts/embed_index.py` → create vectors (e.g., `.npy` + `meta.json`)\n* `scripts/vector_search.py` → cosine similarity top‐k\n* Extend Flask `/search?mode=vector` with citations (doc_id + chunk_id)\n\n**Phase 4 — Web UI**\n\n* Minimal search page calling `/search`\n* Display sources + highlighted snippets\n\n**Phase 5 — Deployment & CI/CD**\n\n* Deploy on Render/Railway (free tier)\n* GH Actions: deploy on `main`\n\n**Phase 6 — Evaluation**\n\n* 15–30 Q/A set over policies\n* Metrics: groundedness, citation accuracy, latency (p50/p95)\n* Report in `design-and-evaluation.md`",
     "vector_index": 32
   },
   {
@@ -439,6 +472,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "---",
     "vector_index": 33
   },
   {
@@ -452,6 +486,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "## 🛠️ Troubleshooting\n\n* `ModuleNotFoundError: flask` → `source .venv/bin/activate`\n* 404 on `/search` → ensure route is defined **before** `app.run(...)`; restart server\n* `curl` to `app.github.dev` shows nothing → test via `http://127.0.0.1:8000` inside terminal",
     "vector_index": 34
   },
   {
@@ -465,6 +500,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "---",
     "vector_index": 35
   },
   {
@@ -478,6 +514,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "## 🤖 AI Use & CI Disclosure\n\n* AI helpers: **ChatGPT‐5** (mentor/co‐dev) + optional **GitHub Copilot**\n* CI: runs on each push/PR, installs deps, smoke‐tests `import app`",
     "vector_index": 36
   },
   {
@@ -491,6 +528,7 @@
       "max_chunk_len": null
     },
     "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e",
+    "text": "---\n\n**Maintainer:** Aryan Yaghobi\n**Mentor / AI Co‐Developer:** ChatGPT‐5\n\n> This README documents Phase 2 completion and provides clear run steps, verification, and a rubric‐aligned roadmap.",
     "vector_index": 37
   },
   {
@@ -504,6 +542,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "AI\nEngineering\nProject\n\nProject Overview\n\nFor this project, you will be designing, building, and evaluating a Retrieval-Augmented\nGeneration (RAG) LLM-based application that answers user questions about a corpus of\ncompany policies & procedures. You will then deploy the application to a free-tier host\n(e.g., Render, Railway) with a basic CI/CD pipeline (e.g., GitHub Actions) that triggers\ndeployment on push/PR when the app builds successfully. Finally, you will demonstrate\nthe system via a screen-share video showing key features of your deployed application,\nand a quick walkthrough of your design, evaluation and CI/CD run. You can complete this\nproject either individually or as a group of no more than three people.\n\nWhile you can fully hand code this project if you wish, you are highly encouraged to\nutilize leading AI code generation models/AI IDEs/async agents to assist in rapidly\nproducing your solution, being sure to describe in broad terms how you made use of\nthem. Here are some examples of very useful AI tools you may wish to consider. You will\nbe graded on the quality and functionality of the application and how well it meets the\nproject requirements—no given proportion of the code is required to be hand coded.\n\nLearning Outcomes",
     "vector_index": 38
   },
   {
@@ -517,6 +556,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "When completed successfully, this project will enable you to:\n\n●  Demonstrate excellent AI engineering skills\n●  Demonstrate the ability to select appropriate AI application design and\n\narchitecture\nImplement a working LLM-based application including RAG\n\n●\n●  Evaluate the performance of an LLM-based application\n●  Utilize AI tooling as appropriate\n\n © 2025 Quantic Holdings, Inc. All rights reserved.      6/23/21\n\n\n\n\n\n\n\n\nAI Engineering Project\n\nProject Description\n\nFirst, assemble a small but coherent corpus of documents outlining company policies &\nprocedures - about 5–20 short markdown/HTML/PDF/TXT files totaling 30–120 pages.\nYou may author them yourself (with AI assistance) or use policies that you are aware of\nfrom your own organization that can be used for this assignment. Students must use a\ncorpus they can legally include in the repo or load at runtime (e.g., your own synthetic\npolicies, your organization’s employee policy documents etc.)—no private/paid data is\nrequired. Additionally, you should define success metrics for your application (see the\n“Evaluation” step below), including at least one information-quality metric (e.g.,\ngroundedness or citation accuracy) and one system metric (e.g., latency).\n\nUse free or zero-cost options when possible e.g., OpenRouter’s free tier\n(https://openrouter.ai/docs/api-reference/limits), Groq\n(https://console.groq.com/docs/rate-limits), or your own paid API keys if you have them.\nFor embedding models, free-tier options are available from Cohere, Voyage,\nHuggingFace and others\n\nComplete the following steps to fully develop, deploy, and evaluate your application:\n\n1.  Environment and Reproducibility\n\n○  Create a virtual environment (e.g., venv, conda).\n○  List dependencies in requirements.txt (or environment.yml).\n○  Provide a README.md with setup + run instructions.\n○  Set fixed seeds where/if applicable (for deterministic chunking or\n\nevaluation sampling).\n\n2.  Ingestion and Indexing\n\n○  Parse & clean documents (handle PDFs/HTML/md/txt).\n○  Chunk documents (e.g., by headings or token windows with overlap).\n○  Embed chunks with a free embedding model or a free-tier API.\n○  Store the embedded document chunks in a local or lightweight vector\ndatabase (e.g. Chroma or optionally a cloud-hosted vector store like\nPinecone, etc.)\n\n○  Store vectors in a local/vector DB or cloud DB (e.g., Chroma, Pinecone, etc.)\n\n3.  Retrieval and Generation (RAG)\n\n○  To build your RAG pipeline you may use frameworks such as LangChain to\n\nhandle retrieval, prompt chaining, and API calls, or implement these\nmanually.\nImplement Top-k retrieval with optional re-ranking.\n\n○\n\n © 2025 Quantic Holdings, Inc. All rights reserved.      6/23/21                                        2\n\n\n\n\nAI Engineering Project\n\n○  Build a prompting strategy that injects retrieved chunks (and\n\ncitations/sources) into the LLM context.",
     "vector_index": 39
   },
   {
@@ -530,6 +570,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "○  Add basic guardrails:\n\n■  Refuse to answer outside the corpus (“I can only answer about our\n\npolicies”),\n\n■  Limit output length,\n■  Always cite source doc IDs/titles for answers.\n\n4.  Web Application\n\n○  Students can use Flask, Streamlit or alternative for the Web app. LangChain\n\nis recommended for orchestration, but is optional.",
     "vector_index": 40
   },
   {
@@ -543,6 +584,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "○  Endpoints/UI:\n■\n■\n\n/   - Web chat interface - text box for user input\n/chat - API endpoint that receives user questions (POST) and returns\nmodel-generated answers with citations and snippets (link to source\nand show snippet).\n/health - returns simple status via JSON.\n\n■\n5.  Deployment\n\n○  For production hosting use Render or Railway free tiers; students may\n\nalternatively use any other free-tier providers of their choice.\n\n○  Configure environment variables (e.g. API keys, model endpoints, DB\n\nrelated etc.).\n\n○  Ensure the app is publicly accessible at a shareable URL.",
     "vector_index": 41
   },
   {
@@ -556,6 +598,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "6.  CI/CD\n\n○  Minimal automated testing is sufficient for this assignment (a build/run\n\ncheck, optional smoke test).",
     "vector_index": 42
   },
   {
@@ -569,6 +612,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "○  Create a GitHub Actions workflow that on push/PR:\n\nInstalls dependencies,\n\n■\n■  Runs a build/start check (e.g., python -m pip install -r\n\nrequirements.txt and python -c \"import app\" or pytest -q if you add\ntests),\n\n■  On success in main, deploy to your host (Render/Railway action or\n\nvia webhook/API).\n\n7.  Evaluation of the LLM Application\n\n○  Provide a small evaluation set of 15–30 questions covering various policy",
     "vector_index": 43
   },
   {
@@ -582,6 +626,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "topics (PTO, security, expense, remote work, holidays, etc.). Report:",
     "vector_index": 44
   },
   {
@@ -595,6 +640,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "■  Answer Quality (required):\n\n1.  Groundedness: % of answers whose content is factually\nconsistent with and fully supported by the retrieved\nevidence—i.e., the answer contains no information that is\nabsent or contradicted in the context.\n\n © 2025 Quantic Holdings, Inc. All rights reserved.      6/23/21                                        3\n\n\n\nAI Engineering Project\n\n2.  Citation Accuracy: % of answers whose listed citations\n\ncorrectly point to the specific passage(s) that support the\ninformation stated—i.e., the attribution is correct and not\nmisleading.\n\n3.  Exact/Partial Match (optional): % of answers that exactly or\n\npartially match a short gold answer you provide.",
     "vector_index": 45
   },
   {
@@ -608,6 +654,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "■  System Metrics (required):\n\n1.  Latency (p50/p95) from request to answer for 10–20 queries.\n\n■  Ablations (optional): compare retrieval k, chunk size, or prompt\n\nvariants.\n8.  Design Documentation\n\n○  Briefly justify design choices (embedding model, chunking, k, prompt\n\nformat, vector store).\n\nSubmission Guidelines",
     "vector_index": 46
   },
   {
@@ -621,6 +668,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "Your final submission should consist of two links:\n\n●  A link to an accessible software repository (a GitHub repo) containing all your\n\ndeveloped code and the items listed below. You must share your repository with\nthe GitHub account, quantic-grader.\n\no  The GitHub repository should include a link to the deployed version of\n\nyour RAG LLM-based application (in file deployed.md)\n\no  The GitHub repository must include a README.md file indicating setup and\n\nrun instructions\n\no  The GitHub repository must also include a brief design and evaluation",
     "vector_index": 47
   },
   {
@@ -634,6 +682,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "document (design-and-evaluation.md) listing and explaining:\n\ni)\n\nii)\n\ndesign and architecture decisions made - and why they were made,\nincluding technology choices\nsummary of your evaluation approach and results for your RAG\nsystem\n\no  The GitHub repository must include an ai-use.md file that briefly describes\n\nwhich AI code tools you used and how.\n\n●  A link to a recorded screen-share demonstration video of the working RAG\n\nLLM-based application, involving screen capture of it being used with voiceover\n\no  All group members must speak and be present on camera.\no  All group members must show their government ID.\no  The demonstration/presentation should be between 5 and 10 minutes long.\n\nTo submit your project, please click on the \"Submit Project\" button on your dashboard\nand follow the steps provided. If you are submitting your project as a group, please\n\n © 2025 Quantic Holdings, Inc. All rights reserved.      6/23/21                                        4\n\n\n\n\nAI Engineering Project\n\nProject Rubric\n\nScores 2 and above are considered passing. Students who receive a 1 or 0 will not get\ncredit for the assignment and must revise and resubmit to receive a passing grade.\n\nScore\n\nDescription\n\n5",
     "vector_index": 48
   },
   {
@@ -647,6 +696,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "●  Addresses ALL of the project requirements, but not limited to:\n\n○  Outstanding RAG application with correct responses with matching\n\ncitations, ingest and indexing works\n\n○  Excellent, well-structured application architecture\n○  Public deployment on Render, Railway (or equivalent) fully functional\n○  CI/CD runs on push/PR and deploys on success\n○  Excellent documentation of design choices.\n○  Excellent evaluation results, which includes groundedness, citation\n\naccuracy, and latency\n\n○  Excellent, clear demo of features, design and evaluation",
     "vector_index": 49
   },
   {
@@ -660,6 +710,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "●  Addresses MOST of the project requirements, but not limited to:\n\n○  Excellent RAG application with correct responses with generally\n\nmatching citations, ingest and indexing works\n○  Very good, well-structured application architecture\n○  Public deployment on Render, Railway (or equivalent) almost fully\n\nfunctional\n\n○  CI/CD runs on push/PR and deploys on success\n○  Very good documentation of design choices.\n○  Very good evaluation results which includes groundedness, citation\n\naccuracy, and latency\n\n○  Very good, clear demo of features, design and evaluation",
     "vector_index": 50
   },
   {
@@ -673,6 +724,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "●  Addresses SOME of the project requirements, but not limited to:\n\n○  Very good RAG application with mainly correct responses with\n\ngenerally matching citations, ingest and indexing works\n\n○  Good, well-structured application architecture\n○  Public deployment on Render, Railway (or equivalent) almost fully\n\nfunctional\n\n○  CI/CD runs on push/PR and deploys on success\n○  Good documentation of design choices.\n\n4\n\n3\n\n © 2025 Quantic Holdings, Inc. All rights reserved.      6/23/21                                        6\n\n\n\n\n\n\n\nAI Engineering Project\n\n○  Good evaluation results which includes most of groundedness,\n\ncitation accuracy, and latency\n\n○  Good, clear demo of features, design and evaluation.",
     "vector_index": 51
   },
   {
@@ -686,6 +738,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "●  Addresses FEW of the project requirements, but not limited to:\n\n○  Passable RAG application with limited correct responses with few\n\nmatching citations, ingest and indexing works partially\n\n○  Passable application architecture\n○  Public deployment on Render, Railway (or equivalent) not fully\n\nfunctional\n\n○  CI/CD runs on push/PR and deploys on success\n○  Passable documentation of design choices.\n○  Passable evaluation results which includes only some of\n\ngroundedness, citation accuracy, and latency\n○  Passable demo of features, design and evaluation\n\n●  Addresses the project but MOST of the project requirements are missing,",
     "vector_index": 52
   },
   {
@@ -699,6 +752,7 @@
       "max_chunk_len": null
     },
     "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906",
+    "text": "but not limited to:\n\nIncomplete app; not deployed,\n\n○\n○  No CI/CD,\n○  No to very limited evaluation\n○  No design documentation\n○  No demo of application\n\n●  The student either did not complete the assignment, plagiarized all or part\n\nof the assignment, or completely failed to address the project requirements.\n\n2\n\n1\n\n0\n\n © 2025 Quantic Holdings, Inc. All rights reserved.      6/23/21                                        7",
     "vector_index": 53
   }
 ]

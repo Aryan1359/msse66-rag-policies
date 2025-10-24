@@ -46,6 +46,7 @@ def load_chunks_for_docs(docs):
                     'method': rec.get('method'),
                     'params': rec.get('params'),
                     'source_hash': source_hash,
+                    'text': rec.get('text'),
                 }
                 meta_rows.append(meta)
     return texts, meta_rows
