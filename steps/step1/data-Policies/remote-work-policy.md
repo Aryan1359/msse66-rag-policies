@@ -1,0 +1,39 @@
+# Remote Work Policy  
+**Filename: remote-work-policy.md**  
+**DocID: REMOTE-002**  
+**Effective Date: Jan 1, 2025**  
+**Last Updated: Sep 15, 2025**
+
+## Purpose  
+To define the guidelines and expectations for employees working remotely.
+
+## Scope  
+Applies to all employees approved for remote work arrangements, either full-time or hybrid.
+
+## Eligibility  
+- Employees must complete 90 days of employment before requesting remote work.
+- Approval is based on role suitability, performance, and manager discretion.
+
+## Expectations  
+- Employees must be available during core hours: 9 AM – 4 PM local time.
+- Daily check-ins via Slack or Teams are required.
+- All meetings must be attended with video on unless otherwise approved.
+
+## Equipment  
+- Company provides laptop, webcam, and headset.
+- Employees are responsible for maintaining a secure and quiet workspace.
+
+## Security  
+- VPN must be used for all company systems.
+- Confidential documents must not be printed or stored locally.
+
+## Reimbursement  
+- Internet costs may be reimbursed up to $50/month with valid receipts.
+- No reimbursement for furniture or utilities unless pre-approved.
+
+## Termination of Remote Work  
+- Remote privileges may be revoked due to performance issues or policy violations.
+- Employees may be asked to return to office with 2 weeks’ notice.
+
+## Contact  
+For remote work support, email remote@company.com.

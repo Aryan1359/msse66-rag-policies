@@ -1,0 +1,37 @@
+# Diversity, Equity, and Inclusion (DEI) Policy  
+**Filename: dei-policy.md**  
+**DocID: DEI-005**  
+**Effective Date: Jan 1, 2025**  
+**Last Updated: Sep 15, 2025**
+
+## Purpose  
+To promote a workplace culture that values diversity, ensures equity, and fosters inclusion across all levels of the organization.
+
+## Scope  
+Applies to all employees, contractors, interns, and leadership teams.
+
+## Commitment  
+- Recruit and retain talent from diverse backgrounds.  
+- Provide equal access to opportunities, resources, and advancement.  
+- Foster inclusive practices in meetings, communications, and decision-making.
+
+## Training  
+- Mandatory DEI training for all employees within the first 90 days of employment.  
+- Annual refresher courses required for all staff.  
+- Specialized workshops available for managers and team leads.
+
+## Reporting and Accountability  
+- DEI concerns can be reported anonymously via the DEI Portal.  
+- Quarterly DEI metrics are reviewed by the Executive Inclusion Council.  
+- Managers are evaluated on inclusive leadership practices.
+
+## Inclusive Language  
+- Employees are encouraged to use inclusive language in all communications.  
+- Pronoun preferences must be respected in email signatures and meetings.
+
+## Celebrations and Observances  
+- The company recognizes cultural heritage months and hosts inclusive events.  
+- Employees may propose observances through the DEI Committee.
+
+## Contact  
+For DEI support or questions, email inclusion@company.com.

@@ -1,0 +1,37 @@
+# Expense Reimbursement Policy
+**Filename: expense-policy.md**
+**DocID: EXPENSE-003**
+**Effective Date: Jan 1, 2025**
+**Last Updated: Sep 15, 2025**
+
+## Purpose
+To outline the procedures and guidelines for reimbursing employees for business-related expenses.
+
+## Scope
+Applies to all employees who incur expenses while conducting company business.
+
+## Eligible Expenses
+- Travel (airfare, lodging, ground transport)
+- Meals during business travel (up to $75/day)
+- Office supplies and software tools
+- Client entertainment (with prior approval)
+
+## Submission Process
+- Submit expenses via the Expense Portal within 30 days of incurring the cost.
+- Upload itemized receipts and business justification.
+- Manager approval required before reimbursement is processed.
+
+## Payment Timeline
+- Approved reimbursements are paid within 14 business days via payroll.
+- Delays may occur if documentation is incomplete.
+
+## Restrictions
+- No reimbursement for alcohol, personal items, or family travel.
+- Expenses over $500 require pre-approval from Finance.
+
+## Audit and Compliance
+- Expense reports are subject to random audit.
+- Fraudulent claims may result in disciplinary action.
+
+## Contact
+For questions, email finance@company.com.

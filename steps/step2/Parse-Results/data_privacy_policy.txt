@@ -1,0 +1,83 @@
+
+
+
+
+
+
+Data Privacy Policy
+
+
+
+
+
+
+Data Privacy Policy
+
+
+Filename:
+ data-privacy-policy.html
+
+
+DocID:
+ PRIVACY-008
+
+
+Effective Date:
+ Jan 1, 2025
+
+
+Last Updated:
+ Sep 15, 2025
+
+
+Purpose
+
+
+To ensure the protection and responsible handling of personal and sensitive data.
+
+
+Scope
+
+
+Applies to all employees and contractors who collect, store, or process data.
+
+
+Data Types
+
+
+
+
+Personally Identifiable Information (PII)
+
+
+Health and financial data
+
+
+Customer and employee records
+
+
+
+
+Handling Guidelines
+
+
+
+
+Data must be encrypted in transit and at rest.
+
+
+Access is granted on a need-to-know basis.
+
+
+Retention periods must comply with legal requirements.
+
+
+
+
+Rights and Requests
+
+
+Individuals may request access, correction, or deletion of their data via privacy@company.com.
+
+
+

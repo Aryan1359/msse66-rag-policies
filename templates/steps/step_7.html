@@ -1,8 +1,150 @@
 
 {% extends "base.html" %}
-{% block page_title %}Step 7{% endblock %}
+{% block page_title %}Step 7: Ask / RAG Generation{% endblock %}
 {% block content %}
-  <h1>Step 7</h1>
-  <p>This page will handle a portion of the pipeline. Placeholder content for Step 7.</p>
-  <div class="secondary-panel"></div>
+<div class="container mt-4">
+  <form method="POST" action="{{ url_for('step7_bp.api_keys') }}" class="card p-3 mb-4">
+    <h5 class="mb-3">API Key Management</h5>
+    <div class="row mb-2">
+      <div class="col-md-4">
+        <label for="openrouter_key" class="form-label">OpenRouter API Key</label>
+        <div class="input-group">
+          <input type="text" name="openrouter_key" id="openrouter_key" class="form-control" value="{{ api_keys.OPENROUTER_API_KEY }}" placeholder="Enter OpenRouter API Key">
+          <button type="submit" name="use_env_openrouter" value="1" class="btn btn-outline-secondary">Use Repo Secret</button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="groq_key" class="form-label">Groq API Key</label>
+        <input type="text" name="groq_key" id="groq_key" class="form-control" value="{{ api_keys.GROQ_API_KEY }}" placeholder="Enter Groq API Key">
+      </div>
+      <div class="col-md-4">
+        <label for="openai_key" class="form-label">OpenAI API Key</label>
+        <input type="text" name="openai_key" id="openai_key" class="form-control" value="{{ api_keys.OPENAI_API_KEY }}" placeholder="Enter OpenAI API Key">
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-success">Save API Keys</button>
+        <button type="submit" name="delete" value="1" class="btn btn-danger ms-2">Delete All Keys</button>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-12">
+        <small class="text-muted">Keys are stored securely for future use. Only providers with keys set will be available for selection below.</small>
+      </div>
+    </div>
+  </form>
+  <form method="POST" action="{{ url_for('step7_bp.ask_route') }}" class="card p-3 mb-4">
+    <div class="row mb-2">
+      <div class="col-md-3">
+        <label for="method" class="form-label">Chunking Method</label>
+        <select name="method" id="method" class="form-select">
+          <option value="headings" {% if method == 'headings' %}selected{% endif %}>By Heading</option>
+          <option value="token" {% if method == 'token' %}selected{% endif %}>By Token</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="db_key" class="form-label">Document Index</label>
+        <select name="db_key" id="db_key" class="form-select">
+          {% for db in dbs %}
+            <option value="{{ db.key }}" {% if db.key == selected_db %}selected{% endif %}>{{ db.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="provider" class="form-label">AI Provider</label>
+        <select name="provider" id="provider" class="form-select">
+          {% for p in available_providers %}
+            <option value="{{ p }}">{{ p|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="topk" class="form-label">Top-K Chunks</label>
+        <input type="number" name="topk" id="topk" class="form-control" value="{{ topk }}" min="1" max="20">
+      </div>
+      <div class="col-md-2">
+        <label for="min_score" class="form-label">Min Score</label>
+        <input type="text" name="min_score" id="min_score" class="form-control" value="{{ min_score }}">
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-3">
+        <label for="answer_len" class="form-label">Answer Length</label>
+        <select name="answer_len" id="answer_len" class="form-select">
+          <option value="short" {% if answer_len == 'short' %}selected{% endif %}>Short</option>
+          <option value="med" {% if answer_len == 'med' %}selected{% endif %}>Medium</option>
+          <option value="long" {% if answer_len == 'long' %}selected{% endif %}>Long</option>
+        </select>
+      </div>
+      <div class="col-md-9">
+        <label for="question" class="form-label">Your Question</label>
+        <input type="text" name="question" id="question" class="form-control" value="{{ question }}" placeholder="e.g. What is the PTO policy?" required>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Ask</button>
+  </form>
+
+  {% if error %}
+    <div class="alert alert-danger">Error: {{ error }}</div>
+  {% endif %}
+
+  {# Only render answer and context once #}
+  {% if error %}
+    <div class="alert alert-danger">Error: {{ error }}</div>
+  {% endif %}
+
+  {% if answer %}
+    <div class="card mb-3">
+      <div class="card-header"><b>Answer</b></div>
+      <div class="card-body">
+        <p>{{ answer }}</p>
+        {% if citations %}
+          <p><b>Citations:</b> 
+            {% for c in citations %}
+              <span class="badge bg-secondary">{{ c }}</span>
+            {% endfor %}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if context_chunks %}
+    <div class="card mb-3">
+      <div class="card-header"><b>Retrieved Chunks</b></div>
+      <div class="card-body">
+        <ul>
+        {% for chunk in context_chunks %}
+          <li><b>{{ chunk.doc_id }}#{{ chunk.chunk_id }}</b>: {{ chunk.text|truncate(180) }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="alert alert-info mt-4">
+    <h4 class="mb-2">Step 7 Overview</h4>
+    <p>This step lets you ask questions about your indexed policy documents using Retrieval-Augmented Generation (RAG). Your query is answered by an AI model, strictly grounded in the retrieved document chunks, with citations for every fact.</p>
+    <hr>
+    <h5 class="mb-1">What is <b>Document Index</b>?</h5>
+    <ul>
+      <li><b>Definition:</b> A Document Index is a collection of embedded document chunks created in previous steps (Step 5/6). Each index represents a different chunking or embedding strategy (e.g., by headings or by tokens).</li>
+      <li><b>Use Case:</b> Select the index that best matches your question or the type of information you want. The system will retrieve the most relevant chunks from the selected index and use them to generate a grounded, cited answer.</li>
+      <li><b>How to Use:</b> Pick a Document Index from the dropdown, then ask your question. The answer and citations will be based only on the selected index’s content. This lets you compare retrieval quality and answer accuracy across different chunking/embedding strategies.</li>
+    </ul>
+    <hr>
+    <h5 class="mb-1">How to use Step 7</h5>
+    <ul>
+      <li>Choose a Document Index (from Step 5/6).</li>
+      <li>Select an AI Provider (OpenRouter, Groq, or OpenAI; API key required).</li>
+      <li>Set retrieval parameters: <b>Top-K</b> (number of chunks), <b>Min Score</b> (minimum relevance), and <b>Answer Length</b> (short/medium/long).</li>
+      <li>Type your question and submit.</li>
+      <li>The answer will be generated, strictly citing the source chunks. You’ll see the answer, citations, and the retrieved context.</li>
+    </ul>
+    <b>Strict Grounding:</b> The answer is only allowed to use information from the retrieved chunks. All facts must be cited (e.g., <code>doc1#3</code>).<br>
+    <b>Provider Selection:</b> Only providers with API keys set are available.<br>
+    <b>Logging:</b> All queries and answers are logged for review and reproducibility.
+  </div>
+</div>
 {% endblock %}

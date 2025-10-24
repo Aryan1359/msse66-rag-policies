@@ -8,3 +8,5 @@
 {"ts": "2025-10-23T23:18:18Z", "chunk_source": "headings", "embed_method": "minilm", "n_chunks": 54, "dim": 384, "ms_elapsed": 3049, "faiss": false, "status": "ok"}
 {"ts": "2025-10-24T00:10:41Z", "chunk_source": "headings", "embed_method": "minilm", "n_chunks": 54, "dim": 384, "ms_elapsed": 7935, "faiss": false, "status": "ok"}
 {"ts": "2025-10-24T00:10:51Z", "chunk_source": "token", "embed_method": "minilm", "n_chunks": 12, "dim": 384, "ms_elapsed": 1569, "faiss": false, "status": "ok"}
+{"ts": "2025-10-24T08:12:57Z", "chunk_source": "headings", "embed_method": "minilm", "n_chunks": 111, "dim": 384, "ms_elapsed": 10519, "faiss": true, "status": "ok"}
+{"ts": "2025-10-24T08:13:15Z", "chunk_source": "token", "embed_method": "minilm", "n_chunks": 20, "dim": 384, "ms_elapsed": 1931, "faiss": true, "status": "ok"}

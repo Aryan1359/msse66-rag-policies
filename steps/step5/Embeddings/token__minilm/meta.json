@@ -1,170 +1,282 @@
 [
   {
-    "doc_id": "etops_5503_50605121425",
+    "doc_id": "attendance_policy",
     "chunk_id": 0,
-    "source_file": "etops_5503_50605121425.jsonl",
+    "source_file": "attendance_policy.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "6d134ef09d90310e823643ea613c83ca0028f182cffae23e19480ced0591d343",
-    "text": "Boeing Pilots Flight Training Bulletin Revision Cycle 2 Updates Flight Ops Division │ 6/5/25 For supplemental information please review the following RC2 Updates: ETOPS 1. Preflight Procedures ETOPS 2. Enroute Procedures Before Start - CA RC2 – Training Highlights Podcast You can also find these videos and podcast on Alaska Pilot Training App. Thank you, Your Flight Training Team Page | 1",
+    "source_hash": "241d5627dddc93084d0159f790eb469cacce0d85643cb6efffd425b034e53588",
+    "text": "Attendance Policy Filename: attendance-policy.txt DocID: ATTEND-017 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To establish expectations for employee attendance and punctuality. Scope Applies to all full-time and part-time employees. Expectations - Employees must report to work on time and adhere to assigned schedules. - Absences must be reported at least 1 hour before shift start. - Excessive tardiness or absenteeism may result in disciplinary action. Leave Types - Sick leave, PTO, and unpaid leave must be requested via HR portal. - Documentation may be required for medical absences over 3 days. Tracking - Attendance is monitored via the timekeeping system. - Managers review monthly attendance reports. Disciplinary Action - Verbal warning for first offense - Written notice for repeated offenses - Suspension or termination for chronic violations Contact For attendance questions, email hr@company.com.",
     "vector_index": 0
   },
   {
-    "doc_id": "hydropower_formula_live_demo_html",
+    "doc_id": "benefits_overview",
     "chunk_id": 0,
-    "source_file": "hydropower_formula_live_demo_html.jsonl",
+    "source_file": "benefits_overview.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "c4184bd9f49e431d03a3f3808415778e3f330c562e3090f3698ffa23f3971f82",
-    "text": "Hydropower Formula – Live Demo Hydropower Formula – Live Demo Interactive calculator for P = η · ρ · g · Q · h (all SI units). Adjust inputs and see power update instantly. Inputs Efficiency η Flow rate Q (m3/s) Head h (m) Advanced (density ρ and gravity g) Density ρ (kg/m3) Gravity g (m/s2) Reset Three Gorges example Units: SI (W, m, m3/s) Output — MW P = η·ρ·g·Q·h = — W Scale reference: bar fills at 25 GW Per‐m3 energy and intuition Quantity Expression Value Energy per m3 of water (at head h) E/m3 = ρ·g·h — J/m3 Power per (m3/s) of flow P/(m3/s) = η·ρ·g·h — W per (m3/s) Show full breakdown η (efficiency) — ρ (kg/m3) — g (m/s2) — Q (m3/s) — h (m) — Product η·ρ·g·Q·h — Nearest MW: — Also: — GW How to talk about it in your presentation P (power) grows when either the drop is taller ( h increases) or more water moves each second ( Q increases). The constant terms ρ (water density) and g (gravity) turn height into energy, and η captures real‐world losses in the turbine/generator. Together: P = η·ρ·g·Q·h . Use the sliders live while presenting to show how doubling Q doubles power, or how raising h boosts power linearly. Open “Advanced” to explain why we typically fix ρ≈1000 kg/m3 and g≈9.81 m/s2. Quote the “Power per (m3/s)” number to make quick mental math: each extra m3/s of flow adds that many Watts at your chosen head and η.",
+    "source_hash": "b2ba5f402d9a142a30e30f3e78a155b3a0a402d0bd4237a0373f597e2457746d",
+    "text": "Benefits Overview Filename: benefits-overview.pdf DocID: BENEFITS-013 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To summarize the benefits available to eligible employees. Scope Applies to all full-time employees and part-time employees working 20+ hours/week. Health Insurance - Medical, dental, and vision coverage through UnitedHealth - Coverage begins on the first day of the month following hire - Dependent coverage available Retirement - 401(k) with 5% company match - Vesting begins after 1 year of service Leave - Paid Time Off (PTO) - Parental Leave: 8 weeks paid - Bereavement Leave: 5 days Other Benefits - Employee Assistance Program (EAP) - Tuition reimbursement up to $3,000/year - Gym membership discount Contact For benefits questions, email benefits@company.com.",
     "vector_index": 1
   },
   {
-    "doc_id": "readme",
+    "doc_id": "code_of_conduct",
     "chunk_id": 0,
-    "source_file": "readme.jsonl",
+    "source_file": "code_of_conduct.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "ded7e1292b1c3132e57d9bc201765cec81a4fe4801703ce8116d37917026c58e",
-    "text": "# MSSE66 RAG — Company Policies Q&A Retrieval‐Augmented Generation (RAG) app that answers questions about a small corpus of **company policies**. Built as part of the **MSSE66+ AI Engineering Project** and aligned to the rubric (env + CI, ingestion, retrieval, deploy, evaluation). --- ## 📌 Status (end of Phase 2) **Done:** * Repo + Codespaces, `.venv`, Python pinned (3.12.1 via `.python-version`, `runtime.txt`) * Minimal deps: `Flask`, `python-dotenv` * Flask endpoints: `/` and `/health` * CI: `.github/workflows/ci.yml` smoke‐tests `import app` * Corpus: `data/policies/*.md` (PTO, Expenses, Remote Work) * Ingestion & Indexing scripts: * `scripts/ingest.py` → doc stats * `scripts/chunk.py` → overlapping chunks * `scripts/index_jsonl.py` → writes `data/index/policies.jsonl` * `scripts/search_jsonl.py` → tiny keyword search (CLI) * API: `/search?q=...&topk=...` returns keyword‐matched chunks (JSON) **Next:** Phase 3 (Embeddings + vector search) → Phase 4 (UI) → Phase 5 (Deploy) → Phase 6 (Eval) --- ## 🚀 Quickstart (GitHub Codespaces) ```bash # 1) Activate the virtualenv source .venv/bin/activate # 2) (Re)build JSONL index if you changed policies python scripts/index_jsonl.py # 3) Run the app (serves on port 8000) python app.py ``` **Test locally from the terminal inside Codespaces:** ```bash # Health curl \"http://127.0.0.1:8000/health\" # Keyword search curl \"http://127.0.0.1:8000/search?q=pto%20accrual&topk=3\" ``` > In the browser, use your **forwarded URL** (looks like `https://<id>-8000.app.github.dev/`). In the terminal, prefer `http://127.0.0.1:8000`. --- ## 🧩 What’s implemented (Phase 2) * **Corpus** in `data/policies/`: small, legal‐to‐use Markdown files. * **Loader (`scripts/ingest.py`)** prints words/lines/headings per file. * **Chunker (`scripts/chunk.py`)** creates ~600‐char chunks with ~100‐char overlap, preferring breaks on blank lines/headings. * **Index writer (`scripts/index_jsonl.py`)** emits one JSON object per chunk to `data/index/policies.jsonl` with ids, text, and rough token counts. * **Keyword search (CLI)** scores by simple term frequencies with word boundaries. * **Flask `/search`** mirrors the CLI search and returns top‐k results with previews and metadata. --- ## 📁 Repository Structure ``` msse66-rag-policies/ ├─ app.py # Flask app with /, /health, /search ├─ data/ │ ├─ policies/ # Policy corpus (Markdown) │ │ ├─ 01-pto.md │ │ ├─ 02-expenses.md │ │ └─ 03-remote-work.md │ └─ index/ │ └─ policies.jsonl # Generated JSONL index (build via scripts) ├─ scripts/ │ ├─ ingest.py # Corpus stats │ ├─ chunk.py # Overlapping chunker │ ├─ index_jsonl.py # Write JSONL index │ └─ search_jsonl.py # CLI keyword search over JSONL ├─ .github/workflows/ci.yml # CI: install deps + smoke test ├─ requirements.txt ├─ .python-version ├─ runtime.txt ├─ Instruction.md # Mentor/working-mode instructions ├─ LEARNING-GUIDE.md # Beginner guide (what/why/how) ├─ checklist.md # Master checklist (rubric aligned) └─ PROGRESS-LOG.md # Chronological log ``` --- ## 🔄 Branch / PR Workflow (beginner‐proof) 1. Create a feature branch: `git checkout -b <feature>` 2. Make a tiny change; verify locally 3. `git add ... && git commit -m \"<scope>: <message>\"` 4. `git push -u origin <feature>` → Open PR → Merge → Delete branch 5. Sync: `git checkout main && git pull` --- ## 🧪 Verification Cheatsheet ```bash # Stats python scripts/ingest.py # Chunking python scripts/chunk.py # Index build python scripts/index_jsonl.py && wc -l data/index/policies.jsonl # CLI search python scripts/search_jsonl.py \"pto accrual\" --topk 3 # API search curl \"http://127.0.0.1:8000/search?q=pto%20accrual&topk=3\" ``` --- ## 🧭 Roadmap (Phases 3–6) **Phase 3 — Embeddings & Vector Search** * Choose embeddings: local (`sentence-transformers`) vs API provider * `scripts/embed_index.py` → create vectors (e.g., `.npy` + `meta.json`) * `scripts/vector_search.py` → cosine similarity top‐k * Extend Flask `/search?mode=vector` with citations (doc_id + chunk_id) **Phase 4 — Web UI** * Minimal search page calling `/search` * Display sources + highlighted snippets **Phase 5 — Deployment & CI/CD** * Deploy on Render/Railway (free tier) * GH Actions: deploy on `main` **Phase 6 — Evaluation** * 15–30 Q/A set over policies * Metrics: groundedness, citation accuracy, latency (p50/p95) * Report in `design-and-evaluation.md` --- ## 🛠️ Troubleshooting * `ModuleNotFoundError: flask` → `source .venv/bin/activate` * 404 on `/search` → ensure route is defined **before** `app.run(...)`; restart server * `curl` to `app.github.dev` shows nothing → test via `http://127.0.0.1:8000` inside terminal --- ## 🤖 AI Use & CI Disclosure * AI helpers: **ChatGPT‐5** (mentor/co‐dev) + optional **GitHub Copilot** * CI: runs on each push/PR, installs deps, smoke‐tests `import app` --- **Maintainer:** Aryan Yaghobi **Mentor / AI Co‐Developer:** ChatGPT‐5 > This README documents Phase 2 completion and provides clear run steps, verification, and a rubric‐aligned roadmap.",
+    "source_hash": "9f21215e4831f84be2d83f390ab9bce48f2b0f71e2636f4ca0a2ed3a8dafd976",
+    "text": "# Code of Conduct Policy **Filename: code-of-conduct.md** **DocID: CONDUCT-004** **Effective Date: Jan 1, 2025** **Last Updated: Sep 15, 2025** ## Purpose To establish behavioral expectations and ethical standards for all employees. ## Scope Applies to all employees, contractors, and interns across all departments and locations. ## Core Principles - Integrity: Act honestly and transparently in all business dealings. - Respect: Treat colleagues, clients, and partners with dignity and professionalism. - Accountability: Take responsibility for actions and decisions. - Compliance: Follow all applicable laws, regulations, and company policies. ## Workplace Behavior - Harassment, discrimination, and bullying are strictly prohibited. - Conflicts of interest must be disclosed to HR. - Use of company resources must be for business purposes only. ## Reporting Violations - Employees are encouraged to report violations via the Ethics Hotline or HR. - Reports may be anonymous and will be investigated promptly. - Retaliation against whistleblowers is prohibited. ## Disciplinary Action - Violations may result in verbal warnings, written notices, suspension, or termination. - Severity of action depends on the nature and frequency of the violation. ## Contact For questions or to report concerns, email ethics@company.com.",
     "vector_index": 2
   },
   {
-    "doc_id": "readme",
-    "chunk_id": 1,
-    "source_file": "readme.jsonl",
+    "doc_id": "data_privacy_policy",
+    "chunk_id": 0,
+    "source_file": "data_privacy_policy.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "ded7e1292b1c3132e57d9bc201765cec81a4fe4801703ce8116d37917026c58e",
-    "text": "**Phase 4 — Web UI** * Minimal search page calling `/search` * Display sources + highlighted snippets **Phase 5 — Deployment & CI/CD** * Deploy on Render/Railway (free tier) * GH Actions: deploy on `main` **Phase 6 — Evaluation** * 15–30 Q/A set over policies * Metrics: groundedness, citation accuracy, latency (p50/p95) * Report in `design-and-evaluation.md` --- ## 🛠️ Troubleshooting * `ModuleNotFoundError: flask` → `source .venv/bin/activate` * 404 on `/search` → ensure route is defined **before** `app.run(...)`; restart server * `curl` to `app.github.dev` shows nothing → test via `http://127.0.0.1:8000` inside terminal --- ## 🤖 AI Use & CI Disclosure * AI helpers: **ChatGPT‐5** (mentor/co‐dev) + optional **GitHub Copilot** * CI: runs on each push/PR, installs deps, smoke‐tests `import app` --- **Maintainer:** Aryan Yaghobi **Mentor / AI Co‐Developer:** ChatGPT‐5 > This README documents Phase 2 completion and provides clear run steps, verification, and a rubric‐aligned roadmap.",
+    "source_hash": "da956b1e0c5a83f1e82f177693f2ae85dd2142bc0a882dc280d953ca5c79aca2",
+    "text": "Data Privacy Policy Data Privacy Policy Filename: data-privacy-policy.html DocID: PRIVACY-008 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To ensure the protection and responsible handling of personal and sensitive data. Scope Applies to all employees and contractors who collect, store, or process data. Data Types Personally Identifiable Information (PII) Health and financial data Customer and employee records Handling Guidelines Data must be encrypted in transit and at rest. Access is granted on a need-to-know basis. Retention periods must comply with legal requirements. Rights and Requests Individuals may request access, correction, or deletion of their data via privacy@company.com.",
     "vector_index": 3
   },
   {
-    "doc_id": "rubric",
+    "doc_id": "dei_policy",
     "chunk_id": 0,
-    "source_file": "rubric.jsonl",
+    "source_file": "dei_policy.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "d9c15a8c01cabcec18e8e3e897328727bcc27c36f411ea30058841bee87dcc54",
-    "text": "AI Engineering Project Project Overview For this project, you will be designing, building, and evaluating a Retrieval-Augmented Generation (RAG) LLM-based application that answers user questions about a corpus of company policies & procedures. You will then deploy the application to a free-tier host (e.g., Render, Railway) with a basic CI/CD pipeline (e.g., GitHub Actions) that triggers deployment on push/PR when the app builds successfully. Finally, you will demonstrate the system via a screen-share video showing key features of your deployed application, and a quick walkthrough of your design, evaluation and CI/CD run. You can complete this project either individually or as a group of no more than three people. While you can fully hand code this project if you wish, you are highly encouraged to utilize leading AI code generation models/AI IDEs/async agents to assist in rapidly producing your solution, being sure to describe in broad terms how you made use of them. Here are some examples of very useful AI tools you may wish to consider. You will be graded on the quality and functionality of the application and how well it meets the project requirements—no given proportion of the code is required to be hand coded. Learning Outcomes When completed successfully, this project will enable you to: ● Demonstrate excellent AI engineering skills ● Demonstrate the ability to select appropriate AI application design and architecture Implement a working LLM-based application including RAG ● ● Evaluate the performance of an LLM-based application ● Utilize AI tooling as appropriate © 2025 Quantic Holdings, Inc. All rights reserved. 6/23/21 AI Engineering Project Project Description First, assemble a small but coherent corpus of documents outlining company policies & procedures - about 5–20 short markdown/HTML/PDF/TXT files totaling 30–120 pages. You may author them yourself (with AI assistance) or use policies that you are aware of from your own organization that can be used for this assignment. Students must use a corpus they can legally include in the repo or load at runtime (e.g., your own synthetic policies, your organization’s employee policy documents etc.)—no private/paid data is required. Additionally, you should define success metrics for your application (see the “Evaluation” step below), including at least one information-quality metric (e.g., groundedness or citation accuracy) and one system metric (e.g., latency). Use free or zero-cost options when possible e.g., OpenRouter’s free tier (https://openrouter.ai/docs/api-reference/limits), Groq (https://console.groq.com/docs/rate-limits), or your own paid API keys if you have them. For embedding models, free-tier options are available from Cohere, Voyage, HuggingFace and others Complete the following steps to fully develop, deploy, and evaluate your application: 1. Environment and Reproducibility ○ Create a virtual environment (e.g., venv, conda). ○ List dependencies in requirements.txt (or environment.yml). ○ Provide a README.md with setup + run instructions. ○ Set fixed seeds where/if applicable (for deterministic chunking or evaluation sampling). 2. Ingestion and Indexing ○ Parse & clean documents (handle PDFs/HTML/md/txt). ○ Chunk documents (e.g., by headings or token windows with overlap). ○ Embed chunks with a free embedding model or a free-tier API. ○ Store the embedded document chunks in a local or lightweight vector database (e.g. Chroma or optionally a cloud-hosted vector store like Pinecone, etc.) ○ Store vectors in a local/vector DB or cloud DB (e.g., Chroma, Pinecone, etc.) 3. Retrieval and Generation (RAG) ○ To build your RAG pipeline you may use frameworks such as LangChain to handle retrieval, prompt chaining, and API calls, or implement these manually. Implement Top-k retrieval with optional re-ranking. ○ © 2025 Quantic Holdings, Inc. All rights reserved. 6/23/21 2 AI Engineering Project ○ Build a prompting strategy that injects retrieved chunks (and citations/sources) into the LLM context. ○ Add basic guardrails: ■ Refuse to answer outside the corpus (“I can only answer about our policies”), ■ Limit output length, ■ Always cite source doc IDs/titles for answers. 4. Web Application ○ Students can use Flask, Streamlit or alternative for the Web app. LangChain is recommended for orchestration, but is optional. ○ Endpoints/UI: ■ ■ / - Web chat interface - text box for user input /chat - API endpoint that receives user questions (POST) and returns model-generated answers with citations and snippets (link to source and show snippet). /health - returns simple status via JSON. ■",
+    "source_hash": "37b36e47d1d2bcdedc423452bcdadce28cc5f623cae033debc3675c4f9d6d20d",
+    "text": "# Diversity, Equity, and Inclusion (DEI) Policy **Filename: dei-policy.md** **DocID: DEI-005** **Effective Date: Jan 1, 2025** **Last Updated: Sep 15, 2025** ## Purpose To promote a workplace culture that values diversity, ensures equity, and fosters inclusion across all levels of the organization. ## Scope Applies to all employees, contractors, interns, and leadership teams. ## Commitment - Recruit and retain talent from diverse backgrounds. - Provide equal access to opportunities, resources, and advancement. - Foster inclusive practices in meetings, communications, and decision-making. ## Training - Mandatory DEI training for all employees within the first 90 days of employment. - Annual refresher courses required for all staff. - Specialized workshops available for managers and team leads. ## Reporting and Accountability - DEI concerns can be reported anonymously via the DEI Portal. - Quarterly DEI metrics are reviewed by the Executive Inclusion Council. - Managers are evaluated on inclusive leadership practices. ## Inclusive Language - Employees are encouraged to use inclusive language in all communications. - Pronoun preferences must be respected in email signatures and meetings. ## Celebrations and Observances - The company recognizes cultural heritage months and hosts inclusive events. - Employees may propose observances through the DEI Committee. ## Contact For DEI support or questions, email inclusion@company.com.",
     "vector_index": 4
   },
   {
-    "doc_id": "rubric",
-    "chunk_id": 1,
-    "source_file": "rubric.jsonl",
+    "doc_id": "dress_code_policy",
+    "chunk_id": 0,
+    "source_file": "dress_code_policy.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "d9c15a8c01cabcec18e8e3e897328727bcc27c36f411ea30058841bee87dcc54",
-    "text": "frameworks such as LangChain to handle retrieval, prompt chaining, and API calls, or implement these manually. Implement Top-k retrieval with optional re-ranking. ○ © 2025 Quantic Holdings, Inc. All rights reserved. 6/23/21 2 AI Engineering Project ○ Build a prompting strategy that injects retrieved chunks (and citations/sources) into the LLM context. ○ Add basic guardrails: ■ Refuse to answer outside the corpus (“I can only answer about our policies”), ■ Limit output length, ■ Always cite source doc IDs/titles for answers. 4. Web Application ○ Students can use Flask, Streamlit or alternative for the Web app. LangChain is recommended for orchestration, but is optional. ○ Endpoints/UI: ■ ■ / - Web chat interface - text box for user input /chat - API endpoint that receives user questions (POST) and returns model-generated answers with citations and snippets (link to source and show snippet). /health - returns simple status via JSON. ■ 5. Deployment ○ For production hosting use Render or Railway free tiers; students may alternatively use any other free-tier providers of their choice. ○ Configure environment variables (e.g. API keys, model endpoints, DB related etc.). ○ Ensure the app is publicly accessible at a shareable URL. 6. CI/CD ○ Minimal automated testing is sufficient for this assignment (a build/run check, optional smoke test). ○ Create a GitHub Actions workflow that on push/PR: Installs dependencies, ■ ■ Runs a build/start check (e.g., python -m pip install -r requirements.txt and python -c \"import app\" or pytest -q if you add tests), ■ On success in main, deploy to your host (Render/Railway action or via webhook/API). 7. Evaluation of the LLM Application ○ Provide a small evaluation set of 15–30 questions covering various policy topics (PTO, security, expense, remote work, holidays, etc.). Report: ■ Answer Quality (required): 1. Groundedness: % of answers whose content is factually consistent with and fully supported by the retrieved evidence—i.e., the answer contains no information that is absent or contradicted in the context. © 2025 Quantic Holdings, Inc. All rights reserved. 6/23/21 3 AI Engineering Project 2. Citation Accuracy: % of answers whose listed citations correctly point to the specific passage(s) that support the information stated—i.e., the attribution is correct and not misleading. 3. Exact/Partial Match (optional): % of answers that exactly or partially match a short gold answer you provide. ■ System Metrics (required): 1. Latency (p50/p95) from request to answer for 10–20 queries. ■ Ablations (optional): compare retrieval k, chunk size, or prompt variants. 8. Design Documentation ○ Briefly justify design choices (embedding model, chunking, k, prompt format, vector store). Submission Guidelines Your final submission should consist of two links: ● A link to an accessible software repository (a GitHub repo) containing all your developed code and the items listed below. You must share your repository with the GitHub account, quantic-grader. o The GitHub repository should include a link to the deployed version of your RAG LLM-based application (in file deployed.md) o The GitHub repository must include a README.md file indicating setup and run instructions o The GitHub repository must also include a brief design and evaluation document (design-and-evaluation.md) listing and explaining: i) ii) design and architecture decisions made - and why they were made, including technology choices summary of your evaluation approach and results for your RAG system o The GitHub repository must include an ai-use.md file that briefly describes which AI code tools you used and how. ● A link to a recorded screen-share demonstration video of the working RAG LLM-based application, involving screen capture of it being used with voiceover o All group members must speak and be present on camera. o All group members must show their government ID. o The demonstration/presentation should be between 5 and 10 minutes long. To submit your project, please click on the \"Submit Project\" button on your dashboard and follow the steps provided. If you are submitting your project as a group, please © 2025 Quantic Holdings, Inc. All rights reserved. 6/23/21 4 AI Engineering Project Project Rubric Scores 2 and above are considered passing. Students who receive a 1 or 0 will not get credit for the assignment and must revise and resubmit to receive a passing grade. Score Description 5 ● Addresses ALL of",
+    "source_hash": "492f6b1847d81bef84c191c52549821a3779f6682a07c1d074470c04eaa48084",
+    "text": "Dress Code Policy Filename: dress-code-policy.txt DocID: DRESS-018 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To define appropriate workplace attire and grooming standards. Scope Applies to all employees working on-site or attending company-sponsored events. General Guidelines - Business casual is the default dress code. - Jeans are permitted if clean and free of holes. - Company-branded apparel is encouraged on Fridays. Prohibited Attire - Clothing with offensive language or imagery - Flip-flops, tank tops, or beachwear - Excessively revealing or torn clothing Special Cases - Formal attire required for client-facing meetings and presentations. - Lab or field roles may require safety gear or uniforms. Remote Work - Employees on video calls must wear appropriate attire visible on camera. Contact For dress code questions, email hr@company.com.",
     "vector_index": 5
   },
   {
-    "doc_id": "rubric",
-    "chunk_id": 2,
-    "source_file": "rubric.jsonl",
+    "doc_id": "exit_process",
+    "chunk_id": 0,
+    "source_file": "exit_process.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "d9c15a8c01cabcec18e8e3e897328727bcc27c36f411ea30058841bee87dcc54",
-    "text": "ai-use.md file that briefly describes which AI code tools you used and how. ● A link to a recorded screen-share demonstration video of the working RAG LLM-based application, involving screen capture of it being used with voiceover o All group members must speak and be present on camera. o All group members must show their government ID. o The demonstration/presentation should be between 5 and 10 minutes long. To submit your project, please click on the \"Submit Project\" button on your dashboard and follow the steps provided. If you are submitting your project as a group, please © 2025 Quantic Holdings, Inc. All rights reserved. 6/23/21 4 AI Engineering Project Project Rubric Scores 2 and above are considered passing. Students who receive a 1 or 0 will not get credit for the assignment and must revise and resubmit to receive a passing grade. Score Description 5 ● Addresses ALL of the project requirements, but not limited to: ○ Outstanding RAG application with correct responses with matching citations, ingest and indexing works ○ Excellent, well-structured application architecture ○ Public deployment on Render, Railway (or equivalent) fully functional ○ CI/CD runs on push/PR and deploys on success ○ Excellent documentation of design choices. ○ Excellent evaluation results, which includes groundedness, citation accuracy, and latency ○ Excellent, clear demo of features, design and evaluation ● Addresses MOST of the project requirements, but not limited to: ○ Excellent RAG application with correct responses with generally matching citations, ingest and indexing works ○ Very good, well-structured application architecture ○ Public deployment on Render, Railway (or equivalent) almost fully functional ○ CI/CD runs on push/PR and deploys on success ○ Very good documentation of design choices. ○ Very good evaluation results which includes groundedness, citation accuracy, and latency ○ Very good, clear demo of features, design and evaluation ● Addresses SOME of the project requirements, but not limited to: ○ Very good RAG application with mainly correct responses with generally matching citations, ingest and indexing works ○ Good, well-structured application architecture ○ Public deployment on Render, Railway (or equivalent) almost fully functional ○ CI/CD runs on push/PR and deploys on success ○ Good documentation of design choices. 4 3 © 2025 Quantic Holdings, Inc. All rights reserved. 6/23/21 6 AI Engineering Project ○ Good evaluation results which includes most of groundedness, citation accuracy, and latency ○ Good, clear demo of features, design and evaluation. ● Addresses FEW of the project requirements, but not limited to: ○ Passable RAG application with limited correct responses with few matching citations, ingest and indexing works partially ○ Passable application architecture ○ Public deployment on Render, Railway (or equivalent) not fully functional ○ CI/CD runs on push/PR and deploys on success ○ Passable documentation of design choices. ○ Passable evaluation results which includes only some of groundedness, citation accuracy, and latency ○ Passable demo of features, design and evaluation ● Addresses the project but MOST of the project requirements are missing, but not limited to: Incomplete app; not deployed, ○ ○ No CI/CD, ○ No to very limited evaluation ○ No design documentation ○ No demo of application ● The student either did not complete the assignment, plagiarized all or part of the assignment, or completely failed to address the project requirements. 2 1 0 © 2025 Quantic Holdings, Inc. All rights reserved. 6/23/21 7",
+    "source_hash": "de643d3fefd526f5181e85e2a7f6460b444fbaed584754fe35a73f10539c33d6",
+    "text": "Employee Exit Process Employee Exit Process Filename: exit-process.html DocID: EXIT-010 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To ensure a smooth and compliant transition when an employee leaves the company. Scope Applies to all voluntary and involuntary separations, including resignations, retirements, and terminations. Notice Period Employees are expected to provide at least 2 weeks’ notice. Executives must provide 4 weeks’ notice. Exit Interview HR conducts an exit interview to gather feedback and review final steps. Final Pay and Benefits Final paycheck includes unused PTO if eligible. Benefits coverage ends on the last day of employment. COBRA information is provided for health coverage continuation. Equipment Return All company property (laptop, badge, etc.) must be returned by the last working day. Account Deactivation IT disables system access within 24 hours of departure.",
     "vector_index": 6
   },
   {
-    "doc_id": "rubric",
-    "chunk_id": 3,
-    "source_file": "rubric.jsonl",
+    "doc_id": "expense_policy",
+    "chunk_id": 0,
+    "source_file": "expense_policy.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "d9c15a8c01cabcec18e8e3e897328727bcc27c36f411ea30058841bee87dcc54",
-    "text": "rights reserved. 6/23/21 7",
+    "source_hash": "e53f90ff5f541852a8f4336ef0b845e5a8c34374b45a12750d83a7dd53d3cd1e",
+    "text": "# Expense Reimbursement Policy **Filename: expense-policy.md** **DocID: EXPENSE-003** **Effective Date: Jan 1, 2025** **Last Updated: Sep 15, 2025** ## Purpose To outline the procedures and guidelines for reimbursing employees for business-related expenses. ## Scope Applies to all employees who incur expenses while conducting company business. ## Eligible Expenses - Travel (airfare, lodging, ground transport) - Meals during business travel (up to $75/day) - Office supplies and software tools - Client entertainment (with prior approval) ## Submission Process - Submit expenses via the Expense Portal within 30 days of incurring the cost. - Upload itemized receipts and business justification. - Manager approval required before reimbursement is processed. ## Payment Timeline - Approved reimbursements are paid within 14 business days via payroll. - Delays may occur if documentation is incomplete. ## Restrictions - No reimbursement for alcohol, personal items, or family travel. - Expenses over $500 require pre-approval from Finance. ## Audit and Compliance - Expense reports are subject to random audit. - Fraudulent claims may result in disciplinary action. ## Contact For questions, email finance@company.com.",
     "vector_index": 7
   },
   {
-    "doc_id": "subtitle_1",
+    "doc_id": "harassment_policy",
     "chunk_id": 0,
-    "source_file": "subtitle_1.jsonl",
+    "source_file": "harassment_policy.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "92c804057c9f9d2d9c604104286739bf06c07e1cee3c28de26195fefcfe93fd9",
-    "text": "Let's travel back through time to the 1960s, when the seeds of modern design thinking were planted. This era, known for its dynamic social changes and technological advances, also marked the birth of a new approach to design. As we explore the origins and evolution of design thinking, we'll uncover its deep-rooted connection to solving complex, multifaceted issues known as \"wicked problems\", with a special focus on the contributions of UC Berkeley in shaping this narrative. By the end of this video, you should be able to define design science and explain its significance in the evolution of design thinking, describe the characteristics of \"wicked problems\", and articulate why these problems defy traditional problem-solving methods. After the Industrial Revolution and World War II, the world underwent major shifts. Art, societal changes, technology, human and environmental needs, even philosophical questions all made it clear that we were facing increasingly complex problems. Initially emerging in the 1950s and 1960s within architecture and engineering, the concept of design thinking as it was then struggled to adapt to the era's rapid changes. The scope and scale and complexity of strategic thinking needed in World War II fundamentally changed the way we approach management, production, and industrial design in the modern world. In the 1960s, attempts to apply scientific methods to design aimed at making it a rigorous discipline. Around this time, Herbert Simon introduced the world to \"design science\". Simon was a pioneering figure in numerous fields, including artificial intelligence, psychology, computer science, and management science, known for his profound contributions to understanding of human decision-making processes and problem-solving. Simon proposed design not just as an art but as a systematic, scientific discipline. This groundbreaking idea, detailed in The Sciences of the Artificial, suggested that design could solve not only just practical problems, but also abstract, complex challenges by creating innovative solutions. This concept laid the foundation for design thinking, emphasizing a structured, methodical approach to uncovering and solving problems. The 1970s saw Herb Simon and others further conceptualize design as a way of thinking, emphasizing rapid prototyping and testing, laying down principles that are central to design thinking today. This era also marked advancements in artificial intelligence and its implications for design. The 1980s recognized solution-focused problem-solving, with Nigel Cross and Brian Lawson comparing the problem-solving approaches of designers and scientists, highlighting designers' preference for generating multiple solutions, known as satisficing behavior. Nigel Cross, now Emeritus Professor of Design Studies at The Open University in the UK, thoroughly examined what makes design its own special field of study. In 1982, Cross wrote a collection of papers called Designerly Ways of Knowing. These papers are foundational in the history of design. I encourage you to read them to learn more. One important takeaway from this work was that when it comes down to it, design isn't just about making things look good, it's really about problem-solving, and thinking, in a way that's different from how scientists or scholars tackle problems. It's like design has its own language and tools for solving puzzles that you won't find in other fields. As Cross describes it, \"A central feature of design activity, then, is its reliance on generating fairly quickly a satisfactory solution, rather than on any prolonged analysis of the problem. It is a process of 'satisficing', rather than optimizing, producing any one of what might well be a large range of satisfactory solutions, rather than attempting to generate the one hypothetically optimum solution. This strategy has been observed in other studies of design behavior, including architects, urban designers, and engineers\". This thread of research continued and was expanded by many. Brian Lawson, a professor from the University of Sheffield, was responsible for some fascinating experiments comparing how architecture students, or designers, and science students differed in their approach to solving problems. Lawson had designers arrange three-dimensional colored blocks following certain known and unknown rules, the most interesting takeaway being the following. While the scientists took a step-by-step approach to figure out the rules, designers were all about trying out different solutions until they identified one that worked. This demonstrated that designers are more likely to seek a workable solution right away, rather than dissecting the",
+    "source_hash": "9fa9f7c65f5baa3b464a9a97e291751dc01969b27ccd183048d0c3317ce46401",
+    "text": "performance-review-policy Harassment Policy Filename: harassment-policy.pdf DocID: HARASS-015 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To maintain a safe, respectful, and inclusive workplace by prohibiting all forms of harassment. Scope Applies to all employees, contractors, interns, and visitors. Definition Harassment includes unwelcome verbal, physical, or visual conduct that creates a hostile work environment. This includes but is not limited to: - Sexual harassment - Bullying or intimidation - Discriminatory remarks or actions Reporting - Incidents should be reported to HR or via the anonymous ethics hotline. - Reports are investigated promptly and confidentially. - Retaliation against reporters is strictly prohibited. Investigation - HR will conduct interviews and review evidence. - Findings are documented and shared with relevant parties. - Corrective action is taken based on severity. Disciplinary Action - May include verbal warning, written notice, suspension, or termination. - Repeat offenses result in escalated consequences. Training - Mandatory annual harassment prevention training for all employees. Contact For questions or to report an incident, email hr@company.com.",
     "vector_index": 8
   },
   {
-    "doc_id": "subtitle_1",
-    "chunk_id": 1,
-    "source_file": "subtitle_1.jsonl",
+    "doc_id": "holiday_calendar",
+    "chunk_id": 0,
+    "source_file": "holiday_calendar.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "92c804057c9f9d2d9c604104286739bf06c07e1cee3c28de26195fefcfe93fd9",
-    "text": "'satisficing', rather than optimizing, producing any one of what might well be a large range of satisfactory solutions, rather than attempting to generate the one hypothetically optimum solution. This strategy has been observed in other studies of design behavior, including architects, urban designers, and engineers\". This thread of research continued and was expanded by many. Brian Lawson, a professor from the University of Sheffield, was responsible for some fascinating experiments comparing how architecture students, or designers, and science students differed in their approach to solving problems. Lawson had designers arrange three-dimensional colored blocks following certain known and unknown rules, the most interesting takeaway being the following. While the scientists took a step-by-step approach to figure out the rules, designers were all about trying out different solutions until they identified one that worked. This demonstrated that designers are more likely to seek a workable solution right away, rather than dissecting the problem bit by bit. As Lawson described it, scientists were problem-focused problem solvers, compared to designers, who were solution-focused problem solvers. This important distinction further encouraged others to study how a repeatable process for solving problems was a hallmark of design thinking. One important contribution came from Peter Rowe's 1987 book, Design Thinking, in which he further explored the design process, specifically in architectural contexts, contributing to the broader understanding of design thinking. As he describes it, it was, quote, \"an attempt to fashion a generalized portrait of design thinking.\" From the 1990s to present, design thinking has been popularized by organizations such as IDEO and many academic institutions across the world. Universities such as Berkeley, Stanford, and Carnegie Mellon, among many others, began making repeatable design methodologies more accessible and widely adopted across various fields. Part of the appeal is a standard toolkit for addressing some of the most difficult and pressing societal challenges, or \"wicked problems\". The ability of design to address our most challenging problems has always been an important thread throughout the history of design. While historically, this concept has often been referred to as \"wicked problems\", you may also be familiar with the term \"complex sociotechnical systems\" that many people prefer to use today. Now let's examine a bit about the history of \"wicked problems\". I personally love this history because of its deep connection to UC Berkeley. The term \"wicked problems\" was actually believed to be coined by design theorist Professor Horst Rittel at UC Berkeley in the 1960s, introducing a new dimension to the challenges design thinking aimed to address. \"Wicked problems\" demand that we think differently, collaborate more broadly, and remain flexible in our approaches. \"Wicked problems\" are characterized by their complexity, resistance to straightforward solutions, and lack of clear definitions. They are large-scale societal, environmental, and organizational challenges like climate change, healthcare, and urban planning, where the problem evolves even as solutions are attempted. Addressing \"wicked problems\" requires an adaptive, interdisciplinary approach focusing on understanding the human element at their core. Let's define \"wicked problems\" broadly. They have no definitive formulation. Solutions are not true or false, but better or worse. Every \"wicked problem\" is essentially unique and novel, and there is no opportunity to learn by trial and error. UC Berkeley's environment has fostered a profound and deep exploration of \"wicked problems\", led by Rittle's early investigations. The university became a place where the concept of collaborative, interdisciplinary problem-solving was nurtured. This approach to education and research emphasized the importance of diverse perspectives and collective brainstorming in crafting innovative solutions to complex issues, a history that we try to uphold today. As we conclude our brief exploration of design thinking's history and its crucial role in solving \"wicked problems\", we're reminded of the power of human-centered design. It's a mindset that looks beyond the surface, diving into the complex web of human needs and societal challenges, armed with empathy, creativity, and the collaborative spirit. The journey from the 1960s to today shows us that design thinking is not just about creating. It's about understanding, adapting, and innovating in the face of uncertainty. As we continue to face new challenges, the principles of design thinking remind us that every problem, no matter how wicked, holds the potential for innovative solutions.",
+    "source_hash": "573c41b4ff68649b439c4cc7762cd196000a51e7cddc9d24706e5cf5f21e7a83",
+    "text": "Holiday Calendar Filename: holiday-calendar.pdf DocID: HOLIDAY-012 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To outline the official company holidays observed throughout the calendar year. Scope Applies to all full-time and part-time employees. Company Holidays - New Year’s Day – Jan 1 - Martin Luther King Jr. Day – Third Monday in Jan - Presidents’ Day – Third Monday in Feb - Memorial Day – Last Monday in May - Independence Day – Jul 4 - Labor Day – First Monday in Sep - Thanksgiving – Fourth Thursday in Nov - Day After Thanksgiving – Fourth Friday in Nov - Christmas Eve – Dec 24 - Christmas Day – Dec 25 - Floating Holiday – 1 day per year (employee’s choice) Policy Notes - If a holiday falls on a weekend, a weekday may be designated as a substitute. - Floating holidays must be approved in advance. - Holiday pay applies only to eligible employees. Contact For holiday questions, email hr@company.com.",
     "vector_index": 9
   },
   {
-    "doc_id": "subtitle_1",
-    "chunk_id": 2,
-    "source_file": "subtitle_1.jsonl",
+    "doc_id": "internet_usage_policy",
+    "chunk_id": 0,
+    "source_file": "internet_usage_policy.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "92c804057c9f9d2d9c604104286739bf06c07e1cee3c28de26195fefcfe93fd9",
-    "text": "a place where the concept of collaborative, interdisciplinary problem-solving was nurtured. This approach to education and research emphasized the importance of diverse perspectives and collective brainstorming in crafting innovative solutions to complex issues, a history that we try to uphold today. As we conclude our brief exploration of design thinking's history and its crucial role in solving \"wicked problems\", we're reminded of the power of human-centered design. It's a mindset that looks beyond the surface, diving into the complex web of human needs and societal challenges, armed with empathy, creativity, and the collaborative spirit. The journey from the 1960s to today shows us that design thinking is not just about creating. It's about understanding, adapting, and innovating in the face of uncertainty. As we continue to face new challenges, the principles of design thinking remind us that every problem, no matter how wicked, holds the potential for innovative solutions.",
+    "source_hash": "46cfad10eb2b0b131e153b55ce083903e2a7b7df601c0ac6aeb6e71c99ee81a1",
+    "text": "Internet Usage Policy Filename: internet-usage-policy.txt DocID: NETUSE-019 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To ensure responsible and secure use of internet resources on company networks. Scope Applies to all employees using company devices or accessing company systems. Acceptable Use - Accessing work-related websites and tools - Limited personal use during breaks (e.g., news, banking) - Downloading approved software and updates Prohibited Use - Streaming non-work media during work hours - Accessing adult, gambling, or illegal content - Downloading pirated or unauthorized software Monitoring - Internet activity may be monitored for compliance and security. - Violations may result in disciplinary action. Security - Do not click suspicious links or download unknown attachments. - Report phishing attempts to security@company.com. Contact For internet policy questions, email it@company.com.",
     "vector_index": 10
   },
   {
-    "doc_id": "tasks_now",
+    "doc_id": "it_security_policy",
     "chunk_id": 0,
-    "source_file": "tasks_now.jsonl",
+    "source_file": "it_security_policy.jsonl",
     "method": "token",
     "params": {
       "window_size": 700,
       "overlap": 150,
       "tokenization": "whitespace_approx"
     },
-    "source_hash": "2a7920b19db121d41841d30683471838b1b9b1e56a5484b8ff7132a01f64b4ba",
-    "text": "Farokhi Email,s Letters, Car Insurance cigo, BrainScape, Credit Crads, Finance WES Sogol Docs Resume 3 letters Applications Dars CBTS 3 licences Quantic Ryan Khan Academy",
+    "source_hash": "b530ba9b1e2097516b2f7633496d3f545dcc05e0bb5b1d807325b2b4d0ada7d4",
+    "text": "IT Security Policy IT Security Policy Filename: it-security-policy.html DocID: ITSEC-007 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To protect company data, systems, and networks from unauthorized access and cyber threats. Scope Applies to all employees, contractors, and third-party vendors accessing company systems. Authentication Multi-factor authentication (MFA) is required for all logins. Passwords must be changed every 90 days. Device Security Company devices must be encrypted and password-protected. Personal devices may not be used to access sensitive systems. Incident Reporting Security incidents must be reported within 24 hours to security@company.com. Prohibited Actions Installing unauthorized software Sharing login credentials Disabling antivirus or firewall tools",
     "vector_index": 11
+  },
+  {
+    "doc_id": "meeting_etiquette",
+    "chunk_id": 0,
+    "source_file": "meeting_etiquette.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "source_hash": "d7cb89dc1e1bbcbbad9861dab7ef007092e7ed9916cec41a5e7a763fa521dde5",
+    "text": "Meeting Etiquette Guidelines Filename: meeting-etiquette.txt DocID: MEET-020 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To promote productive, respectful, and inclusive meetings across the organization. Scope Applies to all employees participating in virtual or in-person meetings. Guidelines - Arrive on time and prepared. - Mute when not speaking in virtual meetings. - Avoid multitasking or distractions during meetings. - Use inclusive language and encourage participation. - Stick to the agenda and respect time limits. Roles - Meeting organizer sets agenda and moderates discussion. - Participants contribute actively and respectfully. - Note-taker records key decisions and action items. Follow-Up - Action items should be assigned and tracked. - Meeting notes must be shared within 24 hours. Contact For etiquette questions, email culture@company.com.",
+    "vector_index": 12
+  },
+  {
+    "doc_id": "onboarding_process",
+    "chunk_id": 0,
+    "source_file": "onboarding_process.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "source_hash": "f5db297cda25d6b3753da02b6dba8f1dab17e28a81fa2ba96dc4193e77b3e7a0",
+    "text": "Employee Onboarding Process Employee Onboarding Process Filename: onboarding-process.html DocID: ONBOARD-009 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To guide new employees through a structured onboarding experience. Scope Applies to all new hires across departments and locations. Steps Pre-arrival paperwork and equipment setup First-day orientation and welcome session Week 1: HR training, IT setup, team introductions Week 2–4: Role-specific training and goal setting Mentorship Each new hire is assigned a mentor for the first 60 days. Feedback New hires complete onboarding surveys at 30 and 90 days.",
+    "vector_index": 13
+  },
+  {
+    "doc_id": "performance_review_policy",
+    "chunk_id": 0,
+    "source_file": "performance_review_policy.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "source_hash": "1b4e95d4174ba93ea9de7bff314fb7fa071badacd0756baf458119d8f601e304",
+    "text": "Performance Review Policy Filename: performance-review-policy.pdf DocID: REVIEW-014 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To define the process and expectations for employee performance evaluations. Scope Applies to all full-time and part-time employees. Review Cycle - Annual reviews conducted in December - Mid-year check-ins in June - New hires reviewed after 90 days Evaluation Criteria - Job knowledge and skills - Communication and collaboration - Initiative and problem-solving - Goal achievement and impact Process - Self-assessment submitted via HR portal - Manager review and rating - One-on-one feedback meeting - Final rating recorded in HRIS Outcomes - High performers may be eligible for bonuses or promotions - Development plans created for improvement areas - Ratings influence merit-based pay adjustments Contact For review process questions, email hr@company.com.",
+    "vector_index": 14
+  },
+  {
+    "doc_id": "pto_policy",
+    "chunk_id": 0,
+    "source_file": "pto_policy.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "source_hash": "725395512a561fe620cb963d0aad8d23b0e82ad3f636d3406f665afc2443116b",
+    "text": "# Paid Time Off (PTO) Policy **DocID: PTO-001** **Effective Date: Jan 1, 2025** **Last Updated: Sep 15, 2025** ## Purpose To outline the guidelines for accruing, requesting, and using paid time off for eligible employees. ## Scope This policy applies to all full-time and part-time employees of the company. ## Accrual - Full-time employees accrue PTO at a rate of 1.25 days per month (15 days/year). - Part-time employees accrue PTO proportionally based on hours worked. - PTO begins accruing on the employee’s start date. ## Usage - PTO must be requested at least 2 weeks in advance via the HR portal. - Approval is subject to team coverage and manager discretion. - PTO can be used for vacation, personal time, or illness. ## Carryover - Up to 5 unused PTO days may be carried over to the next calendar year. - Excess unused PTO is forfeited unless otherwise mandated by local law. ## Payout - Unused PTO is paid out upon termination if the employee has completed at least 6 months of service. ## Exceptions - Certain roles may have different accrual rates based on contract terms. - PTO does not accrue during unpaid leave periods. ## Contact For questions, contact HR at hr@company.com.",
+    "vector_index": 15
+  },
+  {
+    "doc_id": "referral_program",
+    "chunk_id": 0,
+    "source_file": "referral_program.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "source_hash": "ed222c6e48d2c79d2e880df2bd61fc4280a0c47f36cfb95539504947055cba48",
+    "text": "Employee Referral Program Employee Referral Program Filename: referral-program.html DocID: REFERRAL-011 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To encourage employees to refer qualified candidates for open positions. Scope Applies to all full-time employees who refer external candidates. Eligibility Referrals must be submitted via the official referral form. Referred candidates must not have applied in the past 12 months. Reward $1,000 bonus for successful referral after 90 days of employment. Bonus is taxable and paid via payroll. Exclusions HR and hiring managers are not eligible for referral bonuses. Interns and contractors are excluded from the program. Contact For questions, email referrals@company.com.",
+    "vector_index": 16
+  },
+  {
+    "doc_id": "remote_work_policy",
+    "chunk_id": 0,
+    "source_file": "remote_work_policy.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "source_hash": "0a797e8c54a3aa202be484769a045e8771f01171296e7d713e9b45cabe066d9f",
+    "text": "# Remote Work Policy **Filename: remote-work-policy.md** **DocID: REMOTE-002** **Effective Date: Jan 1, 2025** **Last Updated: Sep 15, 2025** ## Purpose To define the guidelines and expectations for employees working remotely. ## Scope Applies to all employees approved for remote work arrangements, either full-time or hybrid. ## Eligibility - Employees must complete 90 days of employment before requesting remote work. - Approval is based on role suitability, performance, and manager discretion. ## Expectations - Employees must be available during core hours: 9 AM – 4 PM local time. - Daily check-ins via Slack or Teams are required. - All meetings must be attended with video on unless otherwise approved. ## Equipment - Company provides laptop, webcam, and headset. - Employees are responsible for maintaining a secure and quiet workspace. ## Security - VPN must be used for all company systems. - Confidential documents must not be printed or stored locally. ## Reimbursement - Internet costs may be reimbursed up to $50/month with valid receipts. - No reimbursement for furniture or utilities unless pre-approved. ## Termination of Remote Work - Remote privileges may be revoked due to performance issues or policy violations. - Employees may be asked to return to office with 2 weeks’ notice. ## Contact For remote work support, email remote@company.com.",
+    "vector_index": 17
+  },
+  {
+    "doc_id": "safety_guidelines",
+    "chunk_id": 0,
+    "source_file": "safety_guidelines.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "source_hash": "6298f4dd416cce0033b258b0239def5a714af3a5961d00cd06fe73c4829f1822",
+    "text": "Workplace Safety Guidelines Filename: safety-guidelines.pdf DocID: SAFETY-016 Effective Date: Jan 1, 2025 Last Updated: Sep 15, 2025 Purpose To ensure a safe and healthy work environment for all employees. Scope Applies to all employees, contractors, and visitors at company facilities. General Safety Rules - Follow posted safety signs and instructions. - Report hazards immediately to Facilities or HR. - Use protective equipment where required. Emergency Procedures - Fire: Evacuate using nearest exit, meet at designated assembly point. - Earthquake: Drop, cover, and hold until shaking stops. - Medical: Call 911 and notify building security. Workstation Ergonomics - Adjust chair, monitor, and keyboard to reduce strain. - Take regular breaks to stretch and move. - Report discomfort or repetitive stress symptoms to HR. Incident Reporting - All injuries or near misses must be reported within 24 hours. - Use the Safety Incident Form available on the intranet. Contact For safety questions or concerns, email safety@company.com.",
+    "vector_index": 18
+  },
+  {
+    "doc_id": "travel_policy",
+    "chunk_id": 0,
+    "source_file": "travel_policy.jsonl",
+    "method": "token",
+    "params": {
+      "window_size": 700,
+      "overlap": 150,
+      "tokenization": "whitespace_approx"
+    },
+    "source_hash": "1fc3729f8718f93029c2f2be338fd324a8cf97307b3c4a7710c579cd1e444e82",
+    "text": "# Travel Policy **Filename: travel-policy.md** **DocID: TRAVEL-006** **Effective Date: Jan 1, 2025** **Last Updated: Sep 15, 2025** ## Purpose To provide guidelines for business-related travel, including booking, reimbursement, and conduct expectations. ## Scope Applies to all employees traveling for company-approved business purposes. ## Booking Procedures - Travel must be booked through the company’s travel portal or approved agency. - Economy class is standard for domestic flights; business class may be approved for international travel over 8 hours. - Hotel bookings should not exceed $200/night unless pre-approved. ## Approval - All travel must be pre-approved by the employee’s manager. - International travel requires VP-level approval. - Travel requests should be submitted at least 3 weeks in advance. ## Expenses - Covered expenses include airfare, lodging, ground transport, meals, and incidentals. - Daily meal allowance: $75/day domestic, $100/day international. - Receipts must be submitted within 10 days of return. ## Conduct - Employees are expected to represent the company professionally at all times. - Alcohol consumption should be moderate and appropriate to the setting. - Any misconduct during travel may result in disciplinary action. ## Safety and Emergencies - Employees must register travel itineraries with HR. - Emergency contact numbers must be provided before departure. - In case of emergency, contact travel@company.com or local embassy. ## Contact For travel support, email travel@company.com.",
+    "vector_index": 19
   }
 ]
