@@ -127,18 +127,32 @@
     <h4 class="mb-2">Step 7 Overview</h4>
     <p>This step lets you ask questions about your indexed policy documents using Retrieval-Augmented Generation (RAG). Your query is answered by an AI model, strictly grounded in the retrieved document chunks, with citations for every fact.</p>
     <hr>
-    <h5 class="mb-1">What is <b>Document Index</b>?</h5>
+    <h5 class="mb-1">Document Index</h5>
     <ul>
-      <li><b>Definition:</b> A Document Index is a collection of embedded document chunks created in previous steps (Step 5/6). Each index represents a different chunking or embedding strategy (e.g., by headings or by tokens).</li>
-      <li><b>Use Case:</b> Select the index that best matches your question or the type of information you want. The system will retrieve the most relevant chunks from the selected index and use them to generate a grounded, cited answer.</li>
-      <li><b>How to Use:</b> Pick a Document Index from the dropdown, then ask your question. The answer and citations will be based only on the selected index’s content. This lets you compare retrieval quality and answer accuracy across different chunking/embedding strategies.</li>
+      <li><b>Definition:</b> A Document Index is a collection of embedded document chunks created in previous steps. Each index represents a different chunking or embedding strategy (e.g., by headings or by tokens).</li>
+      <li><b>Purpose:</b> It determines which set of document chunks the system will search to answer your question. Different indexes may yield different retrieval and answer quality.</li>
+      <li><b>How to Use:</b> Select your preferred chunking method (e.g., "By Heading" or "By Token"). The system will use the corresponding index for retrieval and answer generation.</li>
+      <li><b>Tip:</b> If you only see chunking method options, each method maps to a single index. Pick the method that best matches your question or desired context.</li>
+    </ul>
+    <hr>
+    <h5 class="mb-1">Top-K Chunks</h5>
+    <ul>
+      <li><b>Definition:</b> Top-K controls how many of the most relevant document chunks are retrieved and used to answer your question.</li>
+      <li><b>Purpose:</b> A lower Top-K (e.g., 3) gives concise, focused answers. A higher Top-K (e.g., 10 or 20) provides more context, which can help with complex questions but may introduce irrelevant information.</li>
+      <li><b>How to Use:</b> Adjust Top-K to balance answer depth and focus. Default is usually 5. Increase for broader context, decrease for more precise answers.</li>
+    </ul>
+    <hr>
+    <h5 class="mb-1">Min Score</h5>
+    <ul>
+      <li><b>Definition:</b> Min Score sets the minimum similarity required for a chunk to be considered relevant and included in the answer context. Scores typically range from -1 (least similar) to 1 (most similar).</li>
+      <li><b>Purpose:</b> It helps filter out less relevant or noisy chunks, improving answer quality. Higher Min Score means stricter filtering; lower Min Score means more context but possibly more noise.</li>
+      <li><b>How to Use:</b> Default is usually 0.0. Adjust up (e.g., 0.2, 0.5) for stricter, more focused answers. Adjust down (e.g., -0.2) for broader context or if you get "No evidence found" errors.</li>
     </ul>
     <hr>
     <h5 class="mb-1">How to use Step 7</h5>
     <ul>
-      <li>Choose a Document Index (from Step 5/6).</li>
-      <li>Select an AI Provider (OpenRouter, Groq, or OpenAI; API key required).</li>
-      <li>Set retrieval parameters: <b>Top-K</b> (number of chunks), <b>Min Score</b> (minimum relevance), and <b>Answer Length</b> (short/medium/long).</li>
+      <li>Select a chunking method (Document Index) and set retrieval parameters: <b>Top-K</b> and <b>Min Score</b>.</li>
+      <li>Choose an AI Provider (OpenRouter, Groq, or OpenAI; API key required).</li>
       <li>Type your question and submit.</li>
       <li>The answer will be generated, strictly citing the source chunks. You’ll see the answer, citations, and the retrieved context.</li>
     </ul>
