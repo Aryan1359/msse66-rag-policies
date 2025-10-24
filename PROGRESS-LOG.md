@@ -1,14 +1,17 @@
 
 # PROGRESS LOG — MSSE66 RAG Policies
 # ✨ Features at a Glance
-* Modern, organized homepage UI
+* Modular, stepwise Flask blueprints (upload, parse, chunk, embed, search, ask, evaluate)
+* Modern, responsive UI (Bootstrap, Lottie animations, sidebar navigation)
 * Indexed Files table with delete icons
 * Ask a Question box with clear answer and sources formatting
-* Fast keyword retrieval
-* Grounded answers with citations
-* Automated evaluation & CI gate
-* One-click deploy on Render
-* Extractive summary (LLM disabled)
+* Fast keyword and vector retrieval
+* Grounded answers with citations and robust logging
+* Metrics dashboard: grounded rate, citation correctness, latency, recent questions
+* Automated evaluation & CI gate (groundedness, citation, latency)
+* One-click deploy on Render (Procfile, gunicorn, render.yaml)
+* Extractive summary (LLM disabled by default, provider-agnostic)
+* All steps and logs are reproducible and persistent
 
 ## ✅ Phase 1 — Environment & CI Setup
 
@@ -112,6 +115,23 @@
 * Live Demo: [https://msse66-rag-policies.onrender.com](https://msse66-rag-policies.onrender.com)
 * Updated README with **Live Demo** section.
 * Merged PR #19 → tagged **v0.7.1**.
+
+---
+
+## ✅ Phase 7 — Modularization, Logging, and Metrics (2025-10-22 to 2025-10-24)
+
+* Refactored app into modular blueprints: each pipeline step (upload, parse, chunk, embed, search, ask, evaluate) is a separate module and UI page.
+* Implemented robust, persistent logging for all user questions, answers, citations, and latency (step7/logs/ask.jsonl, step6/logs/search.jsonl).
+* Added metrics dashboard (Step 8): grounded rate, citation correctness, latency, recent questions, and evaluation summary.
+* Improved citation extraction and latency logging for accurate metrics.
+* UI/UX improvements: navigation bar fixes, homepage redesign with Lottie animation, footer enhancements, better spacing.
+* Provider and chunking method selection in Step 7 UI.
+* API key management in UI for OpenRouter, Groq, OpenAI.
+* Persistent log and data file handling for Render deployment.
+* Merged feature branches, resolved conflicts, and cleaned up old branches.
+* Rewrote and updated README (structure, usage, deployment, API, evaluation).
+* Added deployed.md with live demo link as required.
+* All changes tested and validated in production.
 
 ---
 

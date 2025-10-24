@@ -11,32 +11,81 @@ https://msse66-rag-policies.onrender.com
 curl -sS https://msse66-rag-policies.onrender.com/health
 ```
 
-**Sample /ask request**
-```bash
-curl -sS -X POST https://msse66-rag-policies.onrender.com/ask -H 'Content-Type: application/json' -d '{"question": "What is the PTO policy?"}'
-```
+---
 
-**Features:**
-* Modern, organized homepage UI
-* Indexed Files table with delete icons
-* Ask a Question box with clear answer and sources formatting
-* Fast keyword retrieval (local, simple)
-* Grounded answers with citations (`sources[]`)
-* Automated evaluation & CI gate (groundedness, citation, latency)
-* One-click deploy on Render (Procfile + gunicorn)
-* Extractive summary (LLM disabled)
+## 🚀 What is this?
 
-**Supported file types:**
-- Markdown (.md), text (.txt), and PDF (.pdf) files can be uploaded, indexed, and used for Q&A.
-- Deleting a file removes its content from the index and future answers.
-- PDF support requires PyPDF2 (included in requirements.txt).
+**A modular, production-ready Retrieval-Augmented Generation (RAG) pipeline for Q&A over company policies.**
 
-**Latest update:**
-- Homepage UI improved for clarity and organization
-- Answers now show first, with sources listed below
-- All changes live on Render
+- Stepwise, blueprint-based Flask app: each step (upload, parse, chunk, embed, search, ask, evaluate) is a separate page and module.
+- Modern, responsive UI (Bootstrap, Lottie animations, sidebar navigation).
+- Supports Markdown, HTML,  TXT, and PDF files.
+- Embedding via MiniLM (sentence-transformers), vector search with FAISS or NumPy.
+- LLM providers: OpenRouter, Groq, OpenAI (API key management in UI).
+- All user questions, answers, and metrics are logged for evaluation.
 
+---
 
+## 🛠️ Features
+
+- **Stepwise pipeline:** upload → parse → clean → chunk → embed → search → ask (RAG) → evaluate
+- **Provider-agnostic:** easily switch between LLM providers
+- **Metrics dashboard:** grounded rate, citation correctness, latency, recent questions
+- **Sample questions/answers:** for manual evaluation (see Step 7)
+- **All steps and logs are reproducible and persistent** (for Render deployment)
+- **Easy deployment:** Render (Procfile, gunicorn) and local dev
+
+---
+
+## 🗂️ Directory Structure
+
+- `app.py`: Main Flask app, blueprint registration
+- `steps/stepX/`: Each step’s blueprint, logic, and logs
+- `templates/steps/step_X.html`: UI for each step
+- `data/`: Uploaded files, embeddings, and indexes
+- `scripts/`: Utilities for chunking, embedding, search, and evaluation
+- `requirements.txt`: All dependencies (Flask, sentence-transformers, FAISS, etc)
+
+---
+
+## 🧑‍💻 How to Use
+
+1. **Upload** policy files (Step 1)
+2. **Parse and clean** (Steps 2–3)
+3. **Chunk** by heading or token (Step 4)
+4. **Embed** for semantic search (Step 5)
+5. **Search and preview** retrieval (Step 6)
+6. **Ask questions** (Step 7): select provider, chunking method, and parameters
+7. **View metrics and recent questions** (Step 8)
+8. **Compare your answers** to gold-standard samples (shown in Step 7)
+
+---
+
+## 📊 Metrics & Evaluation
+
+- Step 8 dashboard: grounded rate, citation correctness, median latency, recent questions
+- All logs are stored in `/steps/step7/logs/ask.jsonl` and `/steps/step6/logs/search.jsonl`
+- Use the sample questions/answers table in Step 7 for manual or automated evaluation
+
+---
+
+## 🏗️ Deployment
+
+- One-click deploy to Render (free tier supported)
+- All required files and logs are committed for reproducibility
+- API keys can be managed via UI or repo secrets
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome! Modular codebase, easy to extend or add new steps/providers.
+
+---
+
+## 📚 Example API Usage
+
+**Ask a question via API:**
 ```bash
 curl -sS -X POST https://msse66-rag-policies.onrender.com/ask \
   -H "Content-Type: application/json" \
@@ -45,19 +94,9 @@ curl -sS -X POST https://msse66-rag-policies.onrender.com/ask \
 
 ---
 
+## 📝 License
 
----
-
-## 🤝 How to contribute
-
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
-
----
-## 🧭 Overview
-
-A Retrieval-Augmented Generation (RAG) app that answers questions about a small corpus of **company policies**.
-Focus areas:
-
+MIT License. See LICENSE file.
 * **Ingestion & keyword retrieval** (local, simple & fast)
 * **Grounded answers** with citations via `sources[]`
 * **Automated evaluation & CI gate** (groundedness, citation accuracy, latency)
@@ -211,27 +250,44 @@ MIN_GROUNDED=0.8 MIN_CITATION=0.8 P95_MS=3500 make eval-gate
 
 ## 📁 Repository Structure
 
+
 ```
 msse66-rag-policies/
-├─ app.py                      # Flask app (/, /health, /search, /ask)
+├─ app.py                      # Main Flask app, blueprint registration
+├─ requirements.txt            # All Python dependencies
+├─ runtime.txt                 # Python version for Render
+├─ LICENSE
+├─ PROGRESS-LOG.md
+├─ README.md
 ├─ data/
-│  ├─ policies/                # Markdown policy docs
-│  └─ index/                   # Built indexes (keyword; vector hooks)
-├─ scripts/
-│  ├─ index_jsonl.py           # Build keyword index
-│  ├─ search_jsonl.py          # Local keyword search CLI
-│  ├─ embed_index.py           # (scaffold) Build embeddings
-│  ├─ vector_search.py         # (scaffold) Cosine similarity search
-│  └─ eval_ask.py              # Eval metrics + CI gate (p95, thresholds, artifacts)
-├─ .github/workflows/eval.yml  # Evaluation workflow
-├─ Makefile                    # `make eval-gate`
+│  ├─ policies/                # Uploaded policy docs (md, txt, pdf, etc.)
+│  └─ index/                   # Built indexes (keyword, vector, meta)
+│      ├─ meta.json
+│      ├─ policies.jsonl
+│      └─ policies.npy
+├─ scripts/                    # Utilities for chunking, embedding, search, eval
+│  ├─ chunk.py
+│  ├─ embed_index.py
+│  ├─ index_jsonl.py
+│  ├─ ingest.py
+│  ├─ search_jsonl.py
+│  ├─ vector_search.py
+│  └─ ... (eval, test, utils)
+├─ steps/                      # Modular blueprints for each pipeline step
+│  ├─ step1/ ... step8/        # Each step: routes, logic, logs
+│  │   ├─ stepX_routes.py
+│  │   ├─ services_*.py
+│  │   └─ logs/
+│  └─ ...
+├─ templates/
+│  ├─ base.html                # Main layout, sidebar, footer
+│  ├─ index.html               # Homepage (with animation)
+│  └─ steps/step_X.html        # UI for each step (1–8)
+├─ .github/workflows/eval.yml  # Evaluation workflow (CI)
+├─ Makefile                    # `make eval-gate` for CI
 ├─ Procfile                    # Production entrypoint (gunicorn)
 ├─ render/render.yaml          # Render service config (free plan)
-├─ requirements.txt
-├─ PROGRESS-LOG.md
-├─ LEARNING-GUIDE.md
-├─ checklist.md
-└─ Instruction.md
+└─ ... (other docs, guides)
 ```
 
 ---
