@@ -193,6 +193,10 @@ app.register_blueprint(step6_bp)
 from steps.step7.step7_routes import step7_bp
 app.register_blueprint(step7_bp)
 
+# Register Step 8 blueprint
+from steps.step8.step8_routes import step8_bp
+app.register_blueprint(step8_bp)
+
 if __name__ == "__main__":
     print('Registered routes:', app.url_map, file=sys.stderr)
     app.run(host="0.0.0.0", port=8000)
