@@ -22,6 +22,7 @@
       <li><a href="/steps/4" class="{% if request.path.startswith('/steps/4') %}active{% endif %}">Step 4 — Chunk</a></li>
       <li><a href="/steps/5" class="{% if request.path.startswith('/steps/5') %}active{% endif %}">Step 5 — Embed</a></li>
       <li><a href="/steps/6" class="{% if request.path.startswith('/steps/6') %}active{% endif %}">Step 6 — Search</a></li>
+    <li><a href="/steps/7" class="{% if request.path.startswith('/steps/7') %}active{% endif %}">Step 7 — Ask (RAG)</a></li>
       {% for i in range(7, 21) %}
         <li><a href="/steps/{{ i }}" class="{% if request.path == '/steps/' ~ i %}active{% endif %}">Step {{ i }}</a></li>
       {% endfor %}

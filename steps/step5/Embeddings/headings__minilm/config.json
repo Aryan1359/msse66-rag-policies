@@ -2,38 +2,114 @@
   "chunk_source": "headings",
   "embed_method": "minilm",
   "model": "all-MiniLM-L6-v2",
-  "created_iso": "2025-10-24T00:10:41Z",
+  "created_iso": "2025-10-24T08:12:57Z",
   "source_hashes": [
     {
-      "doc_id": "etops_5503_50605121425",
-      "source_file": "etops_5503_50605121425.jsonl",
-      "source_hash": "8c26dbded11e6ebf7f4fe83889e73c6b80ec2e2bc81f7894e95c4b362e18fc6f"
-    },
-    {
-      "doc_id": "hydropower_formula_live_demo_html",
-      "source_file": "hydropower_formula_live_demo_html.jsonl",
-      "source_hash": "40862dae9118cc2b94afe88f5a2cd1742c8ed0ef86d400f05586e6b300bc0275"
-    },
-    {
-      "doc_id": "readme",
-      "source_file": "readme.jsonl",
-      "source_hash": "9607a006be055e9810b0d44f36c3146b50251484d24d1b2e0c9325a82c283e3e"
-    },
-    {
-      "doc_id": "rubric",
-      "source_file": "rubric.jsonl",
-      "source_hash": "1a2f63be566b84ce4bd4c1cfa296d6b488cbb0d7b72a37d9fe0a9d1a11018906"
-    },
-    {
-      "doc_id": "subtitle_1",
-      "source_file": "subtitle_1.jsonl",
+      "doc_id": "attendance_policy",
+      "source_file": "attendance_policy.jsonl",
       "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
-      "doc_id": "tasks_now",
-      "source_file": "tasks_now.jsonl",
+      "doc_id": "benefits_overview",
+      "source_file": "benefits_overview.jsonl",
+      "source_hash": "0c5ad34302a108e55d9005268875e8f6e6b5c3f20ff2094b4faaafc3a4139870"
+    },
+    {
+      "doc_id": "code_of_conduct",
+      "source_file": "code_of_conduct.jsonl",
+      "source_hash": "3c6e97587f9dc4002e32d881d6d855fb6cd6024b6a22fd3498bda88eda1ae5d8"
+    },
+    {
+      "doc_id": "data_privacy_policy",
+      "source_file": "data_privacy_policy.jsonl",
+      "source_hash": "924fc6e0ce265ae85d0238fa0043bf87d75a935b3a578774b1d1a3aa59f95756"
+    },
+    {
+      "doc_id": "dei_policy",
+      "source_file": "dei_policy.jsonl",
+      "source_hash": "615a99e19071dd0257e630ea4e3150cf83c3f7368bb541a5d9c39161c6d1a92d"
+    },
+    {
+      "doc_id": "dress_code_policy",
+      "source_file": "dress_code_policy.jsonl",
       "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "doc_id": "exit_process",
+      "source_file": "exit_process.jsonl",
+      "source_hash": "8b9ed55fb3bcc07c14e22e1010f9d3a63b25846d7cb8b8900ed5f65116d71aed"
+    },
+    {
+      "doc_id": "expense_policy",
+      "source_file": "expense_policy.jsonl",
+      "source_hash": "6c1afcc7e3c973d02978e60d5d8f6e06491b112a785f2d270ef52796fe03d3b3"
+    },
+    {
+      "doc_id": "harassment_policy",
+      "source_file": "harassment_policy.jsonl",
+      "source_hash": "864709850dc2434d31b91b5d2863459277a227746dd7b3618a10593257da1942"
+    },
+    {
+      "doc_id": "holiday_calendar",
+      "source_file": "holiday_calendar.jsonl",
+      "source_hash": "89b3e6e84634bd7ebfc2f470a1cef078e8ad21197ff3255221bc9d7de7178f46"
+    },
+    {
+      "doc_id": "internet_usage_policy",
+      "source_file": "internet_usage_policy.jsonl",
+      "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "doc_id": "it_security_policy",
+      "source_file": "it_security_policy.jsonl",
+      "source_hash": "eae324f4a3ff163ebad0dc521e75d68cd3d93d5fe014bc16477d87625ee178ef"
+    },
+    {
+      "doc_id": "meeting_etiquette",
+      "source_file": "meeting_etiquette.jsonl",
+      "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "doc_id": "new_text_document",
+      "source_file": "new_text_document.jsonl",
+      "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "doc_id": "onboarding_process",
+      "source_file": "onboarding_process.jsonl",
+      "source_hash": "2ec65e2e1f137869be3edd240895112f247694e83b562eac742c91c0a8e5a6ce"
+    },
+    {
+      "doc_id": "performance_review_policy",
+      "source_file": "performance_review_policy.jsonl",
+      "source_hash": "d3f0c0ed413e330e17cefb25817be878e0af3a70a31c6bfbd22e6a3297d927cc"
+    },
+    {
+      "doc_id": "pto_policy",
+      "source_file": "pto_policy.jsonl",
+      "source_hash": "482364b665771020ff944b3add535aaa56a14aca038c11089d8b42e67accc3e6"
+    },
+    {
+      "doc_id": "referral_program",
+      "source_file": "referral_program.jsonl",
+      "source_hash": "c35ef60df9cc4e57f8fb018babd81b883406ae0f8829067a4de0de608b685972"
+    },
+    {
+      "doc_id": "remote_work_policy",
+      "source_file": "remote_work_policy.jsonl",
+      "source_hash": "d808cdd1a276e5a34349564c569834b5edd5ce5be37c59aab937c5ef4a70c45b"
+    },
+    {
+      "doc_id": "safety_guidelines",
+      "source_file": "safety_guidelines.jsonl",
+      "source_hash": "451afd62a3ce8499c6fabe5219e4aad0614c8f54739cebb4dd52725026f86b0d"
+    },
+    {
+      "doc_id": "travel_policy",
+      "source_file": "travel_policy.jsonl",
+      "source_hash": "978ef5e14681eae4ac8c00b02bd4e1d1095a107de1b320324a8af8a131b72e43"
     }
   ],
-  "faiss": false
+  "faiss": true,
+  "metric": "cosine (IP on L2-normalized vectors)"
 }

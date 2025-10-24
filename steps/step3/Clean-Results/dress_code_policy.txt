@@ -1,0 +1,31 @@
+Dress Code Policy
+Filename: dress-code-policy.txt
+DocID: DRESS-018
+Effective Date: Jan 1, 2025
+Last Updated: Sep 15, 2025
+
+Purpose
+To define appropriate workplace attire and grooming standards.
+
+Scope
+Applies to all employees working on-site or attending company-sponsored events.
+
+General Guidelines
+- Business casual is the default dress code.
+- Jeans are permitted if clean and free of holes.
+- Company-branded apparel is encouraged on Fridays.
+
+Prohibited Attire
+- Clothing with offensive language or imagery
+- Flip-flops, tank tops, or beachwear
+- Excessively revealing or torn clothing
+
+Special Cases
+- Formal attire required for client-facing meetings and presentations.
+- Lab or field roles may require safety gear or uniforms.
+
+Remote Work
+- Employees on video calls must wear appropriate attire visible on camera.
+
+Contact
+For dress code questions, email hr@company.com.

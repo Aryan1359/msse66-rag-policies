@@ -11,3 +11,5 @@
 {"ts": "2025-10-24T00:23:51Z", "db": "headings__minilm", "topk": 5, "latency_ms": 4785, "query": "Submission Guidelines", "result_ids": [["rubric", 8], ["rubric", 2], ["rubric", 9], ["rubric", 6], ["rubric", 12]]}
 {"ts": "2025-10-24T00:26:14Z", "db": "headings__minilm", "topk": 5, "latency_ms": 4840, "query": "Submission Guidelines", "result_ids": [["rubric", 8], ["rubric", 2], ["rubric", 9], ["rubric", 6], ["rubric", 12]]}
 {"ts": "2025-10-24T00:28:38Z", "db": "headings__minilm", "topk": 5, "latency_ms": 5168, "query": "Submission Guidelines", "result_ids": [["rubric", 8], ["rubric", 2], ["rubric", 9], ["rubric", 6], ["rubric", 12]]}
+{"ts": "2025-10-24T08:14:31Z", "db": "headings__minilm", "topk": 5, "latency_ms": 357, "query": "paid holidays", "result_ids": [["holiday_calendar", 1], ["holiday_calendar", 2], ["holiday_calendar", 3], ["holiday_calendar", 0], ["expense_policy", 3]]}
+{"ts": "2025-10-24T08:15:24Z", "db": "token__minilm", "topk": 5, "latency_ms": 281, "query": "paid holidays", "result_ids": [["holiday_calendar", 0], ["expense_policy", 0], ["pto_policy", 0], ["benefits_overview", 0], ["attendance_policy", 0]]}

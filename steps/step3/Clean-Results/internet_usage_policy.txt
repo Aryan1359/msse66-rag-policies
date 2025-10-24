@@ -1,0 +1,32 @@
+Internet Usage Policy
+Filename: internet-usage-policy.txt
+DocID: NETUSE-019
+Effective Date: Jan 1, 2025
+Last Updated: Sep 15, 2025
+
+Purpose
+To ensure responsible and secure use of internet resources on company networks.
+
+Scope
+Applies to all employees using company devices or accessing company systems.
+
+Acceptable Use
+- Accessing work-related websites and tools
+- Limited personal use during breaks (e.g., news, banking)
+- Downloading approved software and updates
+
+Prohibited Use
+- Streaming non-work media during work hours
+- Accessing adult, gambling, or illegal content
+- Downloading pirated or unauthorized software
+
+Monitoring
+- Internet activity may be monitored for compliance and security.
+- Violations may result in disciplinary action.
+
+Security
+- Do not click suspicious links or download unknown attachments.
+- Report phishing attempts to security@company.com.
+
+Contact
+For internet policy questions, email it@company.com.
