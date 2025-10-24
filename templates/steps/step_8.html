@@ -2,7 +2,101 @@
 {% extends "base.html" %}
 {% block page_title %}Step 8{% endblock %}
 {% block content %}
-  <h1>Step 8</h1>
-  <p>This page will handle a portion of the pipeline. Placeholder content for Step 8.</p>
-  <div class="secondary-panel"></div>
+  <h2>Step 8: Evaluation & Metrics</h2>
+  <form method="post" class="mb-3">
+    <label for="window">Time Window:</label>
+    <select name="window" id="window" class="form-select w-auto d-inline-block">
+      <option value="all" {% if window=='all' %}selected{% endif %}>All</option>
+      <option value="24h" {% if window=='24h' %}selected{% endif %}>Last 24h</option>
+      <option value="7d" {% if window=='7d' %}selected{% endif %}>Last 7 days</option>
+      <option value="30d" {% if window=='30d' %}selected{% endif %}>Last 30 days</option>
+    </select>
+    <button type="submit" class="btn btn-primary ms-2">Update</button>
+  </form>
+  {% if no_data %}
+    <div class="alert alert-warning">No evaluation data available for the selected window.</div>
+  {% else %}
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Metrics</div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Total Questions: <b>{{ metrics.n_questions }}</b></li>
+            <li class="list-group-item">Grounded Rate: <b>{{ metrics.grounded_rate }}%</b></li>
+            <li class="list-group-item">Citation Correctness: <b>{{ metrics.citation_correctness }}%</b></li>
+            <li class="list-group-item">Median Generation Latency: <b>{{ metrics.median_gen or 'N/A' }} ms</b></li>
+            <li class="list-group-item">Median Retrieval Latency: <b>{{ metrics.median_ret or 'N/A' }} ms</b></li>
+            <li class="list-group-item">Median End-to-End Latency: <b>{{ metrics.end_to_end or 'N/A' }} ms</b></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Recent Questions</div>
+        <div class="card-body p-0">
+          <table class="table table-sm mb-0">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Query</th>
+                <th>Status</th>
+                <th>Citations</th>
+                <th>Latency (ms)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in recent %}
+              <tr>
+                <td>{{ r.time }}</td>
+                <td>{{ r.query|truncate(40) }}</td>
+                <td>{{ r.status }}</td>
+                <td>{{ r.citations_count }}</td>
+                <td>{{ r.latency_ms or 'N/A' }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <div class="card mt-4">
+    <div class="card-header">Step 8 Overview</div>
+    <div class="card-body">
+      <p>
+        <b>What is this dashboard?</b><br>
+        This page provides a live evaluation of your RAG (Retrieval-Augmented Generation) system's performance. It summarizes how well your AI answers are grounded in your documents, how accurate the citations are, and how fast the system responds. These metrics help you debug, improve, and trust your RAG pipeline.
+      </p>
+      <ul>
+        <li><b>Grounded Rate</b>:<br>
+          The percentage of answers that include at least one citation to a document chunk. A high grounded rate means your AI is consistently supporting its answers with evidence from your indexed documents.<br>
+          <i>Use case:</i> Monitor if the model is hallucinating or failing to cite sources. Low values may indicate retrieval or prompt issues.
+        </li>
+        <li><b>Citation Correctness</b>:<br>
+          The percentage of answers where <u>all</u> citations in the answer actually match the chunks retrieved for that question. This measures whether the citations are not just present, but also accurate and relevant.<br>
+          <i>Use case:</i> Detect if the model is fabricating citations or referencing irrelevant content. High correctness means users can trust the citations shown.
+        </li>
+        <li><b>Median Generation Latency</b>:<br>
+          The median time (in milliseconds) taken by the LLM to generate an answer, across all questions in the selected window.<br>
+          <i>Use case:</i> Track LLM speed and user experience. Spikes may indicate provider issues or prompt complexity.
+        </li>
+        <li><b>Median Retrieval Latency</b>:<br>
+          The median time (in milliseconds) spent searching for relevant chunks before answering.<br>
+          <i>Use case:</i> Optimize retrieval code and embedding DBs for faster search.
+        </li>
+        <li><b>Median End-to-End Latency</b>:<br>
+          The total median time from question submission to answer completion (retrieval + generation).<br>
+          <i>Use case:</i> Monitor overall system responsiveness for users.
+        </li>
+      </ul>
+      <p>
+        <b>How to use:</b><br>
+        Use the time window selector above to filter metrics and recent questions. This helps you spot trends, debug issues, and validate improvements after changes to your RAG pipeline.<br>
+        All data is parsed from logs generated in Step 6 (retrieval) and Step 7 (answering).
+      </p>
+    </div>
+  </div>
 {% endblock %}

@@ -161,4 +161,38 @@
     <b>Logging:</b> All queries and answers are logged for review and reproducibility.
   </div>
 </div>
+  <div class="card mt-5">
+    <div class="card-header">Sample Questions & Gold-Standard Answers</div>
+    <div class="card-body">
+      <p>
+        <b>Compare Your Results:</b><br>
+        The table below shows sample questions and their gold-standard answers, along with the target document for each. Use these to test your RAG system and compare your generated answers to the expected ones. This helps you evaluate answer quality, grounding, and citation accuracy.
+      </p>
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Sample Question</th>
+              <th>Gold-Standard Answer</th>
+              <th>Target Document</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>How many paid holidays do employees receive each year?</td><td>Employees receive 11 paid holidays, including 10 fixed dates and 1 floating holiday.</td><td>holiday-calendar.pdf</td></tr>
+            <tr><td>2</td><td>What is the process for submitting expenses and how long does reimbursement take?</td><td>Submit expenses via the Expense Portal within 30 days; reimbursement is processed within 14 business days.</td><td>expense-policy.md</td></tr>
+            <tr><td>3</td><td>What behavior is prohibited under the Code of Conduct Policy?</td><td>Harassment, discrimination, bullying, conflicts of interest, and misuse of company resources are prohibited.</td><td>code-of-conduct.md</td></tr>
+            <tr><td>4</td><td>What are the eligibility rules and reward amount for the Employee Referral Program?</td><td>Employees can earn a $1,000 bonus for referring candidates who stay 90 days; HR and hiring managers are excluded.</td><td>referral-program.html</td></tr>
+            <tr><td>5</td><td>What are the expectations for employee attendance and consequences for violations?</td><td>Employees must report absences before shift start; violations may lead to warnings, suspension, or termination.</td><td>attendance-policy.txt</td></tr>
+            <tr><td>6</td><td>What safety procedures should employees follow during a fire or earthquake?</td><td>During a fire, evacuate and meet at the assembly point; during an earthquake, drop, cover, and hold until shaking stops.</td><td>safety-guidelines.pdf</td></tr>
+            <tr><td>7</td><td>What attire is considered inappropriate under the Dress Code Policy?</td><td>Flip-flops, tank tops, beachwear, offensive or revealing clothing are prohibited.</td><td>dress-code-policy.txt</td></tr>
+            <tr><td>8</td><td>What steps are included in the onboarding process for new hires?</td><td>Pre-arrival setup, orientation, HR/IT training, team introductions, mentorship, and feedback surveys.</td><td>onboarding-process.html</td></tr>
+            <tr><td>9</td><td>What types of data are protected under the Data Privacy Policy and how can individuals request changes?</td><td>PII, health, financial, and employee data are protected; requests for access or deletion go to privacy@company.com.</td><td>data-privacy-policy.html</td></tr>
+            <tr><td>10</td><td>What is the review cycle and evaluation criteria for performance reviews?</td><td>Annual reviews in December, mid-year check-ins in June; criteria include skills, collaboration, initiative, and goals.</td><td>performance-review-policy.pdf</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-2"><b>Tip:</b> Try asking these questions in the form above and compare your answer and citations to the gold-standard. This is useful for both manual and automated evaluation.</p>
+    </div>
+  </div>
 {% endblock %}

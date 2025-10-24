@@ -23,16 +23,22 @@
       <li><a href="/steps/5" class="{% if request.path.startswith('/steps/5') %}active{% endif %}">Step 5 — Embed</a></li>
       <li><a href="/steps/6" class="{% if request.path.startswith('/steps/6') %}active{% endif %}">Step 6 — Search</a></li>
     <li><a href="/steps/7" class="{% if request.path.startswith('/steps/7') %}active{% endif %}">Step 7 — Ask (RAG)</a></li>
-      {% for i in range(7, 21) %}
-        <li><a href="/steps/{{ i }}" class="{% if request.path == '/steps/' ~ i %}active{% endif %}">Step {{ i }}</a></li>
-      {% endfor %}
+    <li><a href="/steps/8" class="{% if request.path.startswith('/steps/8') %}active{% endif %}">Step 8 — Evaluation & Metrics</a></li>
     </ul>
   </nav>
-  <main class="content" style="padding-left:220px;">
-    <div class="header-strip">
-      <h2>{% block page_title %}{% endblock %}</h2>
-    </div>
+  <main class="content" style="padding-left:40px;">
+    {% block page_title %}{% endblock %}
     {% block content %}{% endblock %}
+    <footer class="footer mt-5 py-3 bg-light border-top text-center">
+      <div class="container">
+        <small>AI Engineering Project, MSSE, Aryan Yaghobi</small><br>
+        <span style="color:#e75480; font-size:1rem; font-weight:600;">Quantic School of Business &amp; Technology</span>
+        <div class="d-flex justify-content-center mt-2">
+          <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_4kx2q32n.json" background="transparent" speed="1" style="width: 48px; height: 48px;" loop autoplay></lottie-player>
+        </div>
+      </div>
+    </footer>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
