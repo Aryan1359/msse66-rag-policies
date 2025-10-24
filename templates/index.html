@@ -1,11 +1,24 @@
 {% extends "base.html" %}
-{% block page_title %}Home{% endblock %}
+{% block page_title %}{% endblock %}
 {% block content %}
-  <div class="hero" style="padding:64px 0 32px 0; text-align:center;">
-    <div class="hero-title" style="font-size:2.8rem; font-weight:700; color:#111827; margin-bottom:22px;">RAG — Company Policies Q&A</div>
-    <div class="hero-desc" style="font-size:1.25rem; color:#374151; margin-bottom:32px; max-width:600px; margin-left:auto; margin-right:auto;">
-      Upload your company policies, parse and chunk them, embed for semantic search, and ask questions with grounded answers and citations. Metrics and deployment included.
+<div class="container-fluid d-flex flex-column align-items-center justify-content-center" style="min-height: 80vh; padding-top: 40px;">
+  <div class="card shadow-lg p-4 mb-4" style="max-width: 600px; width: 100%; border-radius: 1.5rem; border: none;">
+    <div class="text-center mb-3">
+  <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_4kx2q32n.json" background="transparent" speed="1" style="width: 220px; height: 220px; margin:0 auto;" loop autoplay></lottie-player>
     </div>
-    <a href="/steps/1" class="cta-btn" style="font-size:1.2rem; padding:16px 40px;">Get started</a>
+    <h1 class="mb-2" style="font-size:2.2rem; font-weight:700; color:#1a202c;">RAG Company Policies Q&amp;A</h1>
+    <p class="lead mb-3" style="color:#374151;">Upload your company policies, parse and chunk them, embed for semantic search, and ask questions with grounded answers and citations. Track metrics and deploy with confidence.</p>
+    <ul class="list-unstyled mb-4" style="color:#4b5563;">
+      <li>✔️ Modular, stepwise pipeline</li>
+      <li>✔️ Supports multiple chunking &amp; embedding strategies</li>
+      <li>✔️ Provider-agnostic (OpenRouter, Groq, OpenAI)</li>
+      <li>✔️ Metrics dashboard for evaluation</li>
+      <li>✔️ Easy deployment (Render, Docker, etc.)</li>
+    </ul>
+    <div class="d-grid">
+      <a href="/steps/1" class="btn btn-primary btn-lg" style="border-radius: 2rem; font-size:1.2rem;">Get Started</a>
+    </div>
   </div>
+</div>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 {% endblock %}

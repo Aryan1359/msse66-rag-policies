@@ -132,6 +132,8 @@ def ask_route():
         return render_template('steps/step_7.html', vectors=vectors, meta=meta, method=method, providers=providers, available_providers=available_providers, api_keys=api_keys, topk=topk, min_score=min_score, answer_len=answer_len, question=question, answer=None, context_chunks=None, citations=None, provenance=None, error=error)
     # Build prompt
     prompt = build_prompt(context_chunks, question, answer_len)
+    import re
+    import time as _time
     try:
         # Set provider API key as env var for call_provider
         key_map = {
@@ -148,10 +150,15 @@ def ask_route():
                 os.environ['OPENROUTER_API_KEY'] = api_keys.get('OPENROUTER_API_KEY', '')
         elif provider in key_map:
             os.environ[key_map[provider]] = api_keys.get(key_map[provider], '')
+        t0 = _time.time()
         result = call_provider(provider, prompt, answer_len)
+        latency = _time.time() - t0
         answer = result.get('answer') if result.get('ok') else None
-        citations = []  # Extract citations from answer if needed
-        latency = None
+        # Extract citations in format doc_id#chunk_id (e.g., rubric#5)
+        if answer:
+            citations = re.findall(r'([\w\-]+#[0-9]+)', answer)
+        else:
+            citations = []
         error = result.get('error') if not result.get('ok') else None
     except Exception as e:
         error = f"Provider error: {str(e)}"

@@ -66,13 +66,37 @@
   <div class="card mt-4">
     <div class="card-header">Step 8 Overview</div>
     <div class="card-body">
-      <p>This dashboard provides evaluation and metrics for RAG question answering. Metrics include:</p>
+      <p>
+        <b>What is this dashboard?</b><br>
+        This page provides a live evaluation of your RAG (Retrieval-Augmented Generation) system's performance. It summarizes how well your AI answers are grounded in your documents, how accurate the citations are, and how fast the system responds. These metrics help you debug, improve, and trust your RAG pipeline.
+      </p>
       <ul>
-        <li><b>Grounded Rate</b>: % of answers with at least one citation.</li>
-        <li><b>Citation Correctness</b>: % of answers where all citations match retrieved chunks.</li>
-        <li><b>Median Latency</b>: Generation, retrieval, and end-to-end times (ms).</li>
+        <li><b>Grounded Rate</b>:<br>
+          The percentage of answers that include at least one citation to a document chunk. A high grounded rate means your AI is consistently supporting its answers with evidence from your indexed documents.<br>
+          <i>Use case:</i> Monitor if the model is hallucinating or failing to cite sources. Low values may indicate retrieval or prompt issues.
+        </li>
+        <li><b>Citation Correctness</b>:<br>
+          The percentage of answers where <u>all</u> citations in the answer actually match the chunks retrieved for that question. This measures whether the citations are not just present, but also accurate and relevant.<br>
+          <i>Use case:</i> Detect if the model is fabricating citations or referencing irrelevant content. High correctness means users can trust the citations shown.
+        </li>
+        <li><b>Median Generation Latency</b>:<br>
+          The median time (in milliseconds) taken by the LLM to generate an answer, across all questions in the selected window.<br>
+          <i>Use case:</i> Track LLM speed and user experience. Spikes may indicate provider issues or prompt complexity.
+        </li>
+        <li><b>Median Retrieval Latency</b>:<br>
+          The median time (in milliseconds) spent searching for relevant chunks before answering.<br>
+          <i>Use case:</i> Optimize retrieval code and embedding DBs for faster search.
+        </li>
+        <li><b>Median End-to-End Latency</b>:<br>
+          The total median time from question submission to answer completion (retrieval + generation).<br>
+          <i>Use case:</i> Monitor overall system responsiveness for users.
+        </li>
       </ul>
-      <p>Use the time window selector to filter metrics and recent questions. Data is parsed from logs generated in Step 6 and Step 7.</p>
+      <p>
+        <b>How to use:</b><br>
+        Use the time window selector above to filter metrics and recent questions. This helps you spot trends, debug issues, and validate improvements after changes to your RAG pipeline.<br>
+        All data is parsed from logs generated in Step 6 (retrieval) and Step 7 (answering).
+      </p>
     </div>
   </div>
 {% endblock %}
