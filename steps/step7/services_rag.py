@@ -17,6 +17,15 @@ def validate_answer(answer: str, citations: list) -> str:
         return "No citations found in answer."
     return ""
 _load_db_logged = False
+
+from .services_rag_exceptions import EmbeddingsMissing
+
+def embeddings_ready(method='headings'):
+    folder = _embeddings_dir() / f"{method}__minilm"
+    vectors_path = folder / "vectors.npy"
+    meta_path = folder / "meta.json"
+    return vectors_path.exists() and meta_path.exists()
+
 def load_db(method='headings'):
     """
     Load embeddings and metadata for Step 7 RAG from Step 5 output folders.
@@ -34,7 +43,7 @@ def load_db(method='headings'):
             print(f"[load_db] Using embeddings folder: {folder.resolve()}")
         _load_db_logged = True
     if not vectors_path.exists() or not meta_path.exists():
-        raise FileNotFoundError(f"Missing embeddings or metadata for method '{method}' in {folder.resolve()}")
+        raise EmbeddingsMissing(method, folder.resolve())
     vectors = np.load(str(vectors_path))
     with open(meta_path, 'r', encoding='utf-8') as f:
         meta = json.load(f)
@@ -118,7 +127,8 @@ def call_provider(provider: str, prompt: str, answer_len: str) -> dict:
       - "openai": uses OPENAI_API_KEY
     """
     try:
-        timeout = 30
+        # Strict timeouts: connect=5s, read=15s (total=20s)
+        timeout = (5, 15)
         max_words = {"short": 120, "medium": 250, "long": 400}.get(answer_len, 120)
 
         if provider == "openrouter_free":
@@ -209,7 +219,7 @@ def call_provider(provider: str, prompt: str, answer_len: str) -> dict:
             return {"ok": False, "error": f"Unknown provider: {provider}"}
 
     except requests.Timeout:
-        return {"ok": False, "error": f"{provider}: request timed out after {timeout}s"}
+        return {"ok": False, "error": f"{provider}: request timed out after 20s"}
     except requests.RequestException as e:
         return {"ok": False, "error": f"{provider}: network error: {str(e)[:200]}"}
     except Exception as e:

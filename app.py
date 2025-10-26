@@ -208,9 +208,14 @@ app.register_blueprint(step6_bp)
 from steps.step7.step7_routes import step7_bp
 app.register_blueprint(step7_bp)
 
+
 # Register Step 8 blueprint
 from steps.step8.step8_routes import step8_bp
 app.register_blueprint(step8_bp)
+
+# Register admin-only manual build endpoint
+from steps.admin_routes import admin_bp
+app.register_blueprint(admin_bp)
 
 # --- Keepalive pinger (optional, Render) ---
 try:
@@ -240,6 +245,22 @@ def keepalive_toggle():
         return jsonify({"ok": True, "enabled": enabled})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 400
+
+def _log_provider_key_status():
+    import logging
+    keys = [
+        ("OPENROUTER_API_KEY", os.environ.get("OPENROUTER_API_KEY", "")),
+        ("GROQ_API_KEY", os.environ.get("GROQ_API_KEY", "")),
+        ("OPENAI_API_KEY", os.environ.get("OPENAI_API_KEY", "")),
+    ]
+    for k, v in keys:
+        if v:
+            masked = v[:4] + ("*" * (len(v)-8)) + v[-4:] if len(v) > 8 else (v[:2] + "****")
+            print(f"[startup] {k} is set: {masked}", file=sys.stderr)
+        else:
+            print(f"[startup] WARNING: {k} is NOT set!", file=sys.stderr)
+
+_log_provider_key_status()
 
 if __name__ == "__main__":
     print('Registered routes:', app.url_map, file=sys.stderr)
