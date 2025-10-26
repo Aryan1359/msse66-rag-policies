@@ -90,7 +90,12 @@ def step7_page():
 @step7_bp.route('/ask', methods=['POST'])
 def ask_route():
     method = request.form.get('method', 'headings')
-    vectors, meta = load_db(method)
+    try:
+        vectors, meta = load_db(method)
+    except FileNotFoundError:
+        from .lazy_build import ensure_embeddings
+        ensure_embeddings(method=method, model="minilm")
+        vectors, meta = load_db(method)
     topk = int(request.form.get('topk', 5))
     min_score = request.form.get('min_score')
     if min_score == 'None' or min_score is None:
