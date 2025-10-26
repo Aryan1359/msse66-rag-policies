@@ -94,23 +94,33 @@ def ask_route():
     method = request.form.get('method', 'headings')
     # Fast-fail if embeddings are missing
     if not embeddings_ready(method):
-        return (
-            json.dumps({
-                "ok": False,
-                "error": "Embeddings not found on server. Please rebuild on deploy or via admin endpoint.",
-                "hint": f"Missing vectors/meta under steps/step5/Embeddings/{method}__minilm/"
-            }), 503, {"Content-Type": "application/json"}
-        )
+        error_msg = "Embeddings not found on server. Please rebuild on deploy or via admin endpoint."
+        if request.is_json or request.headers.get("Accept", "").startswith("application/json"):
+            return (
+                json.dumps({
+                    "ok": False,
+                    "error": error_msg,
+                    "hint": f"Missing vectors/meta under steps/step5/Embeddings/{method}__minilm/"
+                }), 503, {"Content-Type": "application/json"}
+            )
+        else:
+            flash(error_msg, 'danger')
+            return render_template('steps/step_7.html', vectors=None, meta=None, method=method, providers=[], available_providers=[], api_keys={}, topk=5, min_score=None, answer_len='short', question='', answer=None, context_chunks=None, citations=None, provenance=None, error=error_msg)
     try:
         vectors, meta = load_db(method)
     except EmbeddingsMissing as e:
-        return (
-            json.dumps({
-                "ok": False,
-                "error": str(e),
-                "hint": f"Missing vectors/meta under steps/step5/Embeddings/{method}__minilm/"
-            }), 503, {"Content-Type": "application/json"}
-        )
+        error_msg = str(e)
+        if request.is_json or request.headers.get("Accept", "").startswith("application/json"):
+            return (
+                json.dumps({
+                    "ok": False,
+                    "error": error_msg,
+                    "hint": f"Missing vectors/meta under steps/step5/Embeddings/{method}__minilm/"
+                }), 503, {"Content-Type": "application/json"}
+            )
+        else:
+            flash(error_msg, 'danger')
+            return render_template('steps/step_7.html', vectors=None, meta=None, method=method, providers=[], available_providers=[], api_keys={}, topk=5, min_score=None, answer_len='short', question='', answer=None, context_chunks=None, citations=None, provenance=None, error=error_msg)
     topk = int(request.form.get('topk', 5))
     min_score = request.form.get('min_score')
     if min_score == 'None' or min_score is None:
@@ -131,12 +141,17 @@ def ask_route():
         or (p != 'openrouter_free' and api_keys.get(f'{p.upper().replace("_FREE", "")}_API_KEY'))
     )]
     if not question:
-        return (
-            json.dumps({
-                "ok": False,
-                "error": "Please enter a question."
-            }), 400, {"Content-Type": "application/json"}
-        )
+        error_msg = "Please enter a question."
+        if request.is_json or request.headers.get("Accept", "").startswith("application/json"):
+            return (
+                json.dumps({
+                    "ok": False,
+                    "error": error_msg
+                }), 400, {"Content-Type": "application/json"}
+            )
+        else:
+            flash(error_msg, 'warning')
+            return render_template('steps/step_7.html', vectors=vectors, meta=meta, method=method, providers=providers, available_providers=available_providers, api_keys=api_keys, topk=topk, min_score=min_score, answer_len=answer_len, question=question, answer=None, context_chunks=None, citations=None, provenance=None, error=None)
     if min_score:
         try:
             min_score = float(min_score)
@@ -151,12 +166,17 @@ def ask_route():
     q_vec = embed_query(question, config)
     context_chunks, _ = retrieve_chunks(q_vec, vectors, meta, topk, min_score)
     if not context_chunks:
-        return (
-            json.dumps({
-                "ok": False,
-                "error": "No evidence found with the current threshold; lower it and try again."
-            }), 404, {"Content-Type": "application/json"}
-        )
+        error_msg = "No evidence found with the current threshold; lower it and try again."
+        if request.is_json or request.headers.get("Accept", "").startswith("application/json"):
+            return (
+                json.dumps({
+                    "ok": False,
+                    "error": error_msg
+                }), 404, {"Content-Type": "application/json"}
+            )
+        else:
+            flash(error_msg, 'warning')
+            return render_template('steps/step_7.html', vectors=vectors, meta=meta, method=method, providers=providers, available_providers=available_providers, api_keys=api_keys, topk=topk, min_score=min_score, answer_len=answer_len, question=question, answer=None, context_chunks=None, citations=None, provenance=None, error=error_msg)
     # Build prompt
     prompt = build_prompt(context_chunks, question, answer_len)
     import re
@@ -190,24 +210,37 @@ def ask_route():
         f.write(json.dumps(log_entry) + '\n')
     # Route-level timeout: if latency > 25s, return 503
     if latency > 25:
-        return (
-            json.dumps({
-                "ok": False,
-                "error": "Request exceeded 25s limit. Provider or server too slow. Limits are enforced on Render.",
-                "elapsed_ms": int(latency * 1000)
-            }), 503, {"Content-Type": "application/json"}
-        )
+        error_msg = "Request exceeded 25s limit. Provider or server too slow. Limits are enforced on Render."
+        if request.is_json or request.headers.get("Accept", "").startswith("application/json"):
+            return (
+                json.dumps({
+                    "ok": False,
+                    "error": error_msg,
+                    "elapsed_ms": int(latency * 1000)
+                }), 503, {"Content-Type": "application/json"}
+            )
+        else:
+            flash(error_msg, 'danger')
+            return render_template('steps/step_7.html', vectors=vectors, meta=meta, method=method, providers=providers, available_providers=available_providers, api_keys=api_keys, topk=topk, min_score=min_score, answer_len=answer_len, question=question, answer=None, context_chunks=context_chunks, citations=citations, provenance=None, error=error_msg)
     if not result.get('ok'):
-        return (
-            json.dumps({
-                "ok": False,
-                "error": error,
-                "elapsed_ms": int(latency * 1000)
-            }), 502, {"Content-Type": "application/json"}
-        )
-    return json.dumps({
-        "ok": True,
-        "answer": answer,
-        "citations": citations,
-        "elapsed_ms": int(latency * 1000)
-    }), 200, {"Content-Type": "application/json"}
+        if request.is_json or request.headers.get("Accept", "").startswith("application/json"):
+            return (
+                json.dumps({
+                    "ok": False,
+                    "error": error,
+                    "elapsed_ms": int(latency * 1000)
+                }), 502, {"Content-Type": "application/json"}
+            )
+        else:
+            flash(error, 'danger')
+            return render_template('steps/step_7.html', vectors=vectors, meta=meta, method=method, providers=providers, available_providers=available_providers, api_keys=api_keys, topk=topk, min_score=min_score, answer_len=answer_len, question=question, answer=None, context_chunks=context_chunks, citations=citations, provenance=None, error=error)
+    # Success: show answer in HTML page
+    if request.is_json or request.headers.get("Accept", "").startswith("application/json"):
+        return json.dumps({
+            "ok": True,
+            "answer": answer,
+            "citations": citations,
+            "elapsed_ms": int(latency * 1000)
+        }), 200, {"Content-Type": "application/json"}
+    else:
+        return render_template('steps/step_7.html', vectors=vectors, meta=meta, method=method, providers=providers, available_providers=available_providers, api_keys=api_keys, topk=topk, min_score=min_score, answer_len=answer_len, question=question, answer=answer, context_chunks=context_chunks, citations=citations, provenance=None, error=None)
