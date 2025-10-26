@@ -4,7 +4,8 @@ import time
 import numpy as np
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
-from .services_rag import load_db, embed_query, retrieve_chunks, build_prompt, call_provider, validate_answer
+from .services_rag import load_db, embed_query, retrieve_chunks, build_prompt, call_provider, validate_answer, embeddings_ready
+from .services_rag_exceptions import EmbeddingsMissing
 
 step7_bp = Blueprint('step7_bp', __name__, url_prefix='/steps/7')
 
@@ -89,13 +90,27 @@ def step7_page():
 
 @step7_bp.route('/ask', methods=['POST'])
 def ask_route():
+    import time as _time
     method = request.form.get('method', 'headings')
+    # Fast-fail if embeddings are missing
+    if not embeddings_ready(method):
+        return (
+            json.dumps({
+                "ok": False,
+                "error": "Embeddings not found on server. Please rebuild on deploy or via admin endpoint.",
+                "hint": f"Missing vectors/meta under steps/step5/Embeddings/{method}__minilm/"
+            }), 503, {"Content-Type": "application/json"}
+        )
     try:
         vectors, meta = load_db(method)
-    except FileNotFoundError:
-        from .lazy_build import ensure_embeddings
-        ensure_embeddings(method=method, model="minilm")
-        vectors, meta = load_db(method)
+    except EmbeddingsMissing as e:
+        return (
+            json.dumps({
+                "ok": False,
+                "error": str(e),
+                "hint": f"Missing vectors/meta under steps/step5/Embeddings/{method}__minilm/"
+            }), 503, {"Content-Type": "application/json"}
+        )
     topk = int(request.form.get('topk', 5))
     min_score = request.form.get('min_score')
     if min_score == 'None' or min_score is None:
@@ -116,8 +131,12 @@ def ask_route():
         or (p != 'openrouter_free' and api_keys.get(f'{p.upper().replace("_FREE", "")}_API_KEY'))
     )]
     if not question:
-        flash('Please enter a question.', 'warning')
-        return render_template('steps/step_7.html', vectors=vectors, meta=meta, method=method, providers=providers, available_providers=available_providers, api_keys=api_keys, topk=topk, min_score=min_score, answer_len=answer_len, question=question, answer=None, context_chunks=None, citations=None, provenance=None, error=None)
+        return (
+            json.dumps({
+                "ok": False,
+                "error": "Please enter a question."
+            }), 400, {"Content-Type": "application/json"}
+        )
     if min_score:
         try:
             min_score = float(min_score)
@@ -128,53 +147,29 @@ def ask_route():
             flash('Min Score must be a number.', 'warning')
             min_score = None
     # Retrieve chunks
-    # For embedding, use a default config (or extend meta to include config if needed)
     config = {}
     q_vec = embed_query(question, config)
     context_chunks, _ = retrieve_chunks(q_vec, vectors, meta, topk, min_score)
     if not context_chunks:
-        error = 'No evidence found with the current threshold; lower it and try again.'
-        return render_template('steps/step_7.html', vectors=vectors, meta=meta, method=method, providers=providers, available_providers=available_providers, api_keys=api_keys, topk=topk, min_score=min_score, answer_len=answer_len, question=question, answer=None, context_chunks=None, citations=None, provenance=None, error=error)
+        return (
+            json.dumps({
+                "ok": False,
+                "error": "No evidence found with the current threshold; lower it and try again."
+            }), 404, {"Content-Type": "application/json"}
+        )
     # Build prompt
     prompt = build_prompt(context_chunks, question, answer_len)
     import re
-    import time as _time
-    try:
-        # Set provider API key as env var for call_provider
-        key_map = {
-            'openrouter_free': 'OPENROUTER_API_KEY',
-            'groq': 'GROQ_API_KEY',
-            'openai': 'OPENAI_API_KEY'
-        }
-        if provider == 'openrouter_free':
-            if session.get('OPENROUTER_API_KEY'):
-                os.environ['OPENROUTER_API_KEY'] = session.get('OPENROUTER_API_KEY')
-            elif api_keys.get('USE_ENV_OPENROUTER'):
-                os.environ['OPENROUTER_API_KEY'] = os.getenv('OPENROUTER_API_KEY', '')
-            else:
-                os.environ['OPENROUTER_API_KEY'] = api_keys.get('OPENROUTER_API_KEY', '')
-        elif provider in key_map:
-            os.environ[key_map[provider]] = api_keys.get(key_map[provider], '')
-        t0 = _time.time()
-        result = call_provider(provider, prompt, answer_len)
-        latency = _time.time() - t0
-        answer = result.get('answer') if result.get('ok') else None
-        # Extract citations in format doc_id#chunk_id (e.g., rubric#5)
-        if answer:
-            citations = re.findall(r'([\w\-]+#[0-9]+)', answer)
-        else:
-            citations = []
-        error = result.get('error') if not result.get('ok') else None
-    except Exception as e:
-        error = f"Provider error: {str(e)}"
-        answer = None
-        citations = None
-        latency = None
-    # Validate answer
+    t0 = _time.time()
+    result = call_provider(provider, prompt, answer_len)
+    latency = _time.time() - t0
+    answer = result.get('answer') if result.get('ok') else None
+    if answer:
+        citations = re.findall(r'([\w\-]+#[0-9]+)', answer)
+    else:
+        citations = []
+    error = result.get('error') if not result.get('ok') else None
     val_msg = validate_answer(answer, citations)
-    if val_msg:
-        flash(val_msg, 'warning')
-    # Log
     used_ids = [[c['doc_id'], c['chunk_id']] for c in context_chunks]
     log_entry = {
         'timestamp': time.time(),
@@ -193,21 +188,26 @@ def ask_route():
     log_path = os.path.join(os.path.dirname(__file__), 'logs', 'ask.jsonl')
     with open(log_path, 'a') as f:
         f.write(json.dumps(log_entry) + '\n')
-    return render_template(
-        'steps/step_7.html',
-        vectors=vectors,
-        meta=meta,
-        method=method,
-        providers=providers,
-        available_providers=available_providers,
-        api_keys=api_keys,
-        topk=topk,
-        min_score=min_score,
-        answer_len=answer_len,
-        question=question,
-        answer=answer,
-        context_chunks=context_chunks,
-        citations=citations,
-        provenance=None,
-        error=error
-    )
+    # Route-level timeout: if latency > 25s, return 503
+    if latency > 25:
+        return (
+            json.dumps({
+                "ok": False,
+                "error": "Request exceeded 25s limit. Provider or server too slow. Limits are enforced on Render.",
+                "elapsed_ms": int(latency * 1000)
+            }), 503, {"Content-Type": "application/json"}
+        )
+    if not result.get('ok'):
+        return (
+            json.dumps({
+                "ok": False,
+                "error": error,
+                "elapsed_ms": int(latency * 1000)
+            }), 502, {"Content-Type": "application/json"}
+        )
+    return json.dumps({
+        "ok": True,
+        "answer": answer,
+        "citations": citations,
+        "elapsed_ms": int(latency * 1000)
+    }), 200, {"Content-Type": "application/json"}
