@@ -1,6 +1,21 @@
 import os
 import json
 import time
+import sys
+from flask import Flask, request, jsonify, render_template, send_from_directory
+from werkzeug.utils import secure_filename
+
+app = Flask(__name__)
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'dev-secret-key')
+POLICIES_DIR = os.path.join("data", "policies")
+
+# Register favicon route after app is defined
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+import os
+import json
+import time
 import os
 import json
 import time
@@ -197,6 +212,36 @@ app.register_blueprint(step7_bp)
 from steps.step8.step8_routes import step8_bp
 app.register_blueprint(step8_bp)
 
+# --- Keepalive pinger (optional, Render) ---
+try:
+    from keepalive import start_if_enabled, status_json
+    start_if_enabled(app.logger if hasattr(app, "logger") else None)
+except Exception as e:
+    if hasattr(app, "logger"):
+        app.logger.warning("keepalive init failed: %s", e)
+
+@app.get("/keepalive/status")
+def keepalive_status():
+    from flask import Response
+    return Response(status_json(), mimetype="application/json")
+
+# Toggle keepalive on/off from homepage
+@app.route("/keepalive/toggle", methods=["POST"])
+def keepalive_toggle():
+    from flask import request, jsonify
+    try:
+        data = request.get_json(force=True)
+        enabled = bool(data.get("enabled"))
+        import keepalive
+        keepalive._state["enabled"] = enabled
+        if enabled and not getattr(keepalive, "_thread_started", False):
+            keepalive.start_if_enabled(app.logger if hasattr(app, "logger") else None)
+            keepalive._thread_started = True
+        return jsonify({"ok": True, "enabled": enabled})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 400
+
 if __name__ == "__main__":
     print('Registered routes:', app.url_map, file=sys.stderr)
-    app.run(host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host="0.0.0.0", port=port)

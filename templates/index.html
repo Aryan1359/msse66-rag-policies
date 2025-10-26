@@ -20,5 +20,59 @@
     </div>
   </div>
 </div>
+<!-- Keepalive footer widget -->
+<div id="keepalive-footer" style="font-size:12px; opacity:0.75; margin-top:1rem; border-top:1px solid #eee; padding-top:0.5rem;">
+  <span>Keepalive:</span> <strong id="ka-enabled">checking…</strong>
+  <label style="margin-left:0.5rem;">
+    <input type="checkbox" id="ka-toggle" style="vertical-align:middle; margin-right:0.2em;">
+    <span id="ka-toggle-label">off</span>
+  </label>
+  <span style="margin-left:1rem;">Last ping:</span> <span id="ka-last">—</span>
+  <span style="margin-left:1rem;">Uptime timer:</span> <span id="ka-timer">0s</span>
+</div>
+<script>
+  (function(){
+    const enabledEl = document.getElementById('ka-enabled');
+    const lastEl = document.getElementById('ka-last');
+    const timerEl = document.getElementById('ka-timer');
+    const toggle = document.getElementById('ka-toggle');
+    const toggleLabel = document.getElementById('ka-toggle-label');
+    let seconds = 0;
+    function fmtAgo(utc) {
+      if(!utc) return '—';
+      const t = new Date(utc);
+      const diff = Math.max(0, (Date.now() - t.getTime())/1000);
+      if (diff < 60) return Math.round(diff) + 's ago';
+      const m = Math.floor(diff/60), s = Math.floor(diff%60);
+      return m + 'm ' + s + 's ago';
+    }
+    async function refresh() {
+      try {
+        const r = await fetch('/keepalive/status', {cache: 'no-store'});
+        const j = await r.json();
+        enabledEl.textContent = j.enabled ? 'on' : 'off';
+        toggle.checked = !!j.enabled;
+        toggleLabel.textContent = j.enabled ? 'on' : 'off';
+        lastEl.textContent = j.last_ok_utc ? fmtAgo(j.last_ok_utc) : (j.last_err_utc ? ('error ' + fmtAgo(j.last_err_utc)) : '—');
+      } catch(e) {
+        enabledEl.textContent = 'error';
+        toggle.checked = false;
+        toggleLabel.textContent = 'error';
+      }
+    }
+    setInterval(function(){ seconds++; timerEl.textContent = seconds + 's'; }, 1000);
+    refresh(); setInterval(refresh, 10000);
+    toggle.addEventListener('change', async function() {
+      try {
+        await fetch('/keepalive/toggle', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({enabled: toggle.checked})
+        });
+        setTimeout(refresh, 500);
+      } catch(e) { alert('Failed to toggle keepalive'); }
+    });
+  })();
+</script>
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 {% endblock %}

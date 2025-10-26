@@ -1,6 +1,14 @@
-import numpy as np
-import os
+from pathlib import Path
+import os, json, numpy as np
 import requests
+
+# Portable project root and embeddings dir helpers
+def _project_root() -> Path:
+    return Path(os.environ.get("PROJECT_ROOT", Path.cwd()))
+
+def _embeddings_dir() -> Path:
+    base = os.environ.get("EMBED_DIR")
+    return Path(base) if base else _project_root() / "steps" / "step5" / "Embeddings"
 def validate_answer(answer: str, citations: list) -> str:
     """Validate the answer and citations. Returns a warning string if validation fails, else empty string."""
     if not answer or not isinstance(answer, str) or not answer.strip():
@@ -8,25 +16,26 @@ def validate_answer(answer: str, citations: list) -> str:
     if not citations:
         return "No citations found in answer."
     return ""
+_load_db_logged = False
 def load_db(method='headings'):
     """
     Load embeddings and metadata for Step 7 RAG from Step 5 output folders.
     method: 'headings' or 'token'
     """
-    import numpy as np
-    import json
-    import os
-    base = '/workspaces/msse66-rag-policies/steps/step5/Embeddings'
-    folders = {
-        'headings': os.path.join(base, 'headings__minilm'),
-        'token': os.path.join(base, 'token__minilm'),
-    }
-    folder = folders.get(method, folders['headings'])
-    vectors_path = os.path.join(folder, 'vectors.npy')
-    meta_path = os.path.join(folder, 'meta.json')
-    if not os.path.exists(vectors_path) or not os.path.exists(meta_path):
-        raise FileNotFoundError(f"Missing embeddings or metadata for method '{method}' in {folder}")
-    vectors = np.load(vectors_path)
+    global _load_db_logged
+    folder = _embeddings_dir() / f"{method}__minilm"
+    vectors_path = folder / "vectors.npy"
+    meta_path = folder / "meta.json"
+    if not _load_db_logged:
+        try:
+            from flask import current_app
+            current_app.logger.info(f"[load_db] Using embeddings folder: {folder.resolve()}")
+        except Exception:
+            print(f"[load_db] Using embeddings folder: {folder.resolve()}")
+        _load_db_logged = True
+    if not vectors_path.exists() or not meta_path.exists():
+        raise FileNotFoundError(f"Missing embeddings or metadata for method '{method}' in {folder.resolve()}")
+    vectors = np.load(str(vectors_path))
     with open(meta_path, 'r', encoding='utf-8') as f:
         meta = json.load(f)
     return vectors, meta
